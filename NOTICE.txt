@@ -1,0 +1,25 @@
+Copyright (C) 2014, 1&1 Internet AG.
+
+This source code is covered by the Apache License, Version 2.0, which
+can be found in the accompanying LICENSE-2.0.txt file, or online at
+http://www.apache.org/licenses/ .
+
+This product includes software developed by the SNMP4J Project
+(http://www.snmp4j.org/). Complete conditions and disclaimers for
+SNMP4J can be found at
+http://www.snmp4j.org/LICENSE-2_0.txt
+
+This product includes software developed by the Args4J Project
+(http://args4j.kohsuke.org/).  Complete conditions and disclaimers
+for Args4J can be found at
+http://args4j.kohsuke.org/license.html
+
+This product includes software developed by the Guava Libraries
+Project (https://code.google.com/p/guava-libraries/).  Complete
+conditions and disclaimers for Guava Libraries can be found at
+https://code.google.com/p/guava-libraries/
+
+This product includes software developed by the SLF4J Project
+(http://slf4j.org/).  Complete conditions and disclaimers for SLF4J
+can be found at
+http://slf4j.org/license.html
