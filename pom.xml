@@ -16,7 +16,7 @@
     </licenses>
 
     <organization>
-        <name>1und1 Internet AG</name>
+        <name>1and1</name>
         <url>http://www.1and1.com/</url>
     </organization>
 
@@ -226,6 +226,104 @@
                                     </mapper>
                                 </data>
                             </dataSet>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>redhat</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>rpm-maven-plugin</artifactId>
+                        <version>2.1-alpha-3</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>rpm</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <copyright>Apache License 2.0</copyright>
+                            <distribution>Network Utilities</distribution>
+                            <group>System Environment/Daemons</group>
+                            <packager>1and1</packager>
+
+                            <requires>
+                                <require>jre &gt;= 1.7</require>
+                            </requires>
+
+                            <mappings>
+                                <!-- create directories -->
+                                <mapping>
+                                    <directory>/opt/snmpman</directory>
+                                </mapping>
+
+                                <mapping>
+                                    <directory>/opt/snmpman/bin</directory>
+                                </mapping>
+
+                                <mapping>
+                                    <directory>/opt/snmpman/lib</directory>
+                                </mapping>
+
+                                <mapping>
+                                    <directory>/opt/snmpman/etc</directory>
+                                </mapping>
+
+                                <mapping>
+                                    <directory>/opt/snmpman/etc/devices</directory>
+                                </mapping>
+
+                                <!-- copy binary -->
+                                <mapping>
+                                    <sources>
+                                        <source>
+                                            <location>${project.basedir}/src/main/linux/redhat/dataset/bin/snmpman.sh</location>
+                                        </source>
+                                    </sources>
+                                    <directory>/opt/snmpman/bin</directory>
+                                </mapping>
+
+                                <!-- copy library -->
+                                <mapping>
+                                    <sources>
+                                        <source>
+                                            <location>${project.build.directory}/${project.artifactId}-${project.version}-jar-with-dependencies.jar</location>
+                                            <destination>snmpman.jar</destination>
+                                        </source>
+                                    </sources>
+                                    <directory>/opt/snmpman/bin</directory>
+                                </mapping>
+
+                                <!-- copy configuration -->
+                                <mapping>
+                                    <sources>
+                                        <source>
+                                            <location>${project.basedir}/src/main/linux/redhat/dataset/etc</location>
+                                        </source>
+                                    </sources>
+                                    <directory>/opt/snmpman/etc</directory>
+                                    <configuration>noreplace</configuration>
+                                </mapping>
+
+                                <mapping>
+                                    <sources>
+                                        <source>
+                                            <location>${project.basedir}/src/main/linux/redhat/dataset/etc/devices</location>
+                                        </source>
+                                    </sources>
+                                    <directory>/opt/snmpman/etc/devices</directory>
+                                    <configuration>noreplace</configuration>
+                                </mapping>
+                            </mappings>
                         </configuration>
                     </plugin>
                 </plugins>

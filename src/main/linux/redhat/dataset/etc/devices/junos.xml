@@ -1,0 +1,269 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<snmpman:device xmlns:snmpman="http://www.1and1.com/snmpman/device">
+    <!-- Device definition for 'junos' OS-based devices -->
+
+    <!-- cpu.load -->
+    <binding OID=".1.3.6.1.4.1.2636.3.1.13.1.8">
+        <modifier modifierClass="com.oneandone.network.snmpman.modifier.Gauge32Modifier">
+            <param name="minimum" value="0"/>
+            <param name="maximum" value="100"/>
+            <param name="minimumStep" value="0"/>
+            <param name="maximumStep" value="100"/>
+        </modifier>
+    </binding>
+
+    <!-- env.temperature.value -->
+    <binding OID=".1.3.6.1.4.1.2636.3.1.13.1.7">
+        <modifier modifierClass="com.oneandone.network.snmpman.modifier.Gauge32Modifier">
+            <param name="minimum" value="25"/>
+            <param name="maximum" value="60"/>
+            <param name="minimumStep" value="-10"/>
+            <param name="maximumStep" value="10"/>
+        </modifier>
+    </binding>
+
+    <!-- ifTraffic1 -->
+
+    <!-- ifInOctets -->
+    <binding OID=".1.3.6.1.2.1.2.2.1.10">
+        <modifier modifierClass="com.oneandone.network.snmpman.modifier.Counter32Modifier">
+            <param name="minimum" value="0"/>
+            <param name="maximum" value="4294967295"/>
+            <param name="minimumStep" value="0"/>
+            <param name="maximumStep" value="3840000"/>
+        </modifier>
+    </binding>
+
+    <!-- ifInUcastPkts -->
+    <binding OID=".1.3.6.1.2.1.2.2.1.11">
+        <modifier modifierClass="com.oneandone.network.snmpman.modifier.Counter32Modifier">
+            <param name="minimum" value="0"/>
+            <param name="maximum" value="4294967295"/>
+            <param name="minimumStep" value="0"/>
+            <param name="maximumStep" value="20000"/>
+        </modifier>
+    </binding>
+
+    <!-- ifInNUcastPkts -->
+    <binding OID=".1.3.6.1.2.1.2.2.1.12">
+        <modifier modifierClass="com.oneandone.network.snmpman.modifier.Counter32Modifier">
+            <param name="minimum" value="0"/>
+            <param name="maximum" value="4294967295"/>
+            <param name="minimumStep" value="0"/>
+            <param name="maximumStep" value="20000"/>
+        </modifier>
+    </binding>
+
+    <!-- ifInDiscards -->
+    <binding OID=".1.3.6.1.2.1.2.2.1.13">
+        <modifier modifierClass="com.oneandone.network.snmpman.modifier.Counter32Modifier">
+            <param name="minimum" value="0"/>
+            <param name="maximum" value="4294967295"/>
+            <param name="minimumStep" value="0"/>
+            <param name="maximumStep" value="20000"/>
+        </modifier>
+    </binding>
+
+    <!-- ifInErrors -->
+    <binding OID=".1.3.6.1.2.1.2.2.1.14">
+        <modifier modifierClass="com.oneandone.network.snmpman.modifier.Counter32Modifier">
+            <param name="minimum" value="0"/>
+            <param name="maximum" value="4294967295"/>
+            <param name="minimumStep" value="0"/>
+            <param name="maximumStep" value="20000"/>
+        </modifier>
+    </binding>
+
+    <!-- ifInUnknownProtos -->
+    <binding OID=".1.3.6.1.2.1.2.2.1.15">
+        <modifier modifierClass="com.oneandone.network.snmpman.modifier.Counter32Modifier">
+            <param name="minimum" value="0"/>
+            <param name="maximum" value="4294967295"/>
+            <param name="minimumStep" value="0"/>
+            <param name="maximumStep" value="20000"/>
+        </modifier>
+    </binding>
+
+    <!-- ifTraffic2 -->
+
+    <!-- ifInOctets -->
+    <binding OID=".1.3.6.1.2.1.2.2.1.16">
+        <modifier modifierClass="com.oneandone.network.snmpman.modifier.Counter32Modifier">
+            <param name="minimum" value="0"/>
+            <param name="maximum" value="4294967295"/>
+            <param name="minimumStep" value="0"/>
+            <param name="maximumStep" value="3840000"/>
+        </modifier>
+    </binding>
+
+    <!-- ifInUcastPkts -->
+    <binding OID=".1.3.6.1.2.1.2.2.1.17">
+        <modifier modifierClass="com.oneandone.network.snmpman.modifier.Counter32Modifier">
+            <param name="minimum" value="0"/>
+            <param name="maximum" value="4294967295"/>
+            <param name="minimumStep" value="0"/>
+            <param name="maximumStep" value="20000"/>
+        </modifier>
+    </binding>
+
+    <!-- ifInNUcastPkts -->
+    <binding OID=".1.3.6.1.2.1.2.2.1.18">
+        <modifier modifierClass="com.oneandone.network.snmpman.modifier.Counter32Modifier">
+            <param name="minimum" value="0"/>
+            <param name="maximum" value="4294967295"/>
+            <param name="minimumStep" value="0"/>
+            <param name="maximumStep" value="20000"/>
+        </modifier>
+    </binding>
+
+    <!-- ifOutDiscards -->
+    <binding OID=".1.3.6.1.2.1.2.2.1.19">
+        <modifier modifierClass="com.oneandone.network.snmpman.modifier.Counter32Modifier">
+            <param name="minimum" value="0"/>
+            <param name="maximum" value="4294967295"/>
+            <param name="minimumStep" value="0"/>
+            <param name="maximumStep" value="20000"/>
+        </modifier>
+    </binding>
+
+    <!-- ifOutErrors -->
+    <binding OID=".1.3.6.1.2.1.2.2.1.20">
+        <modifier modifierClass="com.oneandone.network.snmpman.modifier.Counter32Modifier">
+            <param name="minimum" value="0"/>
+            <param name="maximum" value="4294967295"/>
+            <param name="minimumStep" value="0"/>
+            <param name="maximumStep" value="20000"/>
+        </modifier>
+    </binding>
+
+    <!-- ifHCInOctets -->
+    <binding OID=".1.3.6.1.2.1.31.1.1.1.6">
+        <modifier modifierClass="com.oneandone.network.snmpman.modifier.Counter64Modifier">
+            <param name="minimum" value="0"/>
+            <param name="maximum" value="1844674407370955161"/>
+            <param name="minimumStep" value="0"/>
+            <param name="maximumStep" value="3840000"/>
+        </modifier>
+    </binding>
+
+    <!-- ifHCInUcastPkts -->
+    <binding OID=".1.3.6.1.2.1.31.1.1.1.7">
+        <modifier modifierClass="com.oneandone.network.snmpman.modifier.Counter64Modifier">
+            <param name="minimum" value="0"/>
+            <param name="maximum" value="1844674407370955161"/>
+            <param name="minimumStep" value="0"/>
+            <param name="maximumStep" value="20000"/>
+        </modifier>
+    </binding>
+
+    <!-- ifHCInMulticastPkts -->
+    <binding OID=".1.3.6.1.2.1.31.1.1.1.8">
+        <modifier modifierClass="com.oneandone.network.snmpman.modifier.Counter64Modifier">
+            <param name="minimum" value="0"/>
+            <param name="maximum" value="1844674407370955161"/>
+            <param name="minimumStep" value="0"/>
+            <param name="maximumStep" value="20000"/>
+        </modifier>
+    </binding>
+
+    <!-- ifHCInBroadcastPkts -->
+    <binding OID=".1.3.6.1.2.1.31.1.1.1.9">
+        <modifier modifierClass="com.oneandone.network.snmpman.modifier.Counter64Modifier">
+            <param name="minimum" value="0"/>
+            <param name="maximum" value="1844674407370955161"/>
+            <param name="minimumStep" value="0"/>
+            <param name="maximumStep" value="20000"/>
+        </modifier>
+    </binding>
+
+    <!-- ifInDiscards -->
+    <binding OID=".1.3.6.1.2.1.2.2.1.13">
+        <modifier modifierClass="com.oneandone.network.snmpman.modifier.Counter32Modifier">
+            <param name="minimum" value="0"/>
+            <param name="maximum" value="4294967295"/>
+            <param name="minimumStep" value="0"/>
+            <param name="maximumStep" value="20000"/>
+        </modifier>
+    </binding>
+
+    <!-- ifInErrors -->
+    <binding OID=".1.3.6.1.2.1.2.2.1.14">
+        <modifier modifierClass="com.oneandone.network.snmpman.modifier.Counter32Modifier">
+            <param name="minimum" value="0"/>
+            <param name="maximum" value="4294967295"/>
+            <param name="minimumStep" value="0"/>
+            <param name="maximumStep" value="20000"/>
+        </modifier>
+    </binding>
+
+    <!-- ifInUnknownProtos -->
+    <binding OID=".1.3.6.1.2.1.2.2.1.15">
+        <modifier modifierClass="com.oneandone.network.snmpman.modifier.Counter32Modifier">
+            <param name="minimum" value="0"/>
+            <param name="maximum" value="4294967295"/>
+            <param name="minimumStep" value="0"/>
+            <param name="maximumStep" value="20000"/>
+        </modifier>
+    </binding>
+
+    <!-- ifHCOutOctets -->
+    <binding OID=".1.3.6.1.2.1.31.1.1.1.10">
+        <modifier modifierClass="com.oneandone.network.snmpman.modifier.Counter64Modifier">
+            <param name="minimum" value="0"/>
+            <param name="maximum" value="1844674407370955161"/>
+            <param name="minimumStep" value="0"/>
+            <param name="maximumStep" value="3840000"/>
+        </modifier>
+    </binding>
+
+    <!-- ifHCOutUcastPkts -->
+    <binding OID=".1.3.6.1.2.1.31.1.1.1.11">
+        <modifier modifierClass="com.oneandone.network.snmpman.modifier.Counter64Modifier">
+            <param name="minimum" value="0"/>
+            <param name="maximum" value="1844674407370955161"/>
+            <param name="minimumStep" value="0"/>
+            <param name="maximumStep" value="20000"/>
+        </modifier>
+    </binding>
+
+    <!-- ifHCOutMulticastPkts -->
+    <binding OID=".1.3.6.1.2.1.31.1.1.1.12">
+        <modifier modifierClass="com.oneandone.network.snmpman.modifier.Counter64Modifier">
+            <param name="minimum" value="0"/>
+            <param name="maximum" value="1844674407370955161"/>
+            <param name="minimumStep" value="0"/>
+            <param name="maximumStep" value="20000"/>
+        </modifier>
+    </binding>
+
+    <!-- ifHCOutBroadcastPkts -->
+    <binding OID=".1.3.6.1.2.1.31.1.1.1.13">
+        <modifier modifierClass="com.oneandone.network.snmpman.modifier.Counter64Modifier">
+            <param name="minimum" value="0"/>
+            <param name="maximum" value="1844674407370955161"/>
+            <param name="minimumStep" value="0"/>
+            <param name="maximumStep" value="20000"/>
+        </modifier>
+    </binding>
+
+    <!-- ifOutDiscards -->
+    <binding OID=".1.3.6.1.2.1.2.2.1.19">
+        <modifier modifierClass="com.oneandone.network.snmpman.modifier.Counter32Modifier">
+            <param name="minimum" value="0"/>
+            <param name="maximum" value="4294967295"/>
+            <param name="minimumStep" value="0"/>
+            <param name="maximumStep" value="20000"/>
+        </modifier>
+    </binding>
+
+    <!-- ifOutErrors -->
+    <binding OID=".1.3.6.1.2.1.2.2.1.20">
+        <modifier modifierClass="com.oneandone.network.snmpman.modifier.Counter32Modifier">
+            <param name="minimum" value="0"/>
+            <param name="maximum" value="4294967295"/>
+            <param name="minimumStep" value="0"/>
+            <param name="maximumStep" value="20000"/>
+        </modifier>
+    </binding>
+
+</snmpman:device>

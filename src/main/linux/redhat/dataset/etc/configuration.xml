@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<snmpman:configuration xmlns:snmpman="http://www.1and1.com/snmpman/configuration">
+
+    <device id="cisco" path="/opt/snmpman/etc/devices/ios.xml"/>
+
+    <agent id="example1" device="cisco" walk="/opt/snmpman/etc/example.txt" address="127.0.0.1" port="10000"/>
+
+</snmpman:configuration>
