@@ -218,6 +218,7 @@
                                     <src>${project.basedir}/src/main/linux/debian/dataset/etc</src>
                                     <dst/>
                                     <type>directory</type>
+                                    <conffile>true</conffile>
                                     <mapper>
                                         <type>perm</type>
                                         <filemode>644</filemode>
