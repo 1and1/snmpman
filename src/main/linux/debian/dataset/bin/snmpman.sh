@@ -58,4 +58,4 @@ elif [ "${ARGS}" != *-Dlog4j.configuration* ] && [ -f /opt/snmpman/etc/log4j.pro
     LOG_PARAMETER="-Dlog4j.configuration=file:${SNMPMAN_HOME}/etc/log4j.properties"
 fi
 
-eval \"${JAVA}\" "${LOG_PARAMETER}" -jar "${SNMPMAN_HOME}/lib/snmpman.jar" "${MAIN_CLASS}" "${ARGS}"
+eval \"${JAVA}\" "${LOG_PARAMETER}" -jar "${SNMPMAN_HOME}/lib/snmpman.jar" "${ARGS}"
