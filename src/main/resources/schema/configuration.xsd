@@ -2,7 +2,7 @@
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
             xmlns:snmpman="http://www.1and1.com/snmpman/configuration"
             targetNamespace="http://www.1and1.com/snmpman/configuration"
-            elementFormDefault="qualified">
+            elementFormDefault="unqualified">
 
     <xsd:element name="configuration">
         <xsd:complexType>
