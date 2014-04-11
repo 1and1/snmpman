@@ -22,6 +22,8 @@ Installation
 ### Packaging
 The `SNMPMAN` can be packaged for Debian installations by executing the Maven profile `debian`. All resources will be installed in the root directory `/opt/snmpman`.
 
+If you want to create a RPM package you should execute the `build-rpm.sh`. The RPM file will be copied into your current working directory after it was created.
+
 Some basic configuration files will be copied to `/opt/snmpman/etc`. One default device will be simulated at `127.0.0.1:10000` by the default configuration.
 
 Execution
