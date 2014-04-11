@@ -204,7 +204,7 @@
                                 <!-- copy binary -->
                                 <data>
                                     <src>${project.basedir}/src/main/linux/debian/dataset/bin/snmpman.sh</src>
-                                    <dst>bin/snmpman</dst>
+                                    <dst>bin/snmpman.sh</dst>
                                     <type>file</type>
                                     <mapper>
                                         <type>perm</type>
@@ -218,23 +218,10 @@
                                     <src>${project.basedir}/src/main/linux/debian/dataset/etc</src>
                                     <dst/>
                                     <type>directory</type>
-                                    <conffile>true</conffile>
                                     <mapper>
                                         <type>perm</type>
                                         <filemode>644</filemode>
                                         <prefix>/opt/snmpman/etc</prefix>
-                                    </mapper>
-                                </data>
-
-                                <data>
-                                    <src>${project.basedir}/src/main/config/devices</src>
-                                    <dst/>
-                                    <type>directory</type>
-                                    <conffile>true</conffile>
-                                    <mapper>
-                                        <type>perm</type>
-                                        <filemode>644</filemode>
-                                        <prefix>/opt/snmpman/etc/devices</prefix>
                                     </mapper>
                                 </data>
                             </dataSet>
