@@ -14,6 +14,8 @@ how to dynamically change the query responses. E.g. the response of an
 may be incremented with each query to simulate traffic. Several variable modifiers are already existing for different
 data types.
 
+Also checkout the `SNMPAMN` GitHub IO page [here](http://1and1.github.io/snmpman/)!
+
 Installation
 ============
 ### Prequisites
