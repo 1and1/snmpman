@@ -22,30 +22,6 @@
 
     <build>
         <plugins>
-	        <plugin>
-		        <groupId>org.apache.maven.plugins</groupId>
-		        <artifactId>maven-dependency-plugin</artifactId>
-		        <version>2.8</version>
-		        <executions>
-			        <execution>
-				        <id>copy-dependencies</id>
-				        <phase>package</phase>
-				        <goals>
-					        <goal>copy-dependencies</goal>
-				        </goals>
-				        <configuration>
-					        <outputDirectory>${project.build.directory}/lib</outputDirectory>
-					        <includeScope>runtime</includeScope>
-					        <overWriteReleases>true</overWriteReleases>
-					        <overWriteSnapshots>true</overWriteSnapshots>
-					        <overWriteIfNewer>true</overWriteIfNewer>
-					        <stripVersion>false</stripVersion>
-					        <useBaseVersion>true</useBaseVersion>
-				        </configuration>
-			        </execution>
-		        </executions>
-	        </plugin>
-
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
@@ -68,6 +44,26 @@
                             <mainClass>com.oneandone.network.snmpman.Snmpman</mainClass>
                         </manifest>
                     </archive>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.4</version>
+                <executions>
+                    <execution>
+                        <id>jar-with-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
                 </configuration>
             </plugin>
 
@@ -163,6 +159,79 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>debian</id>
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.vafer</groupId>
+                        <artifactId>jdeb</artifactId>
+                        <version>1.1.1</version>
+                        <executions>
+                            <execution>
+                                <phase>package</phase>
+                                <goals>
+                                    <goal>jdeb</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                        <configuration>
+                            <controlDir>${project.basedir}/src/main/linux/debian/control</controlDir>
+                            <dataSet>
+                                <!-- copy jar -->
+                                <data>
+                                    <src>${project.build.directory}/${project.artifactId}-${project.version}-jar-with-dependencies.jar</src>
+                                    <dst>lib/snmpman.jar</dst>
+                                    <type>file</type>
+                                    <mapper>
+                                        <type>perm</type>
+                                        <filemode>644</filemode>
+                                    </mapper>
+                                </data>
+
+                                <!-- copy binary -->
+                                <data>
+                                    <src>${project.basedir}/src/main/linux/debian/dataset/bin/snmpman.sh</src>
+                                    <dst>bin/snmpman</dst>
+                                    <type>file</type>
+                                    <mapper>
+                                        <type>perm</type>
+                                        <filemode>755</filemode>
+                                    </mapper>
+                                </data>
+
+                                <!-- copy configuration -->
+                                <data>
+                                    <src>${project.basedir}/src/main/linux/debian/dataset/etc</src>
+                                    <dst>etc/</dst>
+                                    <type>directory</type>
+                                    <mapper>
+                                        <type>perm</type>
+                                        <filemode>644</filemode>
+                                    </mapper>
+                                </data>
+
+                                <data>
+                                    <src>${project.basedir}/src/main/config/devices</src>
+                                    <dst>etc/devices/</dst>
+                                    <type>directory</type>
+                                    <mapper>
+                                        <type>perm</type>
+                                        <filemode>644</filemode>
+                                    </mapper>
+                                </data>
+                            </dataSet>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 	<repositories>
 		<repository>

@@ -1,0 +1,9 @@
+Package: [[name]]
+Version: [[version]]
+Section: misc
+Priority: optional
+Architecture: all
+Depends: jdk (>= 1.7)
+Maintainer: Johann Böhler
+Description: SNMPMAN
+Distribution: development
