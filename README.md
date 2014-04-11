@@ -22,13 +22,17 @@ Installation
 ### Packaging
 The `SNMPMAN` can be packaged for Debian installations by executing the Maven profile `debian`. All resources will be installed in the root directory `/opt/snmpman`.
 
+Some basic configuration files will be copied to `/opt/snmpman/etc`. One default device will be simulated at `127.0.0.1:10000` by the default configuration.
+
 Execution
-------------
+============
 To execute an instance of the `SNMPMAN` you have to start the execution script and specify a value for the `-c`
 or `--configuration` option that lists the path to the configuration file that should be loaded in the execution context.
 
+If no arguments were specified, the default configuration in `/opt/snmpman/etc/configuration.xml` will be used.
+
 Configuration
-------------
+============
 The `SNMPMAN` is configured in two main `XML` files ...
   * The agent configuration _(Namespace: http://www.1and1.com/snmpman/configuration)_
   * The device type configuration _(Namespace: http://www.1and1.com/snmpman/device)_
