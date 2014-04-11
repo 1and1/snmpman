@@ -52,9 +52,9 @@ fi
 
 # Set the log4j configuration if not defined by the call
 LOG_PARAMETER=""
-if [ "${ARGS}" != *-Dlog4j.configuration* && -f /opt/snmpman/etc/log4j.xml ]; then
+if [ "${ARGS}" != *-Dlog4j.configuration* ] && [ -f /opt/snmpman/etc/log4j.xml ]; then
     LOG_PARAMETER="-Dlog4j.configuration=file:${SNMPMAN_HOME}/etc/log4j.xml"
-elif [ "${ARGS}" != *-Dlog4j.configuration* && -f /opt/snmpman/etc/log4j.properties ]; then
+elif [ "${ARGS}" != *-Dlog4j.configuration* ] && [ -f /opt/snmpman/etc/log4j.properties ]; then
     LOG_PARAMETER="-Dlog4j.configuration=file:${SNMPMAN_HOME}/etc/log4j.properties"
 fi
 

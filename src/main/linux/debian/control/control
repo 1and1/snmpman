@@ -3,7 +3,7 @@ Version: [[version]]
 Section: misc
 Priority: optional
 Architecture: all
-Depends: jdk (>= 1.7)
+Depends:
 Maintainer: Johann Böhler
 Description: SNMPMAN
 Distribution: development
