@@ -28,37 +28,70 @@
         </ul>
       </header>
       <section>
-        <h3>
-<a name="welcome-to-github-pages" class="anchor" href="#welcome-to-github-pages"><span class="octicon octicon-link"></span></a>Welcome to GitHub Pages.</h3>
+        <h1>
+<a name="snmpman" class="anchor" href="#snmpman"><span class="octicon octicon-link"></span></a>SNMPMAN</h1>
 
-<p>This automatic page generator is the easiest way to create beautiful pages for all of your projects. Author your page content here using GitHub Flavored Markdown, select a template crafted by a designer, and publish. After your page is generated, you can check out the new branch:</p>
+<p>The <code>SNMPMAN</code> is a command-line application that simulates <code>SNMP</code>-capable devices.
+It may used e.g. to test traffic monitoring applications that execute <code>SNMP</code> queries. Due to to the lack in
+flexibility of already existing alternatives, it was developed by the <strong>1&amp;1 Internet AG</strong> to avoid those deficits. Therefore the <code>SNMPMAN</code>
+is highly extensible and will feature and will be enhanced in time.</p>
 
-<pre><code>$ cd your_repo_root/repo_name
-$ git fetch origin
-$ git checkout gh-pages
+<p>Multiple <code>SNMP</code> agents may be started at once and will run in parallel on different parts. These agents
+will return the data defined in a textual walk file. This file may be created by querying a real device. In addition,
+several device types may be defined and mapped by the agents. This device type configuration may contain policies on
+how to dynamically change the query responses. E.g. the response of an
+<a href="http://tools.cisco.com/Support/SNMP/do/BrowseOID.do?objectInput=ifInOctets&amp;translate=Translate&amp;submitValue=SUBMIT%22">ifInOctets</a>
+may be incremented with each query to simulate traffic. Several variable modifiers are already existing for different
+data types.</p>
+
+<h1>
+<a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>Installation</h1>
+
+<h3>
+<a name="prequisites" class="anchor" href="#prequisites"><span class="octicon octicon-link"></span></a>Prequisites</h3>
+
+<ul>
+<li><code>Java JRE 1.7</code></li>
+</ul><h3>
+<a name="packaging" class="anchor" href="#packaging"><span class="octicon octicon-link"></span></a>Packaging</h3>
+
+<p>The <code>SNMPMAN</code> can be packaged for Debian installations by executing the Maven profile <code>debian</code>. All resources will be installed in the root directory <code>/opt/snmpman</code>.</p>
+
+<p>If you want to create a RPM package you should execute the <code>build-rpm.sh</code>. The RPM file will be copied into your current working directory after it was created.</p>
+
+<p>Some basic configuration files will be copied to <code>/opt/snmpman/etc</code>. One default device will be simulated at <code>127.0.0.1:10000</code> by the default configuration.</p>
+
+<h1>
+<a name="execution" class="anchor" href="#execution"><span class="octicon octicon-link"></span></a>Execution</h1>
+
+<p>To execute an instance of the <code>SNMPMAN</code> you have to start the execution script and specify a value for the <code>-c</code>
+or <code>--configuration</code> option that lists the path to the configuration file that should be loaded in the execution context.</p>
+
+<p>If no arguments were specified, the default configuration in <code>/opt/snmpman/etc/configuration.xml</code> will be used.</p>
+
+<h1>
+<a name="configuration" class="anchor" href="#configuration"><span class="octicon octicon-link"></span></a>Configuration</h1>
+
+<p>The <code>SNMPMAN</code> is configured in two main <code>XML</code> files ...</p>
+
+<ul>
+<li>The agent configuration <em>(Namespace: <a href="http://www.1and1.com/snmpman/configuration">http://www.1and1.com/snmpman/configuration</a>)</em>
+</li>
+<li>The device type configuration <em>(Namespace: <a href="http://www.1and1.com/snmpman/device">http://www.1and1.com/snmpman/device</a>)</em>
+</li>
+</ul><p>The <code>XML</code> schema files can be found in this project in the directory</p>
+
+<pre><code>../src/main/resources/schema
 </code></pre>
 
-<p>If you're using the GitHub for Mac, simply sync your repository and you'll see the new branch.</p>
+<p>The third component of the configuration are the walk files for the agents as specified in the agent configuration.</p>
 
-<h3>
-<a name="designer-templates" class="anchor" href="#designer-templates"><span class="octicon octicon-link"></span></a>Designer Templates</h3>
+<p>This is a basic overview and more information will be provided <a href="https://github.com/1and1/snmpman/wiki">on the projects Wiki pages</a>.</p>
 
-<p>We've crafted some handsome templates for you to use. Go ahead and continue to layouts to browse through them. You can easily go back to edit your page before publishing. After publishing your page, you can revisit the page generator and switch to another theme. Your Page content will be preserved if it remained markdown format.</p>
+<h2>
+<a name="contributing" class="anchor" href="#contributing"><span class="octicon octicon-link"></span></a>Contributing</h2>
 
-<h3>
-<a name="rather-drive-stick" class="anchor" href="#rather-drive-stick"><span class="octicon octicon-link"></span></a>Rather Drive Stick?</h3>
-
-<p>If you prefer to not use the automatic generator, push a branch named <code>gh-pages</code> to your repository to create a page manually. In addition to supporting regular HTML content, GitHub Pages support Jekyll, a simple, blog aware static site generator written by our own Tom Preston-Werner. Jekyll makes it easy to create site-wide headers and footers without having to copy them across every page. It also offers intelligent blog support and other advanced templating features.</p>
-
-<h3>
-<a name="authors-and-contributors" class="anchor" href="#authors-and-contributors"><span class="octicon octicon-link"></span></a>Authors and Contributors</h3>
-
-<p>You can <a href="https://github.com/blog/821" class="user-mention">@mention</a> a GitHub username to generate a link to their profile. The resulting <code>&lt;a&gt;</code> element will link to the contributor's GitHub Profile. For example: In 2007, Chris Wanstrath (<a href="https://github.com/defunkt" class="user-mention">@defunkt</a>), PJ Hyett (<a href="https://github.com/pjhyett" class="user-mention">@pjhyett</a>), and Tom Preston-Werner (<a href="https://github.com/mojombo" class="user-mention">@mojombo</a>) founded GitHub.</p>
-
-<h3>
-<a name="support-or-contact" class="anchor" href="#support-or-contact"><span class="octicon octicon-link"></span></a>Support or Contact</h3>
-
-<p>Having trouble with Pages? Check out the documentation at <a href="http://help.github.com/pages">http://help.github.com/pages</a> or contact <a href="mailto:support@github.com">support@github.com</a> and we’ll help you sort it out.</p>
+<p>To contribute, use the GitHub way - fork, hack, and submit a pull request!</p>
       </section>
       <footer>
         <p>This project is maintained by <a href="https://github.com/1and1">1and1</a></p>
