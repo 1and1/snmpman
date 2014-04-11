@@ -18,6 +18,7 @@ Installation
 ============
 ### Prequisites
   * `Java JRE 1.7`
+
 ### Packaging
 The `SNMPMAN` can be packaged for Debian installations by executing the Maven profile `debian`. All resources will be installed in the root directory `/opt/snmpman`.
 
