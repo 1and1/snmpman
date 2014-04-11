@@ -14,6 +14,14 @@ how to dynamically change the query responses. E.g. the response of an
 may be incremented with each query to simulate traffic. Several variable modifiers are already existing for different
 data types.
 
+Installation
+============
+### Prequisites
+  * `Java JRE 1.7`
+
+### Packaging
+The `SNMPMAN` can be packaged for Debian installations by executing the Maven profile `debian`. All resources will be installed in the root directory `/opt/snmpman`.
+
 Execution
 ------------
 To execute an instance of the `SNMPMAN` you have to start the execution script and specify a value for the `-c`
