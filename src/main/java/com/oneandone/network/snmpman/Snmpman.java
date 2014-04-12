@@ -38,20 +38,14 @@ import java.util.Properties;
  */
 public final class Snmpman {
 
-    /**
-     * The logging instance for this class.
-     */
-    private static transient Logger LOG = LoggerFactory.getLogger(Snmpman.class);
+    /** The logging instance for this class. */
+    private static final Logger LOG = LoggerFactory.getLogger(Snmpman.class);
 
-    /**
-     * The {@code Snmpman} configuration.
-     */
+    /** The {@code Snmpman} configuration. */
     private final Configuration configuration;
 
-    /**
-     * Hidden constructor for the creation of a {@code Snmpman} instance.
-     */
-    Snmpman(final Configuration configuration) {
+    /** Hidden constructor for the creation of a {@code Snmpman} instance. */
+    private Snmpman(final Configuration configuration) {
         this.configuration = configuration;
     }
 
@@ -62,7 +56,7 @@ public final class Snmpman {
         final Properties mavenProperties = new Properties();
         try (final InputStream mavenPropertiesStream = ClassLoader.getSystemResourceAsStream("maven.properties")) {
             mavenProperties.load(mavenPropertiesStream);
-            LOG.debug(String.format("application %s:%s:%s started", mavenProperties.getProperty("maven.groupId"), mavenProperties.getProperty("maven.artifactId"), mavenProperties.getProperty("maven.version")));
+            LOG.info("application {}:{}:{} started", mavenProperties.getProperty("maven.groupId"), mavenProperties.getProperty("maven.artifactId"), mavenProperties.getProperty("maven.version"));
         } catch (final IOException e) {
             LOG.error("could not read maven properties", e);
         }
@@ -86,20 +80,20 @@ public final class Snmpman {
         final CmdLineParser cmdLineParser = new CmdLineParser(commandLineOptions);
         try {
             cmdLineParser.parseArgument(args);
+
+	        final Snmpman snmpman = new Snmpman(commandLineOptions.configuration);
+	        final Map<String, DeviceType> deviceTypeMap = snmpman.loadDeviceTypes();
+
+	        LOG.debug("starting to load agents");
+	        snmpman.loadAgents(deviceTypeMap);
+	        LOG.debug("all agents initialized");
         } catch (final Exception e) {
             if (e.getCause() != null && e.getCause() instanceof UnmarshalException) {
                 System.err.println("Configuration could not be parsed. Check the logs for more information.");
             }
-            LOG.error("could not parse command-line arguments", e);
+            LOG.error("could not parse or process command-line arguments", e);
             cmdLineParser.printUsage(System.out);
-            return;
         }
-
-        final Snmpman snmpman = new Snmpman(commandLineOptions.configuration);
-        final Map<String, DeviceType> deviceTypeMap = snmpman.loadDeviceTypes();
-        LOG.debug("starting to load agents");
-        snmpman.loadAgents(deviceTypeMap);
-        LOG.debug("all agents initialized");
     }
 
     /**
@@ -164,26 +158,24 @@ public final class Snmpman {
         }
     }
 
-    /**
-     * The command-line options for this application.
-     */
+    /** The command-line options for this application. */
     private static final class CommandLineOptions {
 
-        /**
-         * The {@code Snmpman} configuration.
-         */
+        /** The {@code Snmpman} configuration. */
         private Configuration configuration;
 
         /**
          * Sets the {@code Snmpman} configuration by the specified path to the configuration file.
          *
          * @param configurationFile the configuration file
-         * @throws SAXException  general SAX error or warning occurred
-         * @throws JAXBException unmarshalling probably failed
+         * @throws java.lang.NullPointerException if the specified configuration file is null
+         * @throws java.lang.IllegalArgumentException if the specified configuration does not exist or ist not a file
+         * @throws java.lang.IllegalStateException if the configuration could not be parsed
          */
         @SuppressWarnings("UnusedDeclaration")
         @Option(name = "-c", aliases = "--configuration", usage = "the path to the configuration XML", required = true)
-        private void setConfiguration(final File configurationFile) throws SAXException, JAXBException {
+        private void setConfiguration(final File configurationFile) {
+	        Preconditions.checkNotNull(configurationFile, "the configuration file may not be null");
             Preconditions.checkArgument(configurationFile.exists() && configurationFile.isFile(), "configuration does not exist or is not a file");
 
             try (final InputStream configurationSchemaStream = ClassLoader.getSystemResourceAsStream("schema/configuration.xsd")) {
@@ -197,12 +189,12 @@ public final class Snmpman {
                 unmarshaller.setSchema(configurationSchema);
                 this.configuration = (Configuration) unmarshaller.unmarshal(configurationFile);
                 LOG.debug("configuration unmarshalling succeeded");
-                return;
             } catch (final IOException e) {
                 LOG.error("failed to close configuration schema stream", e);
+            } catch (final JAXBException | SAXException e) {
+	            LOG.error("failed to parse configuration", e);
+	            throw new IllegalStateException("could not parse configuration at path: " + configurationFile.getAbsolutePath());
             }
-
-            throw new IllegalStateException("could not parse configuration from path: " + configurationFile.getAbsolutePath());
         }
 
     }
