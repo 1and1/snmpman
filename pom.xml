@@ -282,6 +282,11 @@
                                     <directory>/opt/snmpman/etc/devices</directory>
                                 </mapping>
 
+                                <mapping>
+                                    <directory>/var/log/snmpman</directory>
+                                    <filemode>0777</filemode>
+                                </mapping>
+
                                 <!-- copy binary -->
                                 <mapping>
                                     <sources>
@@ -300,7 +305,7 @@
                                             <destination>snmpman.jar</destination>
                                         </source>
                                     </sources>
-                                    <directory>/opt/snmpman/bin</directory>
+                                    <directory>/opt/snmpman/lib</directory>
                                 </mapping>
 
                                 <!-- copy configuration -->
