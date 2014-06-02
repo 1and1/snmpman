@@ -4,7 +4,7 @@
 
     <!-- cpu.load -->
     <binding OID=".1.3.6.1.4.1.9.2.1.56">
-        <modifier modifierClass="com.oneandone.network.snmpman.modifier.Gauge32Modifier">
+        <modifier modifierClass="com.oneandone.network.snmpman.modifier.Integer32Modifier">
             <param name="minimum" value="0"/>
             <param name="maximum" value="100"/>
             <param name="minimumStep" value="0"/>
@@ -14,7 +14,7 @@
 
     <!-- cpu.avg1 -->
     <binding OID=".1.3.6.1.4.1.9.2.1.57">
-        <modifier modifierClass="com.oneandone.network.snmpman.modifier.Gauge32Modifier">
+        <modifier modifierClass="com.oneandone.network.snmpman.modifier.Integer32Modifier">
             <param name="minimum" value="0"/>
             <param name="maximum" value="100"/>
             <param name="minimumStep" value="0"/>
@@ -24,7 +24,7 @@
 
     <!-- cpu.avg5 -->
     <binding OID=".1.3.6.1.4.1.9.2.1.58">
-        <modifier modifierClass="com.oneandone.network.snmpman.modifier.Gauge32Modifier">
+        <modifier modifierClass="com.oneandone.network.snmpman.modifier.Integer32Modifier">
             <param name="minimum" value="0"/>
             <param name="maximum" value="100"/>
             <param name="minimumStep" value="0"/>
