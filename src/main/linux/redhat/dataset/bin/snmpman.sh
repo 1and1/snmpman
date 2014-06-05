@@ -5,27 +5,7 @@
 # The main class
 readonly MAIN_CLASS="com.oneandone.network.snmpman.Snmpman"
 
-cygwin=false;
-darwin=false;
-linux=false;
-case "`uname`" in
-    CYGWIN*)
-        cygwin=true
-        ;;
-    Darwin*)
-        darwin=true
-        ;;
-    Linux)
-        linux=true
-        ;;
-esac
-
-if ${cygwin} ; then
-    [ -n "${SNMPMAN_HOME}" ] &&
-        SNMPMAN_HOME=`cygpath --unix "${SNMPMAN_HOME}"`
-    [ -n "${JAVA_HOME}" ] &&
-        JAVA_HOME=`cygpath --unix "${JAVA_HOME}"`
-fi
+[ -r "/etc/sysconfig/snmpman" ] && . "/etc/sysconfig/snmpman"
 
 if [ "x${SNMPMAN_HOME}" = "x" ]; then
     if [ -d "/opt/snmpman" ]; then
@@ -58,4 +38,4 @@ elif [ "${ARGS}" != *-Dlog4j.configuration* ] && [ -f /opt/snmpman/etc/log4j.pro
     LOG_PARAMETER="-Dlog4j.configuration=file:${SNMPMAN_HOME}/etc/log4j.properties"
 fi
 
-eval \"${JAVA}\" "${LOG_PARAMETER}" -jar "${SNMPMAN_HOME}/lib/snmpman.jar" "${ARGS}"
+eval \"${JAVA}\" ${JAVA_OPTS} "${LOG_PARAMETER}" -jar "${SNMPMAN_HOME}/lib/snmpman.jar" "${ARGS}"
