@@ -411,8 +411,8 @@ public class SnmpmanAgent extends BaseAgent {
                 new Integer32(StorageType.readOnly),                                // storage type
                 new Integer32(RowStatus.active)                                     // row status
         };
-        final MOTableRow row = snmpCommunityMIB.getSnmpCommunityEntry().createRow(new OctetString("public2public").toSubIndex(true), com2sec);
-        //noinspection unchecked
+
+        final SnmpCommunityMIB.SnmpCommunityEntryRow row = snmpCommunityMIB.getSnmpCommunityEntry().createRow(new OctetString("public2public").toSubIndex(true), com2sec);
         snmpCommunityMIB.getSnmpCommunityEntry().addRow(row);
     }
 }
