@@ -13,7 +13,6 @@ import org.slf4j.LoggerFactory;
 import org.snmp4j.TransportMapping;
 import org.snmp4j.agent.*;
 import org.snmp4j.agent.io.ImportModes;
-import org.snmp4j.agent.mo.MOTableRow;
 import org.snmp4j.agent.mo.snmp.*;
 import org.snmp4j.agent.security.MutableVACM;
 import org.snmp4j.mp.MPv3;
