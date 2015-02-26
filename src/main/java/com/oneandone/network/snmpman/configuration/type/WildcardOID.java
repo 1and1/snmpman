@@ -1,6 +1,7 @@
-package com.oneandone.network.snmpman.configuration;
+package com.oneandone.network.snmpman.configuration.type;
 
 import com.google.common.base.Preconditions;
+import lombok.EqualsAndHashCode;
 import org.snmp4j.smi.OID;
 
 /**
@@ -13,6 +14,7 @@ import org.snmp4j.smi.OID;
  *
  * @author Johann Böhler
  */
+@EqualsAndHashCode
 public class WildcardOID {
 
     /**
@@ -70,22 +72,5 @@ public class WildcardOID {
         } else {
             return startsWith.toDottedString() + ".*." + endsWith.toDottedString();
         }
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-
-        final WildcardOID that = (WildcardOID) o;
-        return !(endsWith != null ? !endsWith.equals(that.endsWith) : that.endsWith != null) && startsWith.equals(that.startsWith);
-
-    }
-
-    @Override
-    public int hashCode() {
-        int result = startsWith.hashCode();
-        result = 31 * result + (endsWith != null ? endsWith.hashCode() : 0);
-        return result;
     }
 }

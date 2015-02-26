@@ -1,7 +1,8 @@
 package com.oneandone.network.snmpman.configuration.modifier;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.oneandone.network.snmpman.configuration.WildcardOID;
+import com.oneandone.network.snmpman.configuration.type.ModifierProperties;
+import com.oneandone.network.snmpman.configuration.type.WildcardOID;
 import org.snmp4j.smi.OID;
 import org.snmp4j.smi.Variable;
 
@@ -15,7 +16,7 @@ public class Modifier<T extends Variable> implements VariableModifier<T> {
 
     public Modifier(@JsonProperty("oid") final String oid,
                     @JsonProperty("class") final String myClass,
-                    @JsonProperty("properties") final Properties properties) {
+                    @JsonProperty("properties") final ModifierProperties properties) {
         this.oid = new WildcardOID(oid);
 
         try {

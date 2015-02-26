@@ -16,6 +16,8 @@ repositories {
     }
 }
 
+test.useTestNG()
+
 dependencies {
     compile group: 'com.google.guava', name: 'guava', version: '18.0'
     compile group: 'args4j', name: 'args4j', version: '2.0.29'

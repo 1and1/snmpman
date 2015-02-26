@@ -1,10 +1,10 @@
 package com.oneandone.network.snmpman.configuration.modifier;
 
+import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
+import com.google.common.primitives.UnsignedInteger;
+import com.oneandone.network.snmpman.configuration.type.ModifierProperties;
 import org.snmp4j.smi.UnsignedInteger32;
-
-import java.util.Map;
-import java.util.Properties;
 
 /**
  * This modifier has all utility methods to construct for unsigned integer variable modifiers.
@@ -26,24 +26,19 @@ abstract class AbstractIntegerModifier<T extends UnsignedInteger32> implements V
     protected Long maximumStep;
 
     @Override
-    public void init(final Properties properties) {
-        Preconditions.checkArgument(properties.containsKey("minimum") && properties.get("minimum") instanceof Number, "minimum not set or not a number");
-        Preconditions.checkArgument(properties.containsKey("maximum") && properties.get("maximum") instanceof Number, "maximum not set or not a number");
-        Preconditions.checkArgument(properties.containsKey("minimumStep") && properties.get("minimumStep") instanceof Number, "minimum step not set or not a number");
-        Preconditions.checkArgument(properties.containsKey("maximumStep") && properties.get("maximumStep") instanceof Number, "maximum step not set or not a number");
-
+    public void init(final ModifierProperties properties) {
         try {
-            this.minimum = ((Number) properties.get("minimum")).longValue();
-            this.maximum = ((Number) properties.get("maximum")).longValue();
+            this.minimum = Optional.fromNullable(properties.getLong("minimum")).or(0L);
+            this.maximum = Optional.fromNullable(properties.getLong("maximum")).or(UnsignedInteger.MAX_VALUE.longValue());
 
-            this.minimumStep = ((Number) properties.get("minimumStep")).longValue();
-            this.maximumStep = ((Number) properties.get("maximumStep")).longValue();
+            this.minimumStep = Optional.fromNullable(properties.getLong("minimumStep")).or(0L);
+            this.maximumStep = Optional.fromNullable(properties.getLong("maximumStep")).or(1L);
 
             Preconditions.checkArgument(minimum >= 0, "minimum should not be negative");
             Preconditions.checkArgument(maximum >= 0, "maximum should not be negative");
 
-            Preconditions.checkArgument(minimum <= 4294967295L, "minimum should not exceed 2^32-1 (4294967295 decimal)");
-            Preconditions.checkArgument(maximum <= 4294967295L, "maximum should not exceed 2^32-1 (4294967295 decimal)");
+            Preconditions.checkArgument(minimum <= UnsignedInteger.MAX_VALUE.longValue(), "minimum should not exceed 2^32-1 (4294967295 decimal)");
+            Preconditions.checkArgument(maximum <= UnsignedInteger.MAX_VALUE.longValue(), "maximum should not exceed 2^32-1 (4294967295 decimal)");
         } catch (final NumberFormatException e) {
             throw new IllegalArgumentException("one of the parameters exceeds the legal long value range", e);
         }

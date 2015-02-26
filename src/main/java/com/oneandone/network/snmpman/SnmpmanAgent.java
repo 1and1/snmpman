@@ -1,12 +1,9 @@
 package com.oneandone.network.snmpman;
 
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.google.common.primitives.UnsignedLong;
+import com.oneandone.network.snmpman.configuration.AgentConfiguration;
 import com.oneandone.network.snmpman.configuration.Device;
 import com.oneandone.network.snmpman.configuration.modifier.ModifiedVariable;
-import com.oneandone.network.snmpman.configuration.modifier.Modifier;
 import com.oneandone.network.snmpman.configuration.modifier.VariableModifier;
 import com.oneandone.network.snmpman.snmp.MOGroup;
 import lombok.extern.slf4j.Slf4j;
@@ -35,87 +32,39 @@ import java.util.stream.Collectors;
 @Slf4j
 public class SnmpmanAgent extends BaseAgent {
 
-    private static final DeviceFactory DEVICE_FACTORY = new DeviceFactory();
-
-    public static class DeviceFactory {
-        public static final Device DEFAULT_DEVICE = new Device("default", new Modifier[0]);
-        
-        private final Map<File, Device> devices = new HashMap<>(1);
-
-        public Device getDevice(final File path) {
-            if (path == null) {
-                return DEFAULT_DEVICE;
-            }
-            
-            if (devices.containsKey(path)) {
-                return devices.get(path);
-            } else {
-                try {
-                    final ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
-                    final Device device = mapper.readValue(path, Device.class);
-                    devices.put(path, device);
-                    return device;
-                } catch (final IOException e) {
-                    log.error("could not load device in path \"" + path.getAbsolutePath() + "\"", e);
-                    return DEFAULT_DEVICE;
-                }
-            }
-        }
-    }
-
     /** The pattern of variable bindings in a walk file. */
     private static final Pattern VARIABLE_BINDING_PATTERN = Pattern.compile("(((iso)?\\.[0-9]+)+) = ((([a-zA-Z0-9-]+): (.*)$)|(\"\"$))");
 
-    private final Device device; // TODO e.g. cisco
-    private final File walkFile; // TODO real walk: /opt/snmpman/...
-
-    private Address address; // TODO e.g. 127.0.0.1/8080
-    private final String community; // TODO e.g. 'public'
-
-    private final String id;
-
+    private final AgentConfiguration configuration;
+    
     /** The list of managed object groups. */
     private final List<MOGroup> groups = new ArrayList<>(0);
 
-    public SnmpmanAgent(@JsonProperty(value = "name", required = false) final String name,
-                        @JsonProperty(value = "device", required = false) final File deviceConfiguration,
-                        @JsonProperty(value = "walk", required = true) final File walkFile,
-                        @JsonProperty(value = "ip", required = true) final String ip,
-                        @JsonProperty(value = "port", required = true) final int port,
-                        @JsonProperty(value = "device", defaultValue = "public") final String community) {
-        super(SnmpmanAgent.getBootCounterFile(name, ip, port, walkFile), SnmpmanAgent.getConfigurationFile(name, ip, port, walkFile), new CommandProcessor(new OctetString(MPv3.createLocalEngineID())));
-        this.device = DEVICE_FACTORY.getDevice(deviceConfiguration);
-        this.walkFile = walkFile;
-
-        this.address = GenericAddress.parse(ip + "/" + port);
-        this.community = community;
-
-        this.id = com.google.common.base.Optional.fromNullable(name).or(ip + ":" + port);
+    public SnmpmanAgent(final AgentConfiguration configuration) {
+        super(SnmpmanAgent.getBootCounterFile(configuration), SnmpmanAgent.getConfigurationFile(configuration), new CommandProcessor(new OctetString(MPv3.createLocalEngineID())));
+        this.configuration = configuration;
     }
-
 
     /**
      * Returns the boot-counter file for the specified agent.
      * <p>
-     * This file will be created in the same directory as the {@link com.oneandone.network.snmpman.configuration.Agent#getWalk()} file.
+     * This file will be created in the same directory as the {@link com.oneandone.network.snmpman.configuration.AgentConfiguration#getWalk()} file.
      *
      * @return the boot-counter file
      */
-    private static File getBootCounterFile(final String name, final String ip, final int port, final File walkFile) {
-        final String id = com.google.common.base.Optional.fromNullable(name).or(ip + ":" + port);
-        return new File(walkFile.getParentFile(), SnmpmanAgent.encode(id + ".BC.cfg"));
+    private static File getBootCounterFile(final AgentConfiguration configuration) {
+        return new File(configuration.getWalk().getParentFile(), SnmpmanAgent.encode(configuration.getName() + ".BC.cfg"));
     }
 
     /**
      * Returns the configuration file for the specified agent.
      * <p>
-     * This file will be created in the same directory as the {@link com.oneandone.network.snmpman.configuration.Agent#getWalk()} file.
+     * This file will be created in the same directory as the {@link com.oneandone.network.snmpman.configuration.AgentConfiguration#getWalk()} file.
      *
      * @return the configuration file
      */
-    private static File getConfigurationFile(final String name, final String ip, final int port, final File walkFile) {
-        final String id = com.google.common.base.Optional.fromNullable(name).or(ip + ":" + port);
-        return new File(walkFile.getParentFile(), SnmpmanAgent.encode(id + ".Config.cfg"));
+    private static File getConfigurationFile(final AgentConfiguration configuration) {
+        return new File(configuration.getWalk().getParentFile(), SnmpmanAgent.encode(configuration.getName() + ".Config.cfg"));
     }
 
     /**
@@ -232,16 +181,16 @@ public class SnmpmanAgent extends BaseAgent {
 
     @Override
     protected void initTransportMappings() throws IOException {
-        log.trace("starting to initialize transport mappings for agent \"{}\"", id);
+        log.trace("starting to initialize transport mappings for agent \"{}\"", configuration.getName());
         transportMappings = new TransportMapping[1];
-        TransportMapping tm = TransportMappings.getInstance().createTransportMapping(address);
+        TransportMapping tm = TransportMappings.getInstance().createTransportMapping(configuration.getAddress());
         transportMappings[0] = tm;
     }
 
     @Override
     protected void registerManagedObjects() {
-        log.trace("registering managed objects for agent \"{}\"", id);
-        try (final FileReader fileReader = new FileReader(walkFile);
+        log.trace("registering managed objects for agent \"{}\"", configuration.getName());
+        try (final FileReader fileReader = new FileReader(configuration.getWalk());
              final BufferedReader reader = new BufferedReader(fileReader)) {
 
             final Map<OID, Variable> bindings = new HashMap<>();
@@ -266,11 +215,11 @@ public class SnmpmanAgent extends BaseAgent {
                     bindings.put(oid, variable);
                     log.trace("added binding with oid \"{}\" and variable \"{}\"", oid, variable);
                 } else {
-                    log.warn("could not parse line \"{}\" of walk file {}", line, walkFile.getAbsolutePath());
+                    log.warn("could not parse line \"{}\" of walk file {}", line, configuration.getWalk().getAbsolutePath());
                 }
             }
 
-            final SortedMap<OID, Variable> variableBindings = this.getVariableBindings(device, bindings);
+            final SortedMap<OID, Variable> variableBindings = this.getVariableBindings(configuration.getDevice(), bindings);
 
             final OctetString ctx = new OctetString();
             final List<OID> roots = SnmpmanAgent.getRoots(variableBindings);
@@ -304,9 +253,9 @@ public class SnmpmanAgent extends BaseAgent {
                 }
             }
         } catch (final FileNotFoundException e) {
-            log.error("walk file {} not found", walkFile.getAbsolutePath());
+            log.error("walk file {} not found", configuration.getWalk().getAbsolutePath());
         } catch (final IOException e) {
-            log.error("could not read walk file " + walkFile.getAbsolutePath(), e);
+            log.error("could not read walk file " + configuration.getWalk().getAbsolutePath(), e);
         } catch (final DuplicateRegistrationException e) {
             log.error("duplicate registrations are not allowed", e);
         }
@@ -322,7 +271,7 @@ public class SnmpmanAgent extends BaseAgent {
      * @return the variable bindings for the specified device configuration
      */
     private SortedMap<OID, Variable> getVariableBindings(final Device device, final Map<OID, Variable> bindings) {
-        log.trace("get variable bindings for agent \"{}\"", id);
+        log.trace("get variable bindings for agent \"{}\"", configuration.getName());
         final SortedMap<OID, Variable> result = new TreeMap<>();
 
         // TODO array of modifiers
@@ -338,7 +287,7 @@ public class SnmpmanAgent extends BaseAgent {
                 try {
                     result.put(binding.getKey(), new ModifiedVariable(binding.getValue(), modifiers));
                 } catch (final ClassCastException e) {
-                    log.error("could not create variable binding for " + binding.getKey().toString() + " and file " + walkFile.getAbsolutePath(), e);
+                    log.error("could not create variable binding for " + binding.getKey().toString() + " and file " + configuration.getWalk().getAbsolutePath(), e);
                 }
             }
 
@@ -356,21 +305,21 @@ public class SnmpmanAgent extends BaseAgent {
 
     @Override
     protected void addUsmUser(final USM usm) {
-        log.trace("adding usm user {} for agent \"{}\"", usm.toString(), id);
+        log.trace("adding usm user {} for agent \"{}\"", usm.toString(), configuration.getName());
         // do nothing here
     }
 
     @Override
     protected void addNotificationTargets(final SnmpTargetMIB snmpTargetMIB, final SnmpNotificationMIB snmpNotificationMIB) {
-        log.trace("adding notification targets {}, {} for agent \"{}\"", snmpTargetMIB.toString(), snmpNotificationMIB.toString(), id);
+        log.trace("adding notification targets {}, {} for agent \"{}\"", snmpTargetMIB.toString(), snmpNotificationMIB.toString(), configuration.getName());
         // do nothing here
     }
 
     @Override
     protected void addViews(final VacmMIB vacmMIB) {
-        log.trace("adding views in the vacm MIB {} for agent \"{}\"", vacmMIB.toString(), id);
-        vacmMIB.addGroup(SecurityModel.SECURITY_MODEL_SNMPv1, new OctetString(community), new OctetString("v1v2group"), StorageType.nonVolatile);
-        vacmMIB.addGroup(SecurityModel.SECURITY_MODEL_SNMPv2c, new OctetString(community), new OctetString("v1v2group"), StorageType.nonVolatile);
+        log.trace("adding views in the vacm MIB {} for agent \"{}\"", vacmMIB.toString(), configuration.getName());
+        vacmMIB.addGroup(SecurityModel.SECURITY_MODEL_SNMPv1, new OctetString(configuration.getCommunity()), new OctetString("v1v2group"), StorageType.nonVolatile);
+        vacmMIB.addGroup(SecurityModel.SECURITY_MODEL_SNMPv2c, new OctetString(configuration.getCommunity()), new OctetString("v1v2group"), StorageType.nonVolatile);
         vacmMIB.addGroup(SecurityModel.SECURITY_MODEL_USM, new OctetString("SHADES"), new OctetString("v3group"), StorageType.nonVolatile);
         vacmMIB.addGroup(SecurityModel.SECURITY_MODEL_USM, new OctetString("TEST"), new OctetString("v3test"), StorageType.nonVolatile);
         vacmMIB.addGroup(SecurityModel.SECURITY_MODEL_USM, new OctetString("SHA"), new OctetString("v3restricted"), StorageType.nonVolatile);
@@ -398,10 +347,10 @@ public class SnmpmanAgent extends BaseAgent {
 
     @Override
     protected void addCommunities(final SnmpCommunityMIB snmpCommunityMIB) {
-        log.trace("adding communities {} for agent \"{}\"", snmpCommunityMIB.toString(), id);
+        log.trace("adding communities {} for agent \"{}\"", snmpCommunityMIB.toString(), configuration.getName());
         final Variable[] com2sec = new Variable[]{
-                new OctetString(community),                 // community name
-                new OctetString(community),                 // security name
+                new OctetString(configuration.getCommunity()),                 // community name
+                new OctetString(configuration.getCommunity()),                 // security name
                 getAgent().getContextEngineID(),                                    // local engine ID
                 new OctetString(),                                                  // default context name
                 new OctetString(),                                                  // transport tag

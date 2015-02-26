@@ -17,8 +17,8 @@ public class TimeTicksModifier implements VariableModifier<TimeTicks> {
     public TimeTicks modify(final TimeTicks variable) {
         TimeTicks timeTicks = new TimeTicks();
         final long timeTicksInMilliseconds = variable.toMilliseconds();
-        final long uptime = (System.currentTimeMillis() - initTime) + timeTicksInMilliseconds;
-        timeTicks.fromMilliseconds(timeTicksInMilliseconds + uptime);
+        final long upTime = (System.currentTimeMillis() - initTime) + timeTicksInMilliseconds;
+        timeTicks.fromMilliseconds(timeTicksInMilliseconds + upTime);
         return timeTicks;
     }
 }

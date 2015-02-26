@@ -3,6 +3,7 @@ package com.oneandone.network.snmpman.configuration.modifier;
 import com.google.common.base.Preconditions;
 import com.google.common.primitives.UnsignedLong;
 
+import com.oneandone.network.snmpman.configuration.type.ModifierProperties;
 import org.snmp4j.smi.Counter64;
 
 import java.util.Map;
@@ -36,7 +37,7 @@ public class Counter64Modifier implements VariableModifier<Counter64> {
     private UnsignedLong maximumStep;
 
     @Override
-    public void init(final Properties properties) {
+    public void init(final ModifierProperties properties) {
        /* Preconditions.checkArgument(properties.containsKey("minimum") && AbstractIntegerModifier.isNumeric(properties.get("minimum")), "minimum not set or not a number");
         Preconditions.checkArgument(properties.containsKey("maximum") && AbstractIntegerModifier.isNumeric(properties.get("maximum")), "maximum not set or not a number");
         Preconditions.checkArgument(properties.containsKey("minimumStep") && AbstractIntegerModifier.isNumeric(properties.get("minimumStep")), "minimum step not set or not a number");

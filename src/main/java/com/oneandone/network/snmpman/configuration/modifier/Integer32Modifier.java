@@ -1,6 +1,7 @@
 package com.oneandone.network.snmpman.configuration.modifier;
 
 import com.google.common.base.Preconditions;
+import com.oneandone.network.snmpman.configuration.type.ModifierProperties;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.snmp4j.smi.Integer32;
@@ -41,7 +42,7 @@ public class Integer32Modifier implements VariableModifier<Integer32> {
     protected Integer maximumStep;
 
     @Override
-    public void init(final Properties properties) {
+    public void init(final ModifierProperties properties) {
         /*Preconditions.checkArgument(properties.containsKey("minimum") && AbstractIntegerModifier.isNumeric(properties.get("minimum")), "minimum not set or not a number");
         Preconditions.checkArgument(properties.containsKey("maximum") && AbstractIntegerModifier.isNumeric(properties.get("maximum")), "maximum not set or not a number");
         Preconditions.checkArgument(properties.containsKey("minimumStep") && AbstractIntegerModifier.isNumeric(properties.get("minimumStep")), "minimum step not set or not a number");
