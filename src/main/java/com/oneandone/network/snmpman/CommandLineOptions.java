@@ -5,6 +5,7 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.google.common.base.Preconditions;
 import com.oneandone.network.snmpman.configuration.AgentConfiguration;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.kohsuke.args4j.Option;
 
 import java.io.File;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 /** The command-line options for this application. */
+@Slf4j
 public final class CommandLineOptions {
 
     /** The {@code Snmpman} configuration. */
@@ -34,6 +36,7 @@ public final class CommandLineOptions {
         Preconditions.checkNotNull(configurationFile, "the configuration file may not be null");
         Preconditions.checkArgument(configurationFile.exists() && configurationFile.isFile(), "configuration does not exist or is not a file");
 
+        log.debug("started with configuration in path {}", configurationFile.getAbsolutePath());
         try {
             final ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
             final AgentConfiguration[] configurations = mapper.readValue(configurationFile, AgentConfiguration[].class);
@@ -41,6 +44,7 @@ public final class CommandLineOptions {
             this.agents = Collections.unmodifiableList(
                     Arrays.stream(configurations).map(configuration -> new SnmpmanAgent(configuration)).collect(Collectors.toList())
             );
+            log.info("configuration loaded for all agents");
         } catch (final IOException e) {
             throw new IllegalStateException("could not parse configuration at path: " + configurationFile.getAbsolutePath(), e);
         }
