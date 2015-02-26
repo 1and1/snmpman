@@ -1,4 +1,4 @@
-package com.oneandone.network.snmpman.jaxb;
+package com.oneandone.network.snmpman.configuration;
 
 import com.google.common.base.Preconditions;
 import org.snmp4j.smi.OID;
@@ -44,17 +44,6 @@ public class WildcardOID {
             this.startsWith = new OID(oid);
             this.endsWith = null;
         }
-    }
-
-    /**
-     * Constructs a new instance of this class.
-     *
-     * @param startsWith the first part of the wildcard {@code OID} (before the "{@code *}" character)
-     * @param endsWith   the second part of the wildcard {@code OID} (after the "{@code *}" character)
-     */
-    public WildcardOID(final OID startsWith, final OID endsWith) {
-        this.startsWith = startsWith;
-        this.endsWith = endsWith;
     }
 
     /**

@@ -8,4 +8,4 @@
  *
  * @see com.oneandone.network.snmpman.configuration.device.DeviceType
  */
-package com.oneandone.network.snmpman.modifier;
+package com.oneandone.network.snmpman.configuration.modifier;

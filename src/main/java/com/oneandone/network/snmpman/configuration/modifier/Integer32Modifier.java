@@ -1,19 +1,19 @@
-package com.oneandone.network.snmpman.modifier;
+package com.oneandone.network.snmpman.configuration.modifier;
 
 import com.google.common.base.Preconditions;
-import com.oneandone.network.snmpman.configuration.device.AbstractModifier;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.snmp4j.smi.Integer32;
 
-import java.util.List;
+import java.util.Map;
+import java.util.Properties;
 
 /**
  * TODO
  *
  * @author Johann Böhler
  */
-public class Integer32Modifier extends VariableModifier<Integer32> {
+public class Integer32Modifier implements VariableModifier<Integer32> {
 
     /**
      * The logging instance for this class.
@@ -23,48 +23,41 @@ public class Integer32Modifier extends VariableModifier<Integer32> {
     /**
      * The minimum allowed number for the resulting modified variable.
      */
-    protected final Integer minimum;
+    protected Integer minimum;
 
     /**
      * The maximum allowed number for the resulting modified variable.
      */
-    protected final Integer maximum;
+    protected Integer maximum;
 
     /**
      * The minimal step by which a variable will be incremented.
      */
-    protected final Integer minimumStep;
+    protected Integer minimumStep;
 
     /**
      * The maximal step by which a variable will be incremented.
      */
-    protected final Integer maximumStep;
+    protected Integer maximumStep;
 
-    /**
-     * Constructs a new instance of this class.
-     *
-     * @param params the parameter for this modifier
-     */
-    public Integer32Modifier(List<AbstractModifier.Param> params) {
-        super(params);
-
-        Preconditions.checkArgument(this.parameter.containsKey("minimum") && AbstractIntegerModifier.isNumeric(this.parameter.get("minimum")), "minimum not set or not a number");
-        Preconditions.checkArgument(this.parameter.containsKey("maximum") && AbstractIntegerModifier.isNumeric(this.parameter.get("maximum")), "maximum not set or not a number");
-        Preconditions.checkArgument(this.parameter.containsKey("minimumStep") && AbstractIntegerModifier.isNumeric(this.parameter.get("minimumStep")), "minimum step not set or not a number");
-        Preconditions.checkArgument(this.parameter.containsKey("maximumStep") && AbstractIntegerModifier.isNumeric(this.parameter.get("maximumStep")), "maximum step not set or not a number");
+    @Override
+    public void init(final Properties properties) {
+        /*Preconditions.checkArgument(properties.containsKey("minimum") && AbstractIntegerModifier.isNumeric(properties.get("minimum")), "minimum not set or not a number");
+        Preconditions.checkArgument(properties.containsKey("maximum") && AbstractIntegerModifier.isNumeric(properties.get("maximum")), "maximum not set or not a number");
+        Preconditions.checkArgument(properties.containsKey("minimumStep") && AbstractIntegerModifier.isNumeric(properties.get("minimumStep")), "minimum step not set or not a number");
+        Preconditions.checkArgument(properties.containsKey("maximumStep") && AbstractIntegerModifier.isNumeric(properties.get("maximumStep")), "maximum step not set or not a number");
 
         try {
-            this.minimum = Integer.parseInt(this.parameter.get("minimum"));
-            this.maximum = Integer.parseInt(this.parameter.get("maximum"));
+            this.minimum = Integer.parseInt(properties.get("minimum"));
+            this.maximum = Integer.parseInt(properties.get("maximum"));
 
-            this.minimumStep = Integer.parseInt(this.parameter.get("minimumStep"));
-            this.maximumStep = Integer.parseInt(this.parameter.get("maximumStep"));
+            this.minimumStep = Integer.parseInt(properties.get("minimumStep"));
+            this.maximumStep = Integer.parseInt(properties.get("maximumStep"));
         } catch (final NumberFormatException e) {
-            LOG.error("one of the parameters in {} for this modifier instance exceeds the long range between {} and {}", this.parameter, Long.MIN_VALUE, Long.MAX_VALUE);
             throw new IllegalArgumentException("one of the parameters exceeds the legal long value range", e);
-        }
+        }*/
     }
-
+    
     /**
      * Increments the current value by a random number between the minimum and maximum step.
      * <p/>

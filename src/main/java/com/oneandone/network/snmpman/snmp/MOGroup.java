@@ -112,8 +112,6 @@ public class MOGroup implements ManagedObject {
         }
         if (first != null) {
             final Variable variable = variableBindings.get(first);
-            // TODO remove try / catch if no more errors occur
-            // TODO add configuration check with types though (e.g. UInt32 == UInt32 Modifier?)
             try {
                 if (variable == null) {
                     request.getVariableBinding().setVariable(Null.noSuchInstance);

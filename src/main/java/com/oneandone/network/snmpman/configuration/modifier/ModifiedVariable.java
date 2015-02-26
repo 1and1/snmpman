@@ -1,4 +1,4 @@
-package com.oneandone.network.snmpman.modifier;
+package com.oneandone.network.snmpman.configuration.modifier;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
