@@ -66,14 +66,14 @@ public class AgentConfiguration {
                               @JsonProperty(value = "walk", required = true) final File walk,
                               @JsonProperty(value = "ip", required = true) final String ip,
                               @JsonProperty(value = "port", required = true) final int port,
-                              @JsonProperty(value = "community", defaultValue = "public") final String community) {
+                              @JsonProperty(value = "community", required = false) final String community) {
         this.name = Optional.fromNullable(name).or(ip + ":" + port);
         this.address = GenericAddress.parse(ip + "/" + port);
         
         this.deviceConfiguration = deviceConfiguration;
         this.walk = walk;
 
-        this.community = community;
+        this.community = Optional.fromNullable(community).or("public");
     }
 
     /**

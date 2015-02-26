@@ -18,6 +18,7 @@ import org.snmp4j.security.SecurityModel;
 import org.snmp4j.security.USM;
 import org.snmp4j.smi.*;
 import org.snmp4j.transport.TransportMappings;
+import org.snmp4j.util.ThreadPool;
 
 import java.io.*;
 import java.net.URLEncoder;
@@ -42,6 +43,7 @@ public class SnmpmanAgent extends BaseAgent {
 
     public SnmpmanAgent(final AgentConfiguration configuration) {
         super(SnmpmanAgent.getBootCounterFile(configuration), SnmpmanAgent.getConfigurationFile(configuration), new CommandProcessor(new OctetString(MPv3.createLocalEngineID())));
+        this.agent.setWorkerPool(ThreadPool.create("RequestPool", 3));
         this.configuration = configuration;
     }
 

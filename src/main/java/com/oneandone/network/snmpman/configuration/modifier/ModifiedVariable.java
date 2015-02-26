@@ -1,5 +1,7 @@
 package com.oneandone.network.snmpman.configuration.modifier;
 
+import lombok.EqualsAndHashCode;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.snmp4j.asn1.BERInputStream;
@@ -12,24 +14,14 @@ import java.util.List;
 
 /**
  * A modified variable will change it's value on every value call.
- *
- * @author Johann Böhler
  */
+@Slf4j @EqualsAndHashCode(of = "variable")
 public class ModifiedVariable implements Variable, Cloneable {
 
-    /**
-     * The logging instance for this class.
-     */
-    private static final Logger LOG = LoggerFactory.getLogger(ModifiedVariable.class);
-
-    /**
-     * The list of modifiers that modify the {@link #variable}.
-     */
+    /** The list of modifiers that modify the {@link #variable}. */
     private final List<VariableModifier> modifiers;
 
-    /**
-     * The variable.
-     */
+    /** The variable. */
     private Variable variable;
 
     /**
@@ -46,27 +38,14 @@ public class ModifiedVariable implements Variable, Cloneable {
     }
 
     @Override
-    public boolean equals(final Object o) {
-        if (o instanceof ModifiedVariable) {
-            return variable.equals(((ModifiedVariable) o).variable);
-        }
-        return variable.equals(o);
-    }
-
-    @Override
     public int compareTo(final Variable variable) {
         return variable.compareTo(variable);
-    }
-
-    @Override
-    public int hashCode() {
-        return variable.hashCode();
     }
 
     @SuppressWarnings({"CloneDoesntDeclareCloneNotSupportedException", "CloneDoesntCallSuperClone", "unchecked"})
     @Override
     public Object clone() {
-        LOG.trace("variable {} will be cloned", variable);
+        log.trace("variable {} will be cloned", variable);
         for (final VariableModifier modifier : modifiers) {
             this.variable = modifier.modify(variable);
         }
@@ -75,37 +54,37 @@ public class ModifiedVariable implements Variable, Cloneable {
 
     @Override
     public int getSyntax() {
-        LOG.trace("syntax of variable {} will be retrieved", variable);
+        log.trace("syntax of variable {} will be retrieved", variable);
         return variable.getSyntax();
     }
 
     @Override
     public boolean isException() {
-        LOG.trace("asking if variable {} is an exception", variable);
+        log.trace("asking if variable {} is an exception", variable);
         return variable.isException();
     }
 
     @Override
     public String toString() {
-        LOG.trace("toString() called for variable {}", variable);
+        log.trace("toString() called for variable {}", variable);
         return variable.toString();
     }
 
     @Override
     public int toInt() {
-        LOG.trace("integer value of variable {} will be returned", variable);
+        log.trace("integer value of variable {} will be returned", variable);
         return variable.toInt();
     }
 
     @Override
     public long toLong() {
-        LOG.trace("long value of variable {} will be returned", variable);
+        log.trace("long value of variable {} will be returned", variable);
         return variable.toLong();
     }
 
     @Override
     public String getSyntaxString() {
-        LOG.trace("syntax string of variable {} will be retrieved", variable);
+        log.trace("syntax string of variable {} will be retrieved", variable);
         return variable.getSyntaxString();
     }
 
@@ -121,31 +100,31 @@ public class ModifiedVariable implements Variable, Cloneable {
 
     @Override
     public boolean isDynamic() {
-        LOG.trace("asking if variable {} is dynamic", variable);
+        log.trace("asking if variable {} is dynamic", variable);
         return variable.isDynamic();
     }
 
     @Override
     public int getBERLength() {
-        LOG.trace("BER length of variable {} will be retrieved", variable);
+        log.trace("BER length of variable {} will be retrieved", variable);
         return variable.getBERLength();
     }
 
     @Override
     public int getBERPayloadLength() {
-        LOG.trace("BER payload length of variable {} will be retrieved", variable);
+        log.trace("BER payload length of variable {} will be retrieved", variable);
         return variable.getBERPayloadLength();
     }
 
     @Override
     public void decodeBER(final BERInputStream berInputStream) throws IOException {
-        LOG.trace("BER will be decoded for variable {}", variable);
+        log.trace("BER will be decoded for variable {}", variable);
         variable.decodeBER(berInputStream);
     }
 
     @Override
     public void encodeBER(final OutputStream outputStream) throws IOException {
-        LOG.trace("BER will be encoded for variable {}", variable);
+        log.trace("BER will be encoded for variable {}", variable);
         variable.encodeBER(outputStream);
     }
 }

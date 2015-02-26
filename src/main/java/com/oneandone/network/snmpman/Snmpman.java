@@ -38,7 +38,6 @@ public final class Snmpman {
                 agent.execute();
             }
             log.debug("all agents initialized");
-	        
         } catch (final Exception e) {
             if (e.getCause() != null && e.getCause() instanceof UnmarshalException) {
                 System.err.println("Configuration could not be parsed. Check the logs for more information.");

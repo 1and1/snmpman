@@ -14,3 +14,7 @@ target/
 
 # MAC
 .DS_Store
+
+# Temporary execution files
+*.BC.cfg
+*.Config.cfg
