@@ -4,6 +4,9 @@ import com.google.common.base.Preconditions;
 import lombok.EqualsAndHashCode;
 import org.snmp4j.smi.OID;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 /**
  * A wildcard {@code OID} is an {@code OID} that can contain the wildcard character "*".
  * <p/>
@@ -17,6 +20,8 @@ import org.snmp4j.smi.OID;
 @EqualsAndHashCode
 public class WildcardOID {
 
+    private static final Pattern WILDCARD_OID_PATTERN = Pattern.compile("((\\.)?[0-9]+(\\.[0-9]+)*)(\\.\\*)?((\\.[0-9]+)*)");
+    
     /**
      * the first part of the wildcard {@code OID} (before the "{@code *}" character).
      */
@@ -37,14 +42,16 @@ public class WildcardOID {
     public WildcardOID(final String oid) {
         Preconditions.checkNotNull(oid, "oid may not be null");
 
-        if (oid.contains("*")) {
-            final String[] splitted = oid.split("\\.\\*");
-            Preconditions.checkArgument(splitted.length == 2, "oid \"" + oid + "\" contains more than one wildcard character, but only one is allowed");
-            this.startsWith = new OID(splitted[0]);
-            this.endsWith = new OID(splitted[1]);
+        final Matcher matcher = WILDCARD_OID_PATTERN.matcher(oid);
+        if (matcher.matches()) {
+            this.startsWith = new OID(matcher.group(1));
+            if (matcher.group(5).isEmpty()) {
+                this.endsWith = null;
+            } else {
+                this.endsWith = new OID(matcher.group(5));
+            }
         } else {
-            this.startsWith = new OID(oid);
-            this.endsWith = null;
+            throw new IllegalArgumentException("specified oid \"" + oid + "\" is not a valid wildcard");
         }
     }
 
@@ -68,7 +75,7 @@ public class WildcardOID {
     @Override
     public String toString() {
         if (endsWith == null) {
-            return startsWith.toDottedString();
+            return startsWith.toDottedString() + ".*";
         } else {
             return startsWith.toDottedString() + ".*." + endsWith.toDottedString();
         }
