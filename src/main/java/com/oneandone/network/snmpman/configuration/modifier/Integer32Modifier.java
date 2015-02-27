@@ -13,20 +13,16 @@ import org.snmp4j.smi.Integer32;
 public class Integer32Modifier implements VariableModifier<Integer32> {
 
     /** The minimum allowed number for the resulting modified variable. */
-    @Getter
-    private Integer minimum;
+    @Getter private Integer minimum;
 
     /** The maximum allowed number for the resulting modified variable. */
-    @Getter
-    private Integer maximum;
+    @Getter private Integer maximum;
 
     /** The minimal step by which a variable will be incremented. */
-    @Getter
-    private Integer minimumStep;
+    @Getter private Integer minimumStep;
 
     /** The maximal step by which a variable will be incremented. */
-    @Getter
-    private Integer maximumStep;
+    @Getter private Integer maximumStep;
 
     @Override
     public void init(final ModifierProperties properties) {

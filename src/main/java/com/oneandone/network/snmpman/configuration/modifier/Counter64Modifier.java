@@ -12,20 +12,16 @@ import org.snmp4j.smi.Counter64;
 public class Counter64Modifier implements VariableModifier<Counter64> {
 
     /** The minimum allowed number for the resulting modified variable. */
-    @Getter
-    private UnsignedLong minimum;
+    @Getter private UnsignedLong minimum;
 
     /** The maximum allowed number for the resulting modified variable. */
-    @Getter
-    private UnsignedLong maximum;
+    @Getter private UnsignedLong maximum;
 
     /** The minimal step by which a variable will be incremented. */
-    @Getter
-    private UnsignedLong minimumStep;
+    @Getter private UnsignedLong minimumStep;
 
     /** The maximal step by which a variable will be incremented. */
-    @Getter
-    private UnsignedLong maximumStep;
+    @Getter private UnsignedLong maximumStep;
 
     @Override
     public void init(final ModifierProperties properties) {
