@@ -3,6 +3,7 @@ package com.oneandone.network.snmpman.configuration.modifier;
 import com.google.common.base.Optional;
 import com.oneandone.network.snmpman.configuration.type.ModifierProperties;
 import lombok.Getter;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.snmp4j.smi.Integer32;
@@ -12,41 +13,37 @@ import org.snmp4j.smi.Integer32;
  *
  * @author Johann Böhler
  */
+@Slf4j
 public class Integer32Modifier implements VariableModifier<Integer32> {
 
-    /**
-     * The logging instance for this class.
-     */
-    private static final Logger LOG = LoggerFactory.getLogger(Integer32Modifier.class);
-
     /** The minimum allowed number for the resulting modified variable. */
-    @Getter private Integer minimum;
+    @Getter
+    private Integer minimum;
 
     /** The maximum allowed number for the resulting modified variable. */
-    @Getter private Integer maximum;
+    @Getter
+    private Integer maximum;
 
     /** The minimal step by which a variable will be incremented. */
-    @Getter private Integer minimumStep;
+    @Getter
+    private Integer minimumStep;
 
     /** The maximal step by which a variable will be incremented. */
-    @Getter private Integer maximumStep;
+    @Getter
+    private Integer maximumStep;
 
     @Override
     public void init(final ModifierProperties properties) {
-        try {
-            this.minimum = Optional.fromNullable(properties.getInteger("minimum")).or(Integer.MIN_VALUE);
-            this.maximum = Optional.fromNullable(properties.getInteger("maximum")).or(Integer.MAX_VALUE);
+        this.minimum = Optional.fromNullable(properties.getInteger("minimum")).or(Integer.MIN_VALUE);
+        this.maximum = Optional.fromNullable(properties.getInteger("maximum")).or(Integer.MAX_VALUE);
 
-            this.minimumStep = Optional.fromNullable(properties.getInteger("minimumStep")).or(-1);
-            this.maximumStep = Optional.fromNullable(properties.getInteger("maximumStep")).or(1);
-        } catch (final NumberFormatException e) {
-            throw new IllegalArgumentException("one of the parameters exceeds the legal long value range", e);
-        }
+        this.minimumStep = Optional.fromNullable(properties.getInteger("minimumStep")).or(-1);
+        this.maximumStep = Optional.fromNullable(properties.getInteger("maximumStep")).or(1);
     }
-    
+
     /**
      * Increments the current value by a random number between the minimum and maximum step.
-     * <p/>
+     * <p>
      * An overflow can occur and will be considered in the minimum and maximum interval.
      *
      * @param currentValue the current value to modify
@@ -82,7 +79,7 @@ public class Integer32Modifier implements VariableModifier<Integer32> {
     @Override
     public Integer32 modify(final Integer32 variable) {
         final int newValue = this.modify(variable.getValue(), minimum, maximum, minimumStep, maximumStep);
-        LOG.trace("Counter32 variable {} will be tuned to {}", variable.getValue(), newValue);
+        log.trace("Counter32 variable {} will be tuned to {}", variable.getValue(), newValue);
         return new Integer32(newValue);
     }
 }

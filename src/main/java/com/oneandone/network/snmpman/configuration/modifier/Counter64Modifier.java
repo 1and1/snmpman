@@ -1,15 +1,10 @@
 package com.oneandone.network.snmpman.configuration.modifier;
 
 import com.google.common.base.Optional;
-import com.google.common.base.Preconditions;
 import com.google.common.primitives.UnsignedLong;
-
 import com.oneandone.network.snmpman.configuration.type.ModifierProperties;
 import lombok.Getter;
 import org.snmp4j.smi.Counter64;
-
-import java.util.Map;
-import java.util.Properties;
 
 /**
  * This modifier instance modifies {@link Counter64} variables by the {@link #modify(Counter64)} method.
@@ -17,30 +12,30 @@ import java.util.Properties;
 public class Counter64Modifier implements VariableModifier<Counter64> {
 
     /** The minimum allowed number for the resulting modified variable. */
-    @Getter private UnsignedLong minimum;
+    @Getter
+    private UnsignedLong minimum;
 
     /** The maximum allowed number for the resulting modified variable. */
-    @Getter private UnsignedLong maximum;
+    @Getter
+    private UnsignedLong maximum;
 
     /** The minimal step by which a variable will be incremented. */
-    @Getter private UnsignedLong minimumStep;
+    @Getter
+    private UnsignedLong minimumStep;
 
     /** The maximal step by which a variable will be incremented. */
-    @Getter private UnsignedLong maximumStep;
+    @Getter
+    private UnsignedLong maximumStep;
 
     @Override
     public void init(final ModifierProperties properties) {
-        try {
-            this.minimum = Optional.fromNullable(properties.getUnsignedLong("minimum")).or(UnsignedLong.ZERO);
-            this.maximum = Optional.fromNullable(properties.getUnsignedLong("maximum")).or(UnsignedLong.MAX_VALUE);
+        this.minimum = Optional.fromNullable(properties.getUnsignedLong("minimum")).or(UnsignedLong.ZERO);
+        this.maximum = Optional.fromNullable(properties.getUnsignedLong("maximum")).or(UnsignedLong.MAX_VALUE);
 
-            this.minimumStep = Optional.fromNullable(properties.getUnsignedLong("minimumStep")).or(UnsignedLong.ZERO);
-            this.maximumStep = Optional.fromNullable(properties.getUnsignedLong("maximumStep")).or(UnsignedLong.ONE);
-        } catch (final NumberFormatException e) {
-            throw new IllegalArgumentException("one of the parameters exceeds the legal long value range", e);
-        }
+        this.minimumStep = Optional.fromNullable(properties.getUnsignedLong("minimumStep")).or(UnsignedLong.ZERO);
+        this.maximumStep = Optional.fromNullable(properties.getUnsignedLong("maximumStep")).or(UnsignedLong.ONE);
     }
-    
+
     @Override
     public Counter64 modify(final Counter64 variable) {
         UnsignedLong currentValue = UnsignedLong.valueOf(variable.toString());
