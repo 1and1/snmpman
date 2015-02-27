@@ -26,4 +26,21 @@ public class Integer32ModifierTest {
         assertNotEquals(modifiedVariable.getValue(), 0);
     }
     
+    @Test
+    public void testProperties() throws Exception {
+        final ModifierProperties modifierProperties = new ModifierProperties();
+        modifierProperties.put("minimum", Integer.MIN_VALUE);
+        modifierProperties.put("maximum", Integer.MAX_VALUE);
+        modifierProperties.put("minimumStep", 1);
+        modifierProperties.put("maximumStep", 10);
+
+        final Integer32Modifier modifier = new Integer32Modifier();
+        modifier.init(modifierProperties);
+        
+        assertEquals(modifier.getMinimum(), new Integer(Integer.MIN_VALUE));
+        assertEquals(modifier.getMaximum(), new Integer(Integer.MAX_VALUE));
+        assertEquals(modifier.getMinimumStep(), new Integer(1));
+        assertEquals(modifier.getMaximumStep(), new Integer(10));
+    }
+    
 }
