@@ -1,13 +1,11 @@
 package com.oneandone.network.snmpman.configuration.modifier;
 
-import com.google.common.base.Preconditions;
+import com.google.common.base.Optional;
 import com.oneandone.network.snmpman.configuration.type.ModifierProperties;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.snmp4j.smi.Integer32;
-
-import java.util.Map;
-import java.util.Properties;
 
 /**
  * TODO
@@ -21,42 +19,29 @@ public class Integer32Modifier implements VariableModifier<Integer32> {
      */
     private static final Logger LOG = LoggerFactory.getLogger(Integer32Modifier.class);
 
-    /**
-     * The minimum allowed number for the resulting modified variable.
-     */
-    protected Integer minimum;
+    /** The minimum allowed number for the resulting modified variable. */
+    @Getter private Integer minimum;
 
-    /**
-     * The maximum allowed number for the resulting modified variable.
-     */
-    protected Integer maximum;
+    /** The maximum allowed number for the resulting modified variable. */
+    @Getter private Integer maximum;
 
-    /**
-     * The minimal step by which a variable will be incremented.
-     */
-    protected Integer minimumStep;
+    /** The minimal step by which a variable will be incremented. */
+    @Getter private Integer minimumStep;
 
-    /**
-     * The maximal step by which a variable will be incremented.
-     */
-    protected Integer maximumStep;
+    /** The maximal step by which a variable will be incremented. */
+    @Getter private Integer maximumStep;
 
     @Override
     public void init(final ModifierProperties properties) {
-        /*Preconditions.checkArgument(properties.containsKey("minimum") && AbstractIntegerModifier.isNumeric(properties.get("minimum")), "minimum not set or not a number");
-        Preconditions.checkArgument(properties.containsKey("maximum") && AbstractIntegerModifier.isNumeric(properties.get("maximum")), "maximum not set or not a number");
-        Preconditions.checkArgument(properties.containsKey("minimumStep") && AbstractIntegerModifier.isNumeric(properties.get("minimumStep")), "minimum step not set or not a number");
-        Preconditions.checkArgument(properties.containsKey("maximumStep") && AbstractIntegerModifier.isNumeric(properties.get("maximumStep")), "maximum step not set or not a number");
-
         try {
-            this.minimum = Integer.parseInt(properties.get("minimum"));
-            this.maximum = Integer.parseInt(properties.get("maximum"));
+            this.minimum = Optional.fromNullable(properties.getInteger("minimum")).or(Integer.MIN_VALUE);
+            this.maximum = Optional.fromNullable(properties.getInteger("maximum")).or(Integer.MAX_VALUE);
 
-            this.minimumStep = Integer.parseInt(properties.get("minimumStep"));
-            this.maximumStep = Integer.parseInt(properties.get("maximumStep"));
+            this.minimumStep = Optional.fromNullable(properties.getInteger("minimumStep")).or(-1);
+            this.maximumStep = Optional.fromNullable(properties.getInteger("maximumStep")).or(1);
         } catch (final NumberFormatException e) {
             throw new IllegalArgumentException("one of the parameters exceeds the legal long value range", e);
-        }*/
+        }
     }
     
     /**

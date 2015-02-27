@@ -4,6 +4,7 @@ import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.primitives.UnsignedInteger;
 import com.oneandone.network.snmpman.configuration.type.ModifierProperties;
+import lombok.Getter;
 import org.snmp4j.smi.UnsignedInteger32;
 
 /**
@@ -14,16 +15,16 @@ import org.snmp4j.smi.UnsignedInteger32;
 abstract class AbstractIntegerModifier<T extends UnsignedInteger32> implements VariableModifier<T> {
 
     /** The minimum allowed number for the resulting modified variable. */
-    protected Long minimum;
+    @Getter private Long minimum;
 
     /** The maximum allowed number for the resulting modified variable. */
-    protected Long maximum;
+    @Getter private Long maximum;
 
     /** The minimal step by which a variable will be incremented. */
-    protected Long minimumStep;
+    @Getter private Long minimumStep;
 
     /** The maximal step by which a variable will be incremented. */
-    protected Long maximumStep;
+    @Getter private Long maximumStep;
 
     @Override
     public void init(final ModifierProperties properties) {
