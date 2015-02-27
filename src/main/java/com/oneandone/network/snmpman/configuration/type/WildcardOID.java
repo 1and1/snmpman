@@ -22,14 +22,10 @@ public class WildcardOID {
 
     private static final Pattern WILDCARD_OID_PATTERN = Pattern.compile("((\\.)?[0-9]+(\\.[0-9]+)*)(\\.\\*)?((\\.[0-9]+)*)");
     
-    /**
-     * the first part of the wildcard {@code OID} (before the "{@code *}" character).
-     */
+    /** The first part of the wildcard {@code OID} (before the "{@code *}" character). */
     private final OID startsWith;
 
-    /**
-     * the second part of the wildcard {@code OID} (after the "{@code *}" character).
-     */
+    /** The second part of the wildcard {@code OID} (after the "{@code *}" character). */
     private final OID endsWith;
 
     /**
