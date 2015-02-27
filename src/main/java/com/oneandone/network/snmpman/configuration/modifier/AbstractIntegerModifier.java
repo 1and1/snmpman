@@ -9,8 +9,6 @@ import org.snmp4j.smi.UnsignedInteger32;
 
 /**
  * This modifier has all utility methods to construct for unsigned integer variable modifiers.
- *
- * @author Johann Böhler
  */
 abstract class AbstractIntegerModifier<T extends UnsignedInteger32> implements VariableModifier<T> {
 

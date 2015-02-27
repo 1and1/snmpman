@@ -20,7 +20,8 @@ import java.util.Map;
 /**
  * TODO
  */
-@Slf4j @ToString(exclude = "community") @EqualsAndHashCode
+@Slf4j 
+@ToString(exclude = "community") @EqualsAndHashCode
 public class AgentConfiguration {
 
     private static final DeviceFactory DEVICE_FACTORY = new DeviceFactory();

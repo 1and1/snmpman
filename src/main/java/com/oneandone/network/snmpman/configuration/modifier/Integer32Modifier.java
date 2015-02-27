@@ -4,14 +4,10 @@ import com.google.common.base.Optional;
 import com.oneandone.network.snmpman.configuration.type.ModifierProperties;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.snmp4j.smi.Integer32;
 
 /**
  * TODO
- *
- * @author Johann Böhler
  */
 @Slf4j
 public class Integer32Modifier implements VariableModifier<Integer32> {

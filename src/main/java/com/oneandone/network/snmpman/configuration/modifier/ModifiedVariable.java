@@ -15,7 +15,8 @@ import java.util.List;
 /**
  * A modified variable will change it's value on every value call.
  */
-@Slf4j @EqualsAndHashCode(of = "variable")
+@Slf4j 
+@EqualsAndHashCode(of = "variable")
 public class ModifiedVariable implements Variable, Cloneable {
 
     /** The list of modifiers that modify the {@link #variable}. */

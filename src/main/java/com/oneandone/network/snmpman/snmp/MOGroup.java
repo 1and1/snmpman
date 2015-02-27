@@ -1,5 +1,7 @@
 package com.oneandone.network.snmpman.snmp;
 
+import lombok.ToString;
+import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.snmp4j.PDU;
@@ -15,23 +17,17 @@ import java.util.Iterator;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
+@Slf4j
+@ToString(of = { "variableBindings", "root", "scope" })
 public class MOGroup implements ManagedObject {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MOGroup.class);
-
-    /**
-     * Sorted map of the variable bindings for this group.
-     */
+    /** Sorted map of the variable bindings for this group. */
     private final SortedMap<OID, Variable> variableBindings;
 
-    /**
-     * The root {@code OID} for this group.
-     */
+    /** The root {@code OID} for this group. */
     private final OID root;
 
-    /**
-     * The {@link MOScope} for this group.
-     */
+    /** The {@link MOScope} for this group. */
     private final MOScope scope;
 
     /**
@@ -121,7 +117,7 @@ public class MOGroup implements ManagedObject {
                 request.getVariableBinding().setOid(first);
             } catch (IllegalArgumentException e) {
                 if (variable != null) {
-                    LOG.error("error occurred on variable class " + variable.getClass().getName() + " with first OID " + first.toDottedString(), e);
+                    log.error("error occurred on variable class " + variable.getClass().getName() + " with first OID " + first.toDottedString(), e);
                 }
             }
             request.completed();
@@ -148,14 +144,5 @@ public class MOGroup implements ManagedObject {
     @Override
     public void cleanup(final SubRequest request) {
         // do nothing here
-    }
-
-    @Override
-    public String toString() {
-        return "MOGroup[" +
-                "variableBindings=" + variableBindings +
-                ", root=" + root +
-                ", scope=" + scope +
-                ']';
     }
 }
