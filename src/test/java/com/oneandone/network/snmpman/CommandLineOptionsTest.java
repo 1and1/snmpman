@@ -13,6 +13,8 @@ public class CommandLineOptionsTest {
         final CmdLineParser cmdLineParser = new CmdLineParser(commandLineOptions);
         cmdLineParser.parseArgument("-c", "src/test/resources/configuration/configuration.yaml");
         
-        assertFalse(commandLineOptions.getAgents().isEmpty());
+        assertEquals(commandLineOptions.getConfigurationFile().getName(), "configuration.yaml");
+        assertTrue(commandLineOptions.getConfigurationFile().exists());
+        assertTrue(commandLineOptions.getConfigurationFile().isFile());
     }
 }

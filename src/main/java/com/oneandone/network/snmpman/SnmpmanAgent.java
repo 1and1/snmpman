@@ -5,11 +5,11 @@ import com.oneandone.network.snmpman.configuration.AgentConfiguration;
 import com.oneandone.network.snmpman.configuration.Device;
 import com.oneandone.network.snmpman.configuration.modifier.ModifiedVariable;
 import com.oneandone.network.snmpman.configuration.modifier.VariableModifier;
-import com.oneandone.network.snmpman.snmp.MOGroup;
 import lombok.extern.slf4j.Slf4j;
 import org.snmp4j.TransportMapping;
 import org.snmp4j.agent.*;
 import org.snmp4j.agent.io.ImportModes;
+import org.snmp4j.agent.mo.ext.StaticMOGroup;
 import org.snmp4j.agent.mo.snmp.*;
 import org.snmp4j.agent.security.MutableVACM;
 import org.snmp4j.mp.MPv3;
@@ -39,7 +39,7 @@ public class SnmpmanAgent extends BaseAgent {
     private final AgentConfiguration configuration;
     
     /** The list of managed object groups. */
-    private final List<MOGroup> groups = new ArrayList<>(0);
+    private final List<ManagedObject> groups = new ArrayList<>(0);
 
     public SnmpmanAgent(final AgentConfiguration configuration) {
         super(SnmpmanAgent.getBootCounterFile(configuration), SnmpmanAgent.getConfigurationFile(configuration), new CommandProcessor(new OctetString(MPv3.createLocalEngineID())));
@@ -47,6 +47,10 @@ public class SnmpmanAgent extends BaseAgent {
         this.configuration = configuration;
     }
 
+    public String getName() {
+        return configuration.getName();
+    }
+    
     /**
      * Returns the boot-counter file for the specified agent.
      * <p>
@@ -92,7 +96,7 @@ public class SnmpmanAgent extends BaseAgent {
      */
     private static List<OID> getRoots(final SortedMap<OID, Variable> bindings) {
         final List<OID> potentialRoots = new ArrayList<>(bindings.size());
-
+        
         OID last = null;
         for (final OID oid : bindings.keySet()) {
             if (last != null) {
@@ -109,7 +113,8 @@ public class SnmpmanAgent extends BaseAgent {
             last = oid;
         }
         Collections.sort(potentialRoots);
-
+        
+        
         final List<OID> roots = new ArrayList<>(potentialRoots.size());
         for (final OID potentialRoot : potentialRoots) {
             if (potentialRoot.size() > 0) {
@@ -117,7 +122,7 @@ public class SnmpmanAgent extends BaseAgent {
                 while (trimmedPotentialRoot.size() > 0 && Collections.binarySearch(potentialRoots, trimmedPotentialRoot) < 0) {
                     trimmedPotentialRoot.trim(1);
                 }
-                if (trimmedPotentialRoot.size() == 0) {
+                if (trimmedPotentialRoot.size() == 0 && !roots.contains(potentialRoot)) {
                     roots.add(potentialRoot);
                 }
             }
@@ -224,29 +229,46 @@ public class SnmpmanAgent extends BaseAgent {
             final SortedMap<OID, Variable> variableBindings = this.getVariableBindings(configuration.getDevice(), bindings);
 
             final OctetString ctx = new OctetString();
+            
+            
+            // unregister all hack
+            DefaultMOContextScope hackScope = new DefaultMOContextScope(ctx, new OID(".1"), true, new OID(".1").nextPeer(), false);
+            ManagedObject query;            
+            while ((query = server.lookup(new DefaultMOQuery(hackScope, false))) != null) {
+                server.unregister(query, ctx);
+            }
+            // hack end
+            
+            
+
             final List<OID> roots = SnmpmanAgent.getRoots(variableBindings);
             for (final OID root : roots) {
-                final SortedMap<OID, Variable> subtree = new TreeMap<>();
+                final ArrayList<VariableBinding> subtree = new ArrayList<>();
+                //final SortedMap<OID, Variable> subtree = new TreeMap<>();
                 for (final Map.Entry<OID, Variable> binding : variableBindings.entrySet()) {
                     if (binding.getKey().size() >= root.size()) {
                         if (binding.getKey().leftMostCompare(root.size(), root) == 0) {
-                            subtree.put(binding.getKey(), binding.getValue());
+                            subtree.add(new VariableBinding(binding.getKey(), binding.getValue()));
+                            //subtree.put(binding.getKey(), binding.getValue());
                         }
                     }
                 }
 
-                MOGroup group = new MOGroup(root, subtree);
+                StaticMOGroup group = new StaticMOGroup(root, subtree.toArray(new VariableBinding[subtree.size()]));
                 DefaultMOContextScope scope = new DefaultMOContextScope(ctx, root, true, root.nextPeer(), false);
                 ManagedObject mo = server.lookup(new DefaultMOQuery(scope, false));
                 if (mo != null) {
-                    // though this iteration may seem awkward it is necessary to bind everything
-                    for (final Map.Entry<OID, Variable> binding : subtree.entrySet()) {
-                        group = new MOGroup(binding.getKey(), binding.getKey(), binding.getValue());
-                        scope = new DefaultMOContextScope(ctx, binding.getKey(), true, binding.getKey().nextPeer(), false);
+                    for (VariableBinding vb : subtree) {
+                        group = new StaticMOGroup(vb.getOid(), new VariableBinding[]{ vb });
+                        scope = new DefaultMOContextScope(ctx, vb.getOid(), true, vb.getOid().nextPeer(), false);
                         mo = server.lookup(new DefaultMOQuery(scope, false));
-                        if (mo == null) {
+                        if (mo != null) {
+                            //logger.warn("Could not register single OID at "+vb.getOid()+" because ManagedObject "+mo+" is already registered.");
+                        }
+                        else {
                             groups.add(group);
                             server.register(group, null);
+                            //logger.info("Registered snapshot subtree '" + root + "' with " + vb);
                         }
                     }
                 } else {
@@ -276,7 +298,6 @@ public class SnmpmanAgent extends BaseAgent {
         log.trace("get variable bindings for agent \"{}\"", configuration.getName());
         final SortedMap<OID, Variable> result = new TreeMap<>();
 
-        // TODO array of modifiers
         for (final Map.Entry<OID, Variable> binding : bindings.entrySet()) {
             final List<VariableModifier> modifiers = new ArrayList<>(0);
 
@@ -300,7 +321,7 @@ public class SnmpmanAgent extends BaseAgent {
     @Override
     protected void unregisterManagedObjects() {
         log.trace("unregistered managed objects for agent \"{}\"", agent);
-        for (final MOGroup mo : groups) {
+        for (final ManagedObject mo : groups) {
             server.unregister(mo, null);
         }
     }
