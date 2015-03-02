@@ -10,13 +10,13 @@ import org.snmp4j.smi.Variable;
 
 import java.io.IOException;
 import java.io.OutputStream;
+import java.util.Collections;
 import java.util.List;
 
 /**
  * A modified variable will change it's value on every value call.
  */
-@Slf4j 
-@EqualsAndHashCode(of = "variable")
+@Slf4j
 public class ModifiedVariable implements Variable, Cloneable {
 
     /** The list of modifiers that modify the {@link #variable}. */
@@ -35,12 +35,12 @@ public class ModifiedVariable implements Variable, Cloneable {
      */
     public ModifiedVariable(final Variable variable, final List<VariableModifier> modifiers) {
         this.variable = variable;
-        this.modifiers = modifiers;
+        this.modifiers = Collections.unmodifiableList(modifiers);
     }
 
     @Override
     public int compareTo(final Variable variable) {
-        return variable.compareTo(variable);
+        return this.variable.compareTo(variable);
     }
 
     @SuppressWarnings({"CloneDoesntDeclareCloneNotSupportedException", "CloneDoesntCallSuperClone", "unchecked"})
@@ -127,5 +127,18 @@ public class ModifiedVariable implements Variable, Cloneable {
     public void encodeBER(final OutputStream outputStream) throws IOException {
         log.trace("BER will be encoded for variable {}", variable);
         variable.encodeBER(outputStream);
+    }
+
+    @Override
+    public boolean equals(final Object o) {
+        if (o instanceof ModifiedVariable) {
+            return variable.equals(((ModifiedVariable) o).variable);
+        }
+        return variable.equals(o);
+    }
+    
+    @Override
+    public int hashCode() {
+        return variable.hashCode();
     }
 }
