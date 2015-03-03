@@ -15,6 +15,9 @@ target/
 # MAC
 .DS_Store
 
+# Gradle properties
+gradle.properties
+
 # Temporary execution files
 *.BC.cfg
 *.Config.cfg

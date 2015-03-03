@@ -5,11 +5,13 @@ plugins {
 apply plugin: 'java'
 apply plugin: 'application'
 apply plugin: 'os-package'
+apply plugin: 'maven'
+apply plugin: 'signing'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
-group = 'com.oneandone.network'
+group = 'com.oneandone'
 archivesBaseName = 'snmpman'
 version = '1.1-SNAPSHOT'
 
@@ -67,8 +69,29 @@ javadoc {
     options.addStringOption('Xdoclint:none', '-quiet')
 }
 
+task javadocJar(type: Jar, dependsOn: javadoc) {
+    classifier = 'javadoc'
+    from 'build/docs/javadoc'
+}
+
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allSource
+    classifier = 'sources'
+}
+
+artifacts {
+    archives jar
+
+    archives javadocJar
+    archives sourcesJar
+}
+
+signing {
+    sign configurations.archives
+}
+
 gradle.taskGraph.whenReady {taskGraph ->
-    if (taskGraph.hasTask(buildRpm) || taskGraph.hasTask(buildDeb)) {
+    if (taskGraph.hasTask(buildRpm) || taskGraph.hasTask(buildDeb) || taskGraph.hasTask(release)) {
         def gitRevision = 'git rev-list HEAD --count'.execute().text.trim()
         version = "${version}".replace('-SNAPSHOT', '') + ".${gitRevision}"
         
@@ -124,4 +147,59 @@ buildRpm {
 buildDeb {
     preInstall file('src/main/scripts/install/deb-preInstall.sh')
     postUninstall file('src/main/scripts/install/deb-postUninstall.sh')
+}
+
+task release {
+}
+
+task snapshot {
+}
+
+// preperation for central as described in http://central.sonatype.org/pages/gradle.html
+uploadArchives {
+    repositories {
+        mavenDeployer {
+            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
+                //authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
+                //authentication(userName: ossrhUsername, password: ossrhPassword)
+            }
+            
+            pom.project {
+                name 'snmpman'
+                packaging 'jar'
+                description 'The SNMPMAN is an application or library that can simulate SNMP capable devices'
+                url 'http://1and1.github.io/snmpman/'
+
+                scm {
+                    url 'https://github.com/1and1/snmpman.git'
+                    connection 'https://github.com/1and1/snmpman.git'
+                    developerConnection 'https://github.com/1and1/snmpman.git'
+                }
+
+                licenses {
+                    license {
+                        name 'The Apache Software License, Version 2.0'
+                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                        distribution 'repo'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id 'bitionaire'
+                        name 'Johann Boehler'
+                    }
+                    developer {
+                        id 'netdevfighter'
+                        name 'Tobias Lindenmann'
+                    }
+                }
+            }
+        }
+    }
 }
