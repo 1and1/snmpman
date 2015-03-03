@@ -1,3 +1,6 @@
+We're currently working on some major updates of the configuration and execution and will update i.e. the IO pages as soon as possible
+after finishing our refactorings.
+
 SNMPMAN
 ============
 
@@ -19,7 +22,7 @@ Also checkout the `SNMPMAN` GitHub IO page [here](http://1and1.github.io/snmpman
 Installation
 ============
 ### Prequisites
-  * `Java JRE 1.7`
+  * `Java JRE 1.8`
 
 ### Packaging
 The packaging capabilities are in progress.
