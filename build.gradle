@@ -149,11 +149,8 @@ buildDeb {
     postUninstall file('src/main/scripts/install/deb-postUninstall.sh')
 }
 
-task release {
-}
-
-task snapshot {
-}
+task release(dependsOn: uploadArchives)
+task snapshot(dependsOn: uploadArchives)
 
 // preperation for central as described in http://central.sonatype.org/pages/gradle.html
 uploadArchives {
