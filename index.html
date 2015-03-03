@@ -1,6 +1,6 @@
 <!doctype html>
 <html>
-<head>
+  <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
     <title>SNMPMAN by 1and1</title>
@@ -11,120 +11,100 @@
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-</head>
-<body>
-<div class="wrapper">
-    <header>
-        <img src="images/snmpman.png"/>
-
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>SNMPMAN</h1>
         <p></p>
 
-        <p class="view">
-            <a href="https://github.com/1and1/snmpman">
-                View the Project on GitHub
-                <small>1and1/snmpman</small>
-            </a>
-        </p>
+        <p class="view"><a href="https://github.com/1and1/snmpman">View the Project on GitHub <small>1and1/snmpman</small></a></p>
 
 
         <ul>
-            <li><a href="https://github.com/1and1/snmpman/zipball/master">Download <strong>ZIP File</strong></a></li>
-            <li><a href="https://github.com/1and1/snmpman/tarball/master">Download <strong>TAR Ball</strong></a></li>
-            <li><a href="https://github.com/1and1/snmpman">View On <strong>GitHub</strong></a></li>
+          <li><a href="https://github.com/1and1/snmpman/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/1and1/snmpman/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/1and1/snmpman">View On <strong>GitHub</strong></a></li>
         </ul>
-    </header>
-    <section>
-
-        <p>The <code>SNMPMAN</code> is a command-line application that simulates <code>SNMP</code>-capable devices.
-            It may used e.g. to test traffic monitoring applications that execute <code>SNMP</code> queries. Due to to the lack in
-            flexibility of already existing alternatives, it was developed by the <strong>1&amp;1 Internet AG</strong> to avoid those deficits. Therefore the
-            <code>SNMPMAN</code>
-            is highly extensible and will feature and will be enhanced in time.</p>
-
-        <p>Multiple <code>SNMP</code> agents may be started at once and will run in parallel on different parts. These agents
-            will return the data defined in a textual walk file. This file may be created by querying a real device. In addition,
-            several device types may be defined and mapped by the agents. This device type configuration may contain policies on
-            how to dynamically change the query responses. E.g. the response of an
-            <a href="http://tools.cisco.com/Support/SNMP/do/BrowseOID.do?objectInput=ifInOctets&amp;translate=Translate&amp;submitValue=SUBMIT%22">ifInOctets</a>
-            may be incremented with each query to simulate traffic. Several variable modifiers are already existing for different
-            data types.</p>
-
+      </header>
+      <section>
         <h1>
-            <a name="installation" class="anchor" href="#installation"><span class="octicon octicon-link"></span></a>
-            Installation
-        </h1>
+<a id="snmpman" class="anchor" href="#snmpman" aria-hidden="true"><span class="octicon octicon-link"></span></a>SNMPMAN</h1>
 
-        <h3>
-            <a name="prequisites" class="anchor" href="#prequisites"><span class="octicon octicon-link"></span></a>
-            Prequisites
-        </h3>
+<p>The <code>SNMPMAN</code> is mainly a command-line application that simulates <code>SNMP</code>-capable devices and can also be started and stopped within Unit-Tests.
+It may used e.g. to test traffic monitoring applications that execute <code>SNMP</code> queries. Due to to the lack in
+flexibility of already existing alternatives, it was developed by the <strong>1&amp;1 Internet AG</strong> to avoid those deficits. Therefore the <code>SNMPMAN</code>
+is highly extensible and will feature and will be enhanced in time.</p>
 
-        <ul>
-            <li><code>Java JRE 1.7</code></li>
-        </ul>
+<p>Multiple <code>SNMP</code> agents may be started at once and will run in parallel on different parts. These agents
+will return the data defined in a textual walk file. This file may be created by querying a real device. In addition,
+several device types may be defined and mapped by the agents. This device type configuration may contain policies on
+how to dynamically change the query responses. E.g. the response of an
+<a href="http://tools.cisco.com/Support/SNMP/do/BrowseOID.do?objectInput=ifInOctets&amp;translate=Translate&amp;submitValue=SUBMIT%22">ifInOctets</a>
+may be incremented with each query to simulate traffic. Several variable modifiers are already existing for different
+data types.</p>
 
-        <h3>
-            <a name="packaging" class="anchor" href="#packaging"><span class="octicon octicon-link"></span></a>
-            Packaging
-        </h3>
+<p>Also checkout the <code>SNMPMAN</code> GitHub IO page <a href="http://1and1.github.io/snmpman/">here</a>!</p>
 
-        <p>The <code>SNMPMAN</code> can be packaged for Debian installations by executing the Maven profile <code>debian</code>. All resources will be installed
-            in the root directory <code>/opt/snmpman</code>.</p>
+<h1>
+<a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h1>
 
-        <p>If you want to create a RPM package you should execute the <code>build-rpm.sh</code>. The RPM file will be copied into your current working directory
-            after it was created.</p>
+<h3>
+<a id="prequisites" class="anchor" href="#prequisites" aria-hidden="true"><span class="octicon octicon-link"></span></a>Prequisites</h3>
 
-        <p>Some basic configuration files will be copied to <code>/opt/snmpman/etc</code>. One default device will be simulated at <code>127.0.0.1:10000</code>
-            by the default configuration.</p>
+<ul>
+<li><code>Java JDK 1.8</code></li>
+<li><code>Gradle 2.2</code></li>
+</ul>
 
-        <h1>
-            <a name="execution" class="anchor" href="#execution"><span class="octicon octicon-link"></span></a>
-            Execution
-        </h1>
+<h3>
+<a id="packaging" class="anchor" href="#packaging" aria-hidden="true"><span class="octicon octicon-link"></span></a>Packaging</h3>
 
-        <p>To execute an instance of the <code>SNMPMAN</code> you have to start the execution script and specify a value for the <code>-c</code>
-            or <code>--configuration</code> option that lists the path to the configuration file that should be loaded in the execution context.</p>
+<p>In order to package the <code>SNMPMAN</code> - as either a <code>.deb</code> or <code>.rpm</code> - you have to execute following gradle tasks</p>
 
-        <p>If no arguments were specified, the default configuration in <code>/opt/snmpman/etc/configuration.xml</code> will be used.</p>
+<ul>
+<li><code>buildDeb</code></li>
+<li><code>buildRpm</code></li>
+</ul>
 
-        <h1>
-            <a name="configuration" class="anchor" href="#configuration"><span class="octicon octicon-link"></span></a>
-            Configuration
-        </h1>
+<p>You will find the generated output in <code>./build/distributions</code> and can install the build packages.</p>
 
-        <p>The <code>SNMPMAN</code> is configured in two main <code>XML</code> files ...</p>
+<h1>
+<a id="execution" class="anchor" href="#execution" aria-hidden="true"><span class="octicon octicon-link"></span></a>Execution</h1>
 
-        <ul>
-            <li>
-                The agent configuration <em>(Namespace: <a href="http://www.1and1.com/snmpman/configuration">http://www.1and1.com/snmpman/configuration</a>)</em>
-            </li>
-            <li>
-                The device type configuration <em>(Namespace: <a href="http://www.1and1.com/snmpman/device">http://www.1and1.com/snmpman/device</a>)</em>
-            </li>
-        </ul>
-        <p>The <code>XML</code> schema files can be found in this project in the directory</p>
+<p>To execute an instance of the <code>SNMPMAN</code> you have to start the execution script and specify a value for the <code>-c</code>
+or <code>--configuration</code> option that lists the path to the configuration <code>YAML</code> file that should be loaded in the execution context.</p>
 
-<pre><code>../src/main/resources/schema
+<h1>
+<a id="configuration" class="anchor" href="#configuration" aria-hidden="true"><span class="octicon octicon-link"></span></a>Configuration</h1>
+
+<p>The <code>SNMPMAN</code> is configured in two main <code>YAML</code> files ...</p>
+
+<ul>
+<li>The agent configuration list all agents which should be started</li>
+<li>The device type configuration defines the modifiers that should be applied to a range of OIDs</li>
+</ul>
+
+<p>You can find some <code>YAML</code> example configuration files within the test resources of this project in the directory</p>
+
+<pre><code>../src/test/resources/configuration
 </code></pre>
 
-        <p>The third component of the configuration are the walk files for the agents as specified in the agent configuration.</p>
+<p>The third component of the configuration are the walk files for the agents as specified in the agent configuration.</p>
 
-        <p>This is a basic overview and more information will be provided <a href="https://github.com/1and1/snmpman/wiki">on the projects Wiki pages</a>.</p>
+<p>This is a basic overview and more information will be provided <a href="https://github.com/1and1/snmpman/wiki">on the projects Wiki pages</a>.</p>
 
-        <h2>
-            <a name="contributing" class="anchor" href="#contributing"><span class="octicon octicon-link"></span></a>Contributing</h2>
+<h2>
+<a id="contributing" class="anchor" href="#contributing" aria-hidden="true"><span class="octicon octicon-link"></span></a>Contributing</h2>
 
-        <p>To contribute, use the GitHub way - fork, hack, and submit a pull request!</p>
-    </section>
-    <footer>
+<p>To contribute, use the GitHub way - fork, hack, and submit a pull request!</p>
+      </section>
+      <footer>
         <p>This project is maintained by <a href="https://github.com/1and1">1and1</a></p>
-
-        <p>
-            <small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small>
-        </p>
-    </footer>
-</div>
-<script src="javascripts/scale.fix.js"></script>
-
-</body>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
 </html>
