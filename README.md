@@ -1,7 +1,7 @@
 SNMPMAN
 ============
 
-The `SNMPMAN` is a command-line application that simulates `SNMP`-capable devices.
+The `SNMPMAN` is mainly a command-line application that simulates `SNMP`-capable devices and can also be started and stopped within Unit-Tests.
 It may used e.g. to test traffic monitoring applications that execute `SNMP` queries. Due to to the lack in
 flexibility of already existing alternatives, it was developed by the **1&1 Internet AG** to avoid those deficits. Therefore the `SNMPMAN`
 is highly extensible and will feature and will be enhanced in time.
@@ -22,28 +22,22 @@ Installation
   * `Java JRE 1.7`
 
 ### Packaging
-The `SNMPMAN` can be packaged for Debian installations by executing the Maven profile `debian`. All resources will be installed in the root directory `/opt/snmpman`.
-
-If you want to create a RPM package you should execute the `build-rpm.sh`. The RPM file will be copied into your current working directory after it was created.
-
-Some basic configuration files will be copied to `/opt/snmpman/etc`. One default device will be simulated at `127.0.0.1:10000` by the default configuration.
+The packaging capabilities are in progress.
 
 Execution
 ============
 To execute an instance of the `SNMPMAN` you have to start the execution script and specify a value for the `-c`
-or `--configuration` option that lists the path to the configuration file that should be loaded in the execution context.
-
-If no arguments were specified, the default configuration in `/opt/snmpman/etc/configuration.xml` will be used.
+or `--configuration` option that lists the path to the configuration `YAML` file that should be loaded in the execution context.
 
 Configuration
 ============
-The `SNMPMAN` is configured in two main `XML` files ...
-  * The agent configuration _(Namespace: http://www.1and1.com/snmpman/configuration)_
-  * The device type configuration _(Namespace: http://www.1and1.com/snmpman/device)_
+The `SNMPMAN` is configured in two main `YAML` files ...
+  * The agent configuration list all agents which should be started
+  * The device type configuration defines the modifiers that should be applied to a range of OIDs
 
-The `XML` schema files can be found in this project in the directory
+You can find some `YAML` example configuration files within the test resources of this project in the directory
 ```
-../src/main/resources/schema
+../src/test/resources/configuration
 ```
 The third component of the configuration are the walk files for the agents as specified in the agent configuration.
 
