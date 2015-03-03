@@ -5,7 +5,29 @@
 # The main class
 readonly MAIN_CLASS="com.oneandone.network.snmpman.Snmpman"
 
-[ -r "/etc/sysconfig/snmpman" ] && . "/etc/sysconfig/snmpman"
+[ -r "/etc/default/snmpman" ] && . "/etc/default/snmpman"
+
+cygwin=false;
+darwin=false;
+linux=false;
+case "`uname`" in
+    CYGWIN*)
+        cygwin=true
+        ;;
+    Darwin*)
+        darwin=true
+        ;;
+    Linux)
+        linux=true
+        ;;
+esac
+
+if ${cygwin} ; then
+    [ -n "${SNMPMAN_HOME}" ] &&
+        SNMPMAN_HOME=`cygpath --unix "${SNMPMAN_HOME}"`
+    [ -n "${JAVA_HOME}" ] &&
+        JAVA_HOME=`cygpath --unix "${JAVA_HOME}"`
+fi
 
 if [ "x${SNMPMAN_HOME}" = "x" ]; then
     if [ -d "/opt/snmpman" ]; then
@@ -27,7 +49,7 @@ fi
 
 ARGS="${@}"
 if [ -f /opt/snmpman/etc/configuration.xml ] && [ "${ARGS}" != *-c* ]; then
-    ARGS="-c ${SNMPMAN_HOME}/etc/configuration.xml $ARGS"
+    ARGS="-c ${SNMPMAN_HOME}/etc/configuration.yaml $ARGS"
 fi
 
 # Set the log4j configuration if not defined by the call
@@ -38,4 +60,4 @@ elif [ "${ARGS}" != *-Dlog4j.configuration* ] && [ -f /opt/snmpman/etc/log4j.pro
     LOG_PARAMETER="-Dlog4j.configuration=file:${SNMPMAN_HOME}/etc/log4j.properties"
 fi
 
-eval \"${JAVA}\" ${JAVA_OPTS} "${LOG_PARAMETER}" -jar "${SNMPMAN_HOME}/lib/snmpman.jar" "${ARGS}"
+eval \"${JAVA}\" ${JAVA_OPTS} "${LOG_PARAMETER}" -jar "${SNMPMAN_HOME}/lib/snmpman*.jar" "${ARGS}"

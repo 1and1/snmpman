@@ -1,9 +1,0 @@
-Package: [[name]]
-Version: [[version]]
-Section: misc
-Priority: optional
-Architecture: all
-Depends:
-Maintainer: Johann Böhler
-Description: SNMPMAN
-Distribution: development
