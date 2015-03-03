@@ -1,6 +1,10 @@
+plugins {
+    id "nebula.os-package" version "2.2.0"
+}
+
 apply plugin: 'java'
 apply plugin: 'application'
-apply plugin: 'os-package-base'
+apply plugin: 'os-package'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -10,16 +14,6 @@ archivesBaseName = 'snmpman'
 version = '1.1-SNAPSHOT'
 
 mainClassName = 'com.oneandone.network.snmpman.Snmpman'
-
-buildscript {
-    repositories {
-        jcenter()
-    }
-    
-    dependencies {
-        classpath 'com.netflix.nebula:gradle-ospackage-plugin:2.2.0'
-    }
-}
 
 repositories {
     mavenCentral()
@@ -96,26 +90,24 @@ ospackage {
     
     prefix '/opt/snmpman' // also only applied to RPM
     into '/opt/snmpman'
-
+    
     from(jar.outputs.files) {
         into 'lib'
+        fileMode = 0644
+        createDirectoryEntry = true
     }
     
     from('src/main/scripts') {
         into 'bin'
         include '**/*.sh'
         fileMode = 0755
+        createDirectoryEntry = true
     }
     
     from('src/main/config') {
         fileType CONFIG | NOREPLACE
         into 'etc'
         fileMode = 0644
+        createDirectoryEntry = true
     }
-}
-
-task buildRpm(type: Rpm) {
-}
-
-task buildDeb(type: Deb) {
 }

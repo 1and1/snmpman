@@ -3,7 +3,7 @@
 <log4j:configuration>
     <appender name="file" class="org.apache.log4j.RollingFileAppender">
         <param name="Append" value="true"/>
-        <param name="File" value="/var/log/snmpman/main.log"/>
+        <param name="File" value="/var/log/snmpman.log"/>
         <param name="MaxFileSize" value="10MB"/>
         <param name="MaxBackupIndex" value="30"/>
         <layout class="org.apache.log4j.PatternLayout">

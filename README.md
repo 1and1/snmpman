@@ -1,6 +1,3 @@
-We're currently working on some major updates of the configuration and execution and will update i.e. the IO pages as soon as possible
-after finishing our refactorings.
-
 SNMPMAN
 ============
 
@@ -22,10 +19,16 @@ Also checkout the `SNMPMAN` GitHub IO page [here](http://1and1.github.io/snmpman
 Installation
 ============
 ### Prequisites
-  * `Java JRE 1.8`
+  * `Java JDK 1.8`
+  * `Gradle 2.2`
 
 ### Packaging
-The packaging capabilities are in progress.
+In order to package the `SNMPMAN` - as either a `.deb` or `.rpm` - you have to execute following gradle tasks
+
+  * `buildDeb`
+  * `buildRpm`
+
+You will find the generated output in `./build/distributions` and can install the build packages.
 
 Execution
 ============
