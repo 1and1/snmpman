@@ -25,7 +25,7 @@ Installation
 ### Packaging
 In order to package the `SNMPMAN` - as either a `.deb` or `.rpm` - you have to execute following gradle tasks
 
-  * `buildDeb`
+  * `buildDeb` - **We strongly advise not to use the debian package, due to bugs**
   * `buildRpm`
 
 You will find the generated output in `./build/distributions` and can install the build packages.

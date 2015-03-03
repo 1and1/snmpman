@@ -91,6 +91,8 @@ ospackage {
     prefix '/opt/snmpman' // also only applied to RPM
     into '/opt/snmpman'
     
+    user 'snmpman'
+    
     from(jar.outputs.files) {
         into 'lib'
         fileMode = 0644
@@ -99,7 +101,7 @@ ospackage {
     
     from('src/main/scripts') {
         into 'bin'
-        include '**/*.sh'
+        include '*.sh'
         fileMode = 0755
         createDirectoryEntry = true
     }
@@ -110,4 +112,16 @@ ospackage {
         fileMode = 0644
         createDirectoryEntry = true
     }
+}
+
+buildRpm {
+    permissionGroup 'snmpman'
+    
+    preInstall file('src/main/scripts/install/rpm-preInstall.sh')
+    postUninstall file('src/main/scripts/install/rpm-postUninstall.sh')
+}
+
+buildDeb {
+    preInstall file('src/main/scripts/install/deb-preInstall.sh')
+    postUninstall file('src/main/scripts/install/deb-postUninstall.sh')
 }
