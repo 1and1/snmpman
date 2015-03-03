@@ -39,6 +39,12 @@ abstract class AbstractIntegerModifier<T extends UnsignedInteger32> implements V
         Preconditions.checkArgument(maximum <= UnsignedInteger.MAX_VALUE.longValue(), "maximum should not exceed 2^32-1 (4294967295 decimal)");
     }
 
+    /**
+     * Casts the long value to the specified output type of the implementing modifier.
+     *
+     * @param value the value to cast
+     * @return the casted value
+     */
     protected abstract T cast(long value);
 
     @Override

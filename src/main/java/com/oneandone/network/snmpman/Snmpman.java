@@ -23,15 +23,41 @@ import java.util.stream.Collectors;
  * This is the main-class for this application.
  * <p/>
  * A mandatory argument for execution of the {@link #main(String...)} method is the path to the configuration file.
- * The configuration file is a {@code XML} representation of the {@link Configuration} class.
- * <p/>
- * All available command-line options are documented in the {@link CommandLineOptions} class.
+ * See {@link com.oneandone.network.snmpman.CommandLineOptions} for information on available command line options.
+ * <p />
+ * Each configuration list item represents an instance of the {@link com.oneandone.network.snmpman.configuration.AgentConfiguration}.
+ * The constructor {@link com.oneandone.network.snmpman.configuration.AgentConfiguration#AgentConfiguration(String, java.io.File, java.io.File, String, int, String)}
+ * lists all available properties, which may or may not be required.
+ * <p />
+ * An entry may look like the following:
+ * <pre>
+ * {@code         
+ *     - name: "example1"
+ *       device: "src/test/resources/configuration/cisco.yaml"
+ *       walk: "src/test/resources/configuration/example.txt"
+ *       ip: "127.0.0.1"
+ *       port: 10000
+ * }
+ * </pre>
+ * You can find more example within the test resources of this project.
+ * <p /> 
+ * The configuration {@code YAML} file defines a list of all agents that should be simulated by the {@code Snmpman}.
  */
 @Slf4j
 public final class Snmpman {
 
+    /**
+     * Returns the list of SNMP agents for {@code this} instance.
+     * 
+     * @return the list of SNMP agents 
+     */
     @Getter private final List<SnmpmanAgent> agents;
-    
+
+    /**
+     * Constructs an instance by the specified list of agents.
+     *
+     * @param agents the agents for {@code this} instance
+     */
     private Snmpman(final List<SnmpmanAgent> agents) {
         this.agents = agents;
     }
@@ -42,7 +68,7 @@ public final class Snmpman {
      * All available command-line arguments are documented in the {@link CommandLineOptions} class.
      * <p/>
      * If illegal command-line options were specified for execution, a usage help message will be printed out
-     * on the {@link System#out} stream and the application will terminate. Otherwise the configuration will
+     * on the {@link System#err} stream and the application will terminate. Otherwise the configuration will
      * be read and used for execution.
      *
      * @param args the command-line arguments
@@ -70,6 +96,13 @@ public final class Snmpman {
         }
     }
 
+    /**
+     * Creates an {@code Snmpman} instance by the specified configuration in the {@code configurationFile} and starts all agents.
+     *
+     * @param configurationFile the configuration
+     * @return the {@code Snmpman} instance
+     * @throws com.oneandone.network.snmpman.exception.InitializationException thrown if any agent, as specified in the configuration, could not be started
+     */
     public static Snmpman start(final File configurationFile) {
         Preconditions.checkNotNull(configurationFile, "the configuration file may not be null");
         Preconditions.checkArgument(configurationFile.exists() && configurationFile.isFile(), "configuration does not exist or is not a file");
@@ -79,20 +112,30 @@ public final class Snmpman {
             final ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
             final AgentConfiguration[] configurations = mapper.readValue(configurationFile, AgentConfiguration[].class);
             
-            return Snmpman.start(Collections.unmodifiableList(
-                    Arrays.stream(configurations).map(configuration -> new SnmpmanAgent(configuration)).collect(Collectors.toList())
-            ));
+            return Snmpman.start(Arrays.stream(configurations).map(configuration -> new SnmpmanAgent(configuration)).collect(Collectors.toList()));
         } catch (final IOException e) {
             throw new InitializationException("could not parse configuration at path: " + configurationFile.getAbsolutePath(), e);
         }
     }
-    
+
+    /**
+     * Creates an {@code Snmpman} instance by the specified list of agents and starts all agents.
+     *
+     * @param agents the list of agents
+     * @return the {@code Snmpman} instance
+     * @throws com.oneandone.network.snmpman.exception.InitializationException thrown if any agent, as specified in the configuration, could not be started
+     */
     public static Snmpman start(final List<SnmpmanAgent> agents) {
-        final Snmpman snmpman = new Snmpman(agents);
+        final Snmpman snmpman = new Snmpman(Collections.unmodifiableList(agents));
         snmpman.start();
         return snmpman;
     }
-    
+
+    /**
+     * Starts all agents as defined in {@link #agents}.
+     * 
+     * @throws com.oneandone.network.snmpman.exception.InitializationException thrown if any agent could not be started
+     */
     private void start() {
         log.debug("starting to load agents");
         for (final SnmpmanAgent agent : agents) {
@@ -105,6 +148,7 @@ public final class Snmpman {
         log.debug("all agents initialized");
     }
     
+    /** Stops all agents as defined in {@link #agents}. */
     public void stop() {
         agents.forEach(com.oneandone.network.snmpman.SnmpmanAgent::stop);
     }

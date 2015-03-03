@@ -17,21 +17,36 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * TODO
- */
+/** Representation of the configuration for a {@link com.oneandone.network.snmpman.SnmpmanAgent}. */
 @Slf4j 
 @ToString(exclude = "community") @EqualsAndHashCode
 public class AgentConfiguration {
 
+    /** The device factory. */
     private static final DeviceFactory DEVICE_FACTORY = new DeviceFactory();
 
+    /**
+     * The device factory creates all {@link com.oneandone.network.snmpman.configuration.Device} representations.
+     * <p />
+     * It is required to instantiate the representations only one time application-wide.
+     */
+    // TODO each Snmpman instance should have its own device factory instance
     public static class DeviceFactory {
 
+        /** The default device which will be returned if no configuration specified. */
         public static final Device DEFAULT_DEVICE = new Device("default", new Modifier[0]);
 
+        /** The map of all available devices. */
         private final Map<File, Device> devices = new HashMap<>(1);
 
+        /**
+         * Returns the device representation for the specified {@code path}.
+         * <p /> 
+         * If the {@code path} is {@code null}, or the parsing of the configuration failed, the {@link #DEFAULT_DEVICE} will be returned instead.
+         *
+         * @param path the path of the device configuration
+         * @return the {@link com.oneandone.network.snmpman.configuration.Device} representation for the specified configuration in {@code path}
+         */
         public Device getDevice(final File path) {
             if (path == null) {
                 return DEFAULT_DEVICE;
@@ -53,15 +68,63 @@ public class AgentConfiguration {
         }
     }
 
+    /**
+     * Returns the name of the agent.
+     * <p />
+     * If the {@code name} wasn't set on construction, the name will be defined by the {@link #address}. 
+     * 
+     * @return the name of the agent 
+     */
     @Getter private final String name;
+
+    /**
+     * Returns the address of the agent.
+     * 
+     * @return the address of the agent 
+     */
     @Getter private final Address address; // e.g. 127.0.0.1/8080
 
+    /** The device configuration file path. */
     private final File deviceConfiguration;
+
+    /**
+     * Returns the {@link com.oneandone.network.snmpman.configuration.Device} representation for the agent.
+     * <p />
+     * Will be set to {@link com.oneandone.network.snmpman.configuration.AgentConfiguration.DeviceFactory#DEFAULT_DEVICE} by default.
+     *  
+     * @return the device representation for the agent 
+     */
     @Getter(lazy=true) private final Device device = initializeDevice(); // e.g. cisco
+
+    /**
+     * Returns the base walk file (e.g. dump of SNMP walks) for the agent.
+     * 
+     * @return the base walk file for the agent 
+     */
     @Getter private final File walk; // real walk: /opt/snmpman/...
 
+    /**
+     * Returns the community for the agent.
+     * <p />
+     * The community is {@code public} by default.
+     * 
+     * @return the community for the agent
+     */
     @Getter private final String community; // e.g. 'public'
 
+    /**
+     * Constructs a new agent configuration. 
+     * <p />
+     * The list of agent configurations will be parsed from within {@link com.oneandone.network.snmpman.Snmpman}. 
+     *  
+     * @param name the name of the agent or {@code null} to set the address as the name
+     * @param deviceConfiguration the device configuration or {@code null} will set it to 
+     *                            {@link com.oneandone.network.snmpman.configuration.AgentConfiguration.DeviceFactory#DEFAULT_DEVICE}
+     * @param walk the base walk file (e.g. dump of SNMP walks)
+     * @param ip the IP the agent should bind to
+     * @param port the port of the agent
+     * @param community the community of the agent or {@code null} will set it to {@code public}
+     */
     public AgentConfiguration(@JsonProperty(value = "name", required = false) final String name,
                               @JsonProperty(value = "device", required = false) final File deviceConfiguration,
                               @JsonProperty(value = "walk", required = true) final File walk,

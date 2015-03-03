@@ -14,12 +14,11 @@ import java.util.regex.Pattern;
  * Every sequence of {@code int} array chains can be considered for the wildcard character.
  * <p/>
  * Only one wildcard is allowed for the wildcard {@code OID}.
- *
- * @author Johann Böhler
  */
 @EqualsAndHashCode
 public class WildcardOID {
 
+    /** The wildcard OID pattern. */
     private static final Pattern WILDCARD_OID_PATTERN = Pattern.compile("((\\.)?[0-9]+(\\.[0-9]+)*)(\\.\\*)?((\\.[0-9]+)*)");
     
     /** The first part of the wildcard {@code OID} (before the "{@code *}" character). */

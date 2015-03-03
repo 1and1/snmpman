@@ -6,7 +6,7 @@ import org.kohsuke.args4j.Option;
 
 import java.io.File;
 
-/** The command-line options for this application. */
+/** The command-line options for the {@link com.oneandone.network.snmpman.Snmpman} application. */
 @Slf4j
 public final class CommandLineOptions {
 
@@ -14,6 +14,7 @@ public final class CommandLineOptions {
     @Option(name = "-c", aliases = "--configuration", usage = "the path to the configuration XML", required = true)
     @Getter private File configurationFile;
     
+    /** Flag that defines that a help message should be displayed when {@code true}. */
     @Option(name = "-h", aliases = "--help", usage = "print the help message", help = true)
     @Getter private boolean showHelp = false;
 }

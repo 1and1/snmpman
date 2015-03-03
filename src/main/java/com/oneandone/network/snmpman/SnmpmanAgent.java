@@ -28,7 +28,10 @@ import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
- * TODO
+ * This is the core class of the {@code Snmpman}. The agent simulates the SNMP-capable devices.
+ * <p />
+ * This class can be instantiated via the constructor {@link #SnmpmanAgent(com.oneandone.network.snmpman.configuration.AgentConfiguration)}, which
+ * requires an instance of the {@link com.oneandone.network.snmpman.configuration.AgentConfiguration}.
  */
 @Slf4j
 public class SnmpmanAgent extends BaseAgent {
@@ -36,17 +39,30 @@ public class SnmpmanAgent extends BaseAgent {
     /** The pattern of variable bindings in a walk file. */
     private static final Pattern VARIABLE_BINDING_PATTERN = Pattern.compile("(((iso)?\\.[0-9]+)+) = ((([a-zA-Z0-9-]+): (.*)$)|(\"\"$))");
 
+    /** The configuration of this agent. */
     private final AgentConfiguration configuration;
     
     /** The list of managed object groups. */
     private final List<ManagedObject> groups = new ArrayList<>(0);
 
+    /**
+     * Initializes a new instance of an SNMP agent.
+     *
+     * @param configuration the configuration for this agent
+     */
     public SnmpmanAgent(final AgentConfiguration configuration) {
         super(SnmpmanAgent.getBootCounterFile(configuration), SnmpmanAgent.getConfigurationFile(configuration), new CommandProcessor(new OctetString(MPv3.createLocalEngineID())));
         this.agent.setWorkerPool(ThreadPool.create("RequestPool", 3));
         this.configuration = configuration;
     }
 
+    /**
+     * Returns the name of {@code this} agent.
+     * <p /> 
+     * See {@link com.oneandone.network.snmpman.configuration.AgentConfiguration#getName()} for more information on the return value.
+     *
+     * @return the name of {@code this} agent.
+     */
     public String getName() {
         return configuration.getName();
     }
@@ -91,8 +107,8 @@ public class SnmpmanAgent extends BaseAgent {
     /**
      * Returns the root OIDs of the bindings.
      *
-     * @param bindings the bindings
-     * @return the roots
+     * @param bindings the variable bindings
+     * @return the roots of the specified variable bindings
      */
     private static List<OID> getRoots(final SortedMap<OID, Variable> bindings) {
         final List<OID> potentialRoots = new ArrayList<>(bindings.size());
@@ -227,29 +243,17 @@ public class SnmpmanAgent extends BaseAgent {
             }
 
             final SortedMap<OID, Variable> variableBindings = this.getVariableBindings(configuration.getDevice(), bindings);
-
             final OctetString ctx = new OctetString();
-            
-            
-            // unregister all hack
-            DefaultMOContextScope hackScope = new DefaultMOContextScope(ctx, new OID(".1"), true, new OID(".1").nextPeer(), false);
-            ManagedObject query;            
-            while ((query = server.lookup(new DefaultMOQuery(hackScope, false))) != null) {
-                server.unregister(query, ctx);
-            }
-            // hack end
-            
-            
+
+            unregisterDefaultManagedObjects(ctx);
 
             final List<OID> roots = SnmpmanAgent.getRoots(variableBindings);
             for (final OID root : roots) {
                 final ArrayList<VariableBinding> subtree = new ArrayList<>();
-                //final SortedMap<OID, Variable> subtree = new TreeMap<>();
                 for (final Map.Entry<OID, Variable> binding : variableBindings.entrySet()) {
                     if (binding.getKey().size() >= root.size()) {
                         if (binding.getKey().leftMostCompare(root.size(), root) == 0) {
                             subtree.add(new VariableBinding(binding.getKey(), binding.getValue()));
-                            //subtree.put(binding.getKey(), binding.getValue());
                         }
                     }
                 }
@@ -258,17 +262,15 @@ public class SnmpmanAgent extends BaseAgent {
                 DefaultMOContextScope scope = new DefaultMOContextScope(ctx, root, true, root.nextPeer(), false);
                 ManagedObject mo = server.lookup(new DefaultMOQuery(scope, false));
                 if (mo != null) {
-                    for (VariableBinding vb : subtree) {
-                        group = new StaticMOGroup(vb.getOid(), new VariableBinding[]{ vb });
-                        scope = new DefaultMOContextScope(ctx, vb.getOid(), true, vb.getOid().nextPeer(), false);
+                    for (final VariableBinding variableBinding : subtree) {
+                        group = new StaticMOGroup(variableBinding.getOid(), new VariableBinding[]{ variableBinding });
+                        scope = new DefaultMOContextScope(ctx, variableBinding.getOid(), true, variableBinding.getOid().nextPeer(), false);
                         mo = server.lookup(new DefaultMOQuery(scope, false));
                         if (mo != null) {
-                            //logger.warn("Could not register single OID at "+vb.getOid()+" because ManagedObject "+mo+" is already registered.");
-                        }
-                        else {
+                            log.warn("could not register single OID at {} because ManagedObject {} is already registered.", variableBinding.getOid(), mo);
+                        } else {
                             groups.add(group);
                             server.register(group, null);
-                            //logger.info("Registered snapshot subtree '" + root + "' with " + vb);
                         }
                     }
                 } else {
@@ -282,6 +284,20 @@ public class SnmpmanAgent extends BaseAgent {
             log.error("could not read walk file " + configuration.getWalk().getAbsolutePath(), e);
         } catch (final DuplicateRegistrationException e) {
             log.error("duplicate registrations are not allowed", e);
+        }
+    }
+
+    /**
+     * Unregisters all default managed objects in the specified context {@code ctx}.
+     *
+     * @param ctx the context from which all default managed objects should be unregistred
+     */
+    private void unregisterDefaultManagedObjects(final OctetString ctx) {
+        final OID startOID = new OID(".1");
+        final DefaultMOContextScope hackScope = new DefaultMOContextScope(ctx, startOID, true, startOID.nextPeer(), false);
+        ManagedObject query;
+        while ((query = server.lookup(new DefaultMOQuery(hackScope, false))) != null) {
+            server.unregister(query, ctx);
         }
     }
 
@@ -374,16 +390,14 @@ public class SnmpmanAgent extends BaseAgent {
         final Variable[] com2sec = new Variable[]{
                 new OctetString(configuration.getCommunity()),                 // community name
                 new OctetString(configuration.getCommunity()),                 // security name
-                getAgent().getContextEngineID(),                                    // local engine ID
-                new OctetString(),                                                  // default context name
-                new OctetString(),                                                  // transport tag
-                new Integer32(StorageType.readOnly),                                // storage type
-                new Integer32(RowStatus.active)                                     // row status
+                getAgent().getContextEngineID(),                               // local engine ID
+                new OctetString(),                                             // default context name
+                new OctetString(),                                             // transport tag
+                new Integer32(StorageType.readOnly),                           // storage type
+                new Integer32(RowStatus.active)                                // row status
         };
-
         final SnmpCommunityMIB.SnmpCommunityEntryRow row = snmpCommunityMIB.getSnmpCommunityEntry().createRow(new OctetString("public2public").toSubIndex(true), com2sec);
         snmpCommunityMIB.getSnmpCommunityEntry().addRow(row);
     }
-
 
 }

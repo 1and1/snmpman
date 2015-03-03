@@ -9,6 +9,7 @@ import org.snmp4j.smi.TimeTicks;
  */
 public class TimeTicksModifier implements VariableModifier<TimeTicks> {
 
+    /** The initialization time of {@code this} modifier. */
     private final long initTime = System.currentTimeMillis();
 
     @Override

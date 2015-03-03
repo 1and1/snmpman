@@ -6,9 +6,7 @@ import com.oneandone.network.snmpman.configuration.type.ModifierProperties;
 import lombok.Getter;
 import org.snmp4j.smi.Counter64;
 
-/**
- * This modifier instance modifies {@link Counter64} variables by the {@link #modify(Counter64)} method.
- */
+/** This modifier instance modifies {@link org.snmp4j.smi.Counter64} variables. */
 public class Counter64Modifier implements VariableModifier<Counter64> {
 
     /** The minimum allowed number for the resulting modified variable. */

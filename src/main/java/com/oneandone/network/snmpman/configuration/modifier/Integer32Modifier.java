@@ -6,9 +6,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.snmp4j.smi.Integer32;
 
-/**
- * TODO
- */
+/** This modifier instance modifies {@link org.snmp4j.smi.Integer32} variables. */
 @Slf4j
 public class Integer32Modifier implements VariableModifier<Integer32> {
 

@@ -10,8 +10,10 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-/**
- * Represents a device type.
+/** 
+ * Represents a device type. 
+ * <p />
+ * You can find example configurations within the test resources of this project.
  */
 @ToString(of = "name") @EqualsAndHashCode
 public class Device {
