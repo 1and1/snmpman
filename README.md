@@ -30,12 +30,15 @@ You can include the `SNMPMAN` as a Maven dependency from [Maven Central]().
 
 In order to start and stop the simulation use this code snippet as an example:
 
-```
-// creates a new instance of the SNMPMAN by the specified 
-// configuration file and executes all agents
+```Java
+/* 
+ * creates a new instance of the SNMPMAN by the specified configuration file 
+ * and executes all agents 
+ */
 Snmpman snmpman = Snmpman.start(new File(configuration.yaml"));
-// ... do something with the agents
-// stop the SNMPMAN and all started agents
+/* ... do something with the agents */
+
+/* stop the SNMPMAN and all started agents */
 snmpman.stop();
 ```
 
