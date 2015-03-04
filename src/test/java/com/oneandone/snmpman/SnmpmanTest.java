@@ -43,7 +43,7 @@ public class SnmpmanTest {
         snmpman.stop();
     }
 
-    private static List<TableEvent> getResponse(final OID query) throws Exception {
+    public static List<TableEvent> getResponse(final OID query) throws Exception {
         final Address targetAddress = GenericAddress.parse("127.0.0.1/10000");
         final TransportMapping transport = new DefaultUdpTransportMapping();
         final Snmp snmp = new Snmp(transport);

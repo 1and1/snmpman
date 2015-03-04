@@ -46,7 +46,6 @@ dependencies {
 
     testCompile group: 'org.testng', name: 'testng', version: '6.8.21'
 }
-test.useTestNG()
 
 task fatJar(type: Jar) {
     dependsOn configurations.runtime
@@ -55,17 +54,49 @@ task fatJar(type: Jar) {
         exclude "META-INF/*.DSA"
         exclude "META-INF/*.RSA"
     }
+    with jar
 
     manifest {
         attributes 'Implementation-Title': 'snmpman',
-                   'Implementation-Version': version,
-                   'Built-By': System.getProperty('user.name'),
-                   'Built-Date': new Date(),
-                   'Built-JDK': System.getProperty('java.version'),
-                   'Main-Class': mainClassName
+                'Implementation-Version': version,
+                'Built-By': System.getProperty('user.name'),
+                'Built-Date': new Date(),
+                'Built-JDK': System.getProperty('java.version'),
+                'Main-Class': mainClassName
     }
 }
 
+// --------------------------------------------------------------------------------------------------------------------
+// Unit test definition
+// --------------------------------------------------------------------------------------------------------------------
+test {
+    useTestNG({
+        excludeGroups 'integration-test'
+    })
+}
+
+// --------------------------------------------------------------------------------------------------------------------
+// Integration test definition
+// --------------------------------------------------------------------------------------------------------------------
+ext {
+    snmpmanProcess = null
+}
+task startSnmpman(dependsOn: fatJar) << {
+    def jarPath = fatJar.outputs.files[0].absolutePath
+    snmpmanProcess = "java -jar ${jarPath} -c src/test/resources/configuration/configuration.yaml".execute()
+}
+task integrationTest(type: Test, dependsOn: startSnmpman) {
+    useTestNG({
+        includeGroups 'integration-test'
+    })
+}
+gradle.buildFinished {
+    snmpmanProcess?.waitForOrKill(1000)
+}
+
+// --------------------------------------------------------------------------------------------------------------------
+// Publish artifact configuration
+// --------------------------------------------------------------------------------------------------------------------
 javadoc {
     options.addStringOption('Xdoclint:none', '-quiet')
 }
@@ -91,6 +122,9 @@ signing {
     sign configurations.archives
 }
 
+// --------------------------------------------------------------------------------------------------------------------
+// Version of artifact as defined by the task graph
+// --------------------------------------------------------------------------------------------------------------------
 gradle.taskGraph.whenReady {taskGraph ->
     if ("${version}".matches("[0-9]+\\.[0-9]+\\-SNAPSHOT") && (taskGraph.hasTask(buildRpm) || taskGraph.hasTask(buildDeb) || taskGraph.hasTask(release))) {
         def gitRevision = 'git rev-list HEAD --count'.execute().text.trim()
