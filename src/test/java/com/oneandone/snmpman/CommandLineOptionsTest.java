@@ -17,4 +17,13 @@ public class CommandLineOptionsTest {
         assertTrue(commandLineOptions.getConfigurationFile().exists());
         assertTrue(commandLineOptions.getConfigurationFile().isFile());
     }
+
+    @Test
+    public void testHelp() throws Exception {
+        final CommandLineOptions commandLineOptions = new CommandLineOptions();
+        final CmdLineParser cmdLineParser = new CmdLineParser(commandLineOptions);
+        cmdLineParser.parseArgument("-h");
+
+        assertTrue(commandLineOptions.isShowHelp());
+    }
 }
