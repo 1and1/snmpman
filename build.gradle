@@ -47,7 +47,7 @@ dependencies {
     testCompile group: 'org.testng', name: 'testng', version: '6.8.21'
 }
 
-jar {
+task fatJar(type: Jar) {
     dependsOn configurations.runtime
     from ((configurations.runtime - configurations.provided).collect { it.isDirectory() ? it : zipTree(it) })  {
         exclude "META-INF/*.SF"
@@ -57,11 +57,11 @@ jar {
 
     manifest {
         attributes 'Implementation-Title': 'snmpman',
-                   'Implementation-Version': version,
-                   'Built-By': System.getProperty('user.name'),
-                   'Built-Date': new Date(),
-                   'Built-JDK': System.getProperty('java.version'),
-                   'Main-Class': mainClassName
+                'Implementation-Version': version,
+                'Built-By': System.getProperty('user.name'),
+                'Built-Date': new Date(),
+                'Built-JDK': System.getProperty('java.version'),
+                'Main-Class': mainClassName
     }
 }
 
@@ -113,10 +113,8 @@ ospackage {
     
     prefix '/opt/snmpman' // also only applied to RPM
     into '/opt/snmpman'
-    
-    user 'snmpman'
-    
-    from(jar.outputs.files) {
+
+    from(fatJar.outputs.files) {
         into 'lib'
         fileMode = 0644
         createDirectoryEntry = true
@@ -138,6 +136,7 @@ ospackage {
 }
 
 buildRpm {
+    user 'snmpman'
     permissionGroup 'snmpman'
     
     preInstall file('src/main/scripts/install/rpm-preInstall.sh')
@@ -145,12 +144,16 @@ buildRpm {
 }
 
 buildDeb {
-    preInstall file('src/main/scripts/install/deb-preInstall.sh')
-    postUninstall file('src/main/scripts/install/deb-postUninstall.sh')
+    // TODO add install script and move user and group up to main defintion once bug is fixed
+    //preInstall file('src/main/scripts/install/deb-preInstall.sh')
+    //postUninstall file('src/main/scripts/install/deb-postUninstall.sh')
 }
 
 task release(dependsOn: uploadArchives)
 task snapshot(dependsOn: uploadArchives)
+
+ossrhUsername = "${ossrhUsername}"
+ossrhPassword = "${ossrhPassword}"
 
 // preperation for central as described in http://central.sonatype.org/pages/gradle.html
 uploadArchives {
@@ -158,12 +161,12 @@ uploadArchives {
         mavenDeployer {
             beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
-                //authentication(userName: ossrhUsername, password: ossrhPassword)
+            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
             }
 
-            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
-                //authentication(userName: ossrhUsername, password: ossrhPassword)
+            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots") {
+                authentication(userName: ossrhUsername, password: ossrhPassword)
             }
             
             pom.project {
