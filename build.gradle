@@ -91,10 +91,10 @@ signing {
 }
 
 gradle.taskGraph.whenReady {taskGraph ->
-    if ("${version}".matches("[0-9]+\\.[0-9]+") && (taskGraph.hasTask(buildRpm) || taskGraph.hasTask(buildDeb) || taskGraph.hasTask(release))) {
+    if ("${version}".matches("[0-9]+\\.[0-9]+\\-SNAPSHOT") && (taskGraph.hasTask(buildRpm) || taskGraph.hasTask(buildDeb) || taskGraph.hasTask(release))) {
         def gitRevision = 'git rev-list HEAD --count'.execute().text.trim()
         version = "${version}".replace('-SNAPSHOT', '') + ".${gitRevision}"
-        
+
         configurations.testCompile.dependencies.each { dependency ->
             if (dependency.version.contains("SNAPSHOT")) {
                 throw new RuntimeException("project contains SNAPSHOT dependency in artifact ${dependency.group}:${dependency.name}:${dependency.version}")
@@ -149,13 +149,17 @@ buildDeb {
     //postUninstall file('src/main/scripts/install/deb-postUninstall.sh')
 }
 
-task release(dependsOn: uploadArchives)
-task snapshot(dependsOn: uploadArchives)
+task release(dependsOn: uploadArchives) << {
+    println "build release with version ${version}"
+}
+
+task snapshot(dependsOn: uploadArchives) << {
+    println "build snapshot with version ${version}"
+}
 
 ossrhUsername = "${ossrhUsername}"
 ossrhPassword = "${ossrhPassword}"
 
-// preperation for central as described in http://central.sonatype.org/pages/gradle.html
 uploadArchives {
     repositories {
         mavenDeployer {
