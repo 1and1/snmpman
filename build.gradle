@@ -17,14 +17,6 @@ version = '1.2-SNAPSHOT'
 
 mainClassName = 'com.oneandone.snmpman.Snmpman'
 
-// credentials to 'The Central Repository' (http://central.sonatype.org/pages/ossrh-guide.html)
-ext {
-    if (!hasProperty('ossrhUsername') || !hasProperty('ossrhPassword')) {
-        ossrhUsername = ""
-        ossrhPassword = ""
-    }
-}
-
 repositories {
     mavenCentral()
 
@@ -164,68 +156,72 @@ buildDeb {
 // --------------------------------------------------------------------------------------------------------------------
 // Release tasks to 'The Central Repository'
 // --------------------------------------------------------------------------------------------------------------------
-task release(dependsOn: uploadArchives) << {
-    println "build release with version ${version}"
-}
 
-task snapshot(dependsOn: uploadArchives) << {
-    println "build snapshot with version ${version}"
-}
+// credentials to 'The Central Repository' (http://central.sonatype.org/pages/ossrh-guide.html)
+if (hasProperty('ossrhUsername') && hasProperty('ossrhPassword')) {
+    task release(dependsOn: uploadArchives) << {
+        println "build release with version ${version}"
+    }
 
-uploadArchives {
-    repositories {
-        mavenDeployer {
-            beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
+    task snapshot(dependsOn: uploadArchives) << {
+        println "build snapshot with version ${version}"
+    }
 
-            repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
+    uploadArchives {
+        repositories {
+            mavenDeployer {
+                beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-            snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots") {
-                authentication(userName: ossrhUsername, password: ossrhPassword)
-            }
-            
-            pom.project {
-                name 'snmpman'
-                packaging 'jar'
-                description 'The SNMPMAN is an application or library that can simulate SNMP capable devices'
-                url 'http://1and1.github.io/snmpman/'
-
-                scm {
-                    url 'https://github.com/1and1/snmpman.git'
-                    connection 'https://github.com/1and1/snmpman.git'
-                    developerConnection 'https://github.com/1and1/snmpman.git'
+                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2") {
+                    authentication(userName: ossrhUsername, password: ossrhPassword)
                 }
 
-                licenses {
-                    license {
-                        name 'The Apache Software License, Version 2.0'
-                        url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
-                        distribution 'repo'
+                snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots") {
+                    authentication(userName: ossrhUsername, password: ossrhPassword)
+                }
+
+                pom.project {
+                    name 'snmpman'
+                    packaging 'jar'
+                    description 'The SNMPMAN is an application or library that can simulate SNMP capable devices'
+                    url 'http://1and1.github.io/snmpman/'
+
+                    scm {
+                        url 'https://github.com/1and1/snmpman.git'
+                        connection 'https://github.com/1and1/snmpman.git'
+                        developerConnection 'https://github.com/1and1/snmpman.git'
                     }
-                }
-                
-                repositories {
-                    repository {
-                        id 'snmp4j.repo'
-                        name 'SNMP4J Maven Repository'
-                        url 'https://oosnmp.net/dist/release'
-                    }
-                }
 
-                organization {
-                    name '1&1 Internet Inc.'
-                    url 'http://www.1and1.com/'
-                }
-
-                developers {
-                    developer {
-                        id 'bitionaire'
-                        name 'Johann Boehler'
+                    licenses {
+                        license {
+                            name 'The Apache Software License, Version 2.0'
+                            url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                            distribution 'repo'
+                        }
                     }
-                    developer {
-                        id 'netdevfighter'
-                        name 'Tobias Lindenmann'
+
+                    repositories {
+                        repository {
+                            id 'snmp4j.repo'
+                            name 'SNMP4J Maven Repository'
+                            url 'https://oosnmp.net/dist/release'
+                        }
+                    }
+
+                    organization {
+                        name '1&1 Internet Inc.'
+                        url 'http://www.1and1.com/'
+                    }
+
+                    developers {
+                        developer {
+                            id 'bitionaire'
+                            name 'Johann Boehler'
+                        }
+                        developer {
+                            id 'netdevfighter'
+                            name 'Tobias Lindenmann'
+                        }
                     }
                 }
             }
