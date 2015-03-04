@@ -91,7 +91,7 @@ signing {
 }
 
 gradle.taskGraph.whenReady {taskGraph ->
-    if (taskGraph.hasTask(buildRpm) || taskGraph.hasTask(buildDeb) || taskGraph.hasTask(release)) {
+    if ("${version}".matches("[0-9]+\\.[0-9]+") && (taskGraph.hasTask(buildRpm) || taskGraph.hasTask(buildDeb) || taskGraph.hasTask(release))) {
         def gitRevision = 'git rev-list HEAD --count'.execute().text.trim()
         version = "${version}".replace('-SNAPSHOT', '') + ".${gitRevision}"
         
