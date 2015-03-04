@@ -1,24 +1,24 @@
-name: "IOS"
+name: "NxOS"
 modifiers:
 # cpu.load
-  - oid: ".1.3.6.1.4.1.9.2.1.56"
-    class: "com.oneandone.snmpman.configuration.modifier.Integer32Modifier"
+  - oid: ".1.3.6.1.4.1.9.9.109.1.1.1.1.6"
+    class: "com.oneandone.snmpman.configuration.modifier.Gauge32Modifier"
     properties:
        minimum: 0
        maximum: 100
        minimumStep: 0
        maximumStep: 100
 # cpu.avg1
-  - oid: ".1.3.6.1.4.1.9.2.1.57"
-    class: "com.oneandone.snmpman.configuration.modifier.Integer32Modifier"
+  - oid: ".1.3.6.1.4.1.9.9.109.1.1.1.1.7"
+    class: "com.oneandone.snmpman.configuration.modifier.Gauge32Modifier"
     properties:
        minimum: 0
        maximum: 100
        minimumStep: 0
        maximumStep: 100
 # cpu.avg5
-  - oid: ".1.3.6.1.4.1.9.2.1.58"
-    class: "com.oneandone.snmpman.configuration.modifier.Integer32Modifier"
+  - oid: ".1.3.6.1.4.1.9.9.109.1.1.1.1.8"
+    class: "com.oneandone.snmpman.configuration.modifier.Gauge32Modifier"
     properties:
        minimum: 0
        maximum: 100
@@ -41,7 +41,7 @@ modifiers:
        minimumStep: -30
        maximumStep: 30
 # mem.used
-  - oid: ".1.3.6.1.4.1.9.9.48.1.1.1.5"
+  - oid: ".1.3.6.1.4.1.9.9.305.1.1.2"
     class: "com.oneandone.snmpman.configuration.modifier.Gauge32Modifier"
     properties:
        minimum: 0

@@ -13,9 +13,17 @@ targetCompatibility = 1.8
 
 group = 'com.oneandone'
 archivesBaseName = 'snmpman'
-version = '1.1-SNAPSHOT'
+version = '1.2-SNAPSHOT'
 
-mainClassName = 'com.oneandone.network.snmpman.Snmpman'
+mainClassName = 'com.oneandone.snmpman.Snmpman'
+
+// credentials to 'The Central Repository' (http://central.sonatype.org/pages/ossrh-guide.html)
+ext {
+    if (!hasProperty('ossrhUsername') || !hasProperty('ossrhPassword')) {
+        ossrhUsername = ""
+        ossrhPassword = ""
+    }
+}
 
 repositories {
     mavenCentral()
@@ -24,7 +32,6 @@ repositories {
         url "https://oosnmp.net/dist/release/"
     }
 }
-test.useTestNG()
 
 configurations {
     provided
@@ -36,7 +43,7 @@ dependencies {
     compile group: 'args4j', name: 'args4j', version: '2.0.29'
 
     compile group: 'org.snmp4j', name: 'snmp4j', version: '2.3.3'
-    compile group: 'org.snmp4j', name: 'snmp4j-agent', version: '2.2.2' // TODO 2.3.1
+    compile group: 'org.snmp4j', name: 'snmp4j-agent', version: '2.3.1'
     compile group: 'com.fasterxml.jackson.jaxrs', name: 'jackson-jaxrs-json-provider', version: '2.5.1'
     compile group: 'com.fasterxml.jackson.dataformat', name: 'jackson-dataformat-yaml', version: '2.5.1'
     compile group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.5.1'
@@ -47,6 +54,7 @@ dependencies {
 
     testCompile group: 'org.testng', name: 'testng', version: '6.8.21'
 }
+test.useTestNG()
 
 task fatJar(type: Jar) {
     dependsOn configurations.runtime
@@ -58,11 +66,11 @@ task fatJar(type: Jar) {
 
     manifest {
         attributes 'Implementation-Title': 'snmpman',
-                'Implementation-Version': version,
-                'Built-By': System.getProperty('user.name'),
-                'Built-Date': new Date(),
-                'Built-JDK': System.getProperty('java.version'),
-                'Main-Class': mainClassName
+                   'Implementation-Version': version,
+                   'Built-By': System.getProperty('user.name'),
+                   'Built-Date': new Date(),
+                   'Built-JDK': System.getProperty('java.version'),
+                   'Main-Class': mainClassName
     }
 }
 
@@ -104,6 +112,9 @@ gradle.taskGraph.whenReady {taskGraph ->
     }
 }
 
+// --------------------------------------------------------------------------------------------------------------------
+// The packaging configuration (RPM/DEB)
+// --------------------------------------------------------------------------------------------------------------------
 ospackage {
     packageName = 'snmpman'
     release = 1
@@ -150,6 +161,9 @@ buildDeb {
     //postUninstall file('src/main/scripts/install/deb-postUninstall.sh')
 }
 
+// --------------------------------------------------------------------------------------------------------------------
+// Release tasks to 'The Central Repository'
+// --------------------------------------------------------------------------------------------------------------------
 task release(dependsOn: uploadArchives) << {
     println "build release with version ${version}"
 }
@@ -157,9 +171,6 @@ task release(dependsOn: uploadArchives) << {
 task snapshot(dependsOn: uploadArchives) << {
     println "build snapshot with version ${version}"
 }
-
-ossrhUsername = "${ossrhUsername}"
-ossrhPassword = "${ossrhPassword}"
 
 uploadArchives {
     repositories {
@@ -200,6 +211,11 @@ uploadArchives {
                         name 'SNMP4J Maven Repository'
                         url 'https://oosnmp.net/dist/release'
                     }
+                }
+
+                organization {
+                    name '1&1 Internet Inc.'
+                    url 'http://www.1and1.com/'
                 }
 
                 developers {

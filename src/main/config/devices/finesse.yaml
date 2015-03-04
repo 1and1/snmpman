@@ -1,37 +1,29 @@
-name: "IOS"
+name: "Finesse"
 modifiers:
 # cpu.load
-  - oid: ".1.3.6.1.4.1.9.2.1.56"
-    class: "com.oneandone.snmpman.configuration.modifier.Integer32Modifier"
+  - oid: ".1.3.6.1.4.1.9.9.109.1.1.1.1.3"
+    class: "com.oneandone.snmpman.configuration.modifier.Gauge32Modifier"
     properties:
        minimum: 0
        maximum: 100
        minimumStep: 0
        maximumStep: 100
 # cpu.avg1
-  - oid: ".1.3.6.1.4.1.9.2.1.57"
-    class: "com.oneandone.snmpman.configuration.modifier.Integer32Modifier"
+  - oid: ".1.3.6.1.4.1.9.9.109.1.1.1.1.4"
+    class: "com.oneandone.snmpman.configuration.modifier.Gauge32Modifier"
     properties:
        minimum: 0
        maximum: 100
        minimumStep: 0
        maximumStep: 100
 # cpu.avg5
-  - oid: ".1.3.6.1.4.1.9.2.1.58"
-    class: "com.oneandone.snmpman.configuration.modifier.Integer32Modifier"
+  - oid: ".1.3.6.1.4.1.9.9.109.1.1.1.1.5"
+    class: "com.oneandone.snmpman.configuration.modifier.Gauge32Modifier"
     properties:
        minimum: 0
        maximum: 100
        minimumStep: 0
        maximumStep: 100
-# mem.free
-  - oid: ".1.3.6.1.4.1.9.9.48.1.1.1.6"
-    class: "com.oneandone.snmpman.configuration.modifier.Gauge32Modifier"
-    properties:
-       minimum: 1547369620
-       maximum: 1547374620
-       minimumStep: -30
-       maximumStep: 30
 # mem.largestfree
   - oid: ".1.3.6.1.4.1.9.9.48.1.1.1.7"
     class: "com.oneandone.snmpman.configuration.modifier.Gauge32Modifier"
@@ -56,6 +48,22 @@ modifiers:
        maximum: 60
        minimumStep: -10
        maximumStep: 10
+# ConnectionsCurrent
+  - oid: ".1.3.6.1.4.1.9.9.147.1.2.2.2.1.5.40.6"
+    class: "com.oneandone.snmpman.configuration.modifier.Gauge32Modifier"
+    properties:
+       minimum: 0
+       maximum: 1000
+       minimumStep: 0
+       maximumStep: 1000
+# ConnectionsHigh
+  - oid: ".1.3.6.1.4.1.9.9.147.1.2.2.2.1.5.40.6"
+    class: "com.oneandone.snmpman.configuration.modifier.Gauge32Modifier"
+    properties:
+       minimum: 0
+       maximum: 1000
+       minimumStep: 0
+       maximumStep: 1000
 # ifInOctets
   - oid: ".1.3.6.1.2.1.2.2.1.10"
     class: "com.oneandone.snmpman.configuration.modifier.Counter32Modifier"

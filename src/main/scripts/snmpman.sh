@@ -3,7 +3,7 @@
 # ------------------------------------------------------------------
 
 # The main class
-readonly MAIN_CLASS="com.oneandone.network.snmpman.Snmpman"
+readonly MAIN_CLASS="com.oneandone.snmpman.Snmpman"
 
 [ -r "/etc/default/snmpman" ] && . "/etc/default/snmpman"
 
