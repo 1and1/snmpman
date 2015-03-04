@@ -34,6 +34,7 @@ configurations {
 dependencies {
     compile group: 'com.google.guava', name: 'guava', version: '18.0'
     compile group: 'args4j', name: 'args4j', version: '2.0.29'
+
     compile group: 'org.snmp4j', name: 'snmp4j', version: '2.3.3'
     compile group: 'org.snmp4j', name: 'snmp4j-agent', version: '2.2.2' // TODO 2.3.1
     compile group: 'com.fasterxml.jackson.jaxrs', name: 'jackson-jaxrs-json-provider', version: '2.5.1'
@@ -190,6 +191,14 @@ uploadArchives {
                         name 'The Apache Software License, Version 2.0'
                         url 'http://www.apache.org/licenses/LICENSE-2.0.txt'
                         distribution 'repo'
+                    }
+                }
+                
+                repositories {
+                    repository {
+                        id 'snmp4j.repo'
+                        name 'SNMP4J Maven Repository'
+                        url 'https://oosnmp.net/dist/release'
                     }
                 }
 
