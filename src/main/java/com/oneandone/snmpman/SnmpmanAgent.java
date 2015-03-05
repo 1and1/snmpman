@@ -158,12 +158,20 @@ public class SnmpmanAgent extends BaseAgent {
      */
     private static Variable getVariable(final String type, final String value) {
         switch (type) {
+            // TODO add "BITS" support
             case "STRING":
-                return new OctetString(value.substring(1, value.length() - 1));
+                if (value.startsWith("\"") && value.endsWith("\"")) {
+                    if (value.length() == 2) {
+                        return new OctetString();
+                    }
+                    return new OctetString(value.substring(1, value.length() - 1));
+                } else{
+                    return new OctetString(value);
+                }
             case "OID":
                 return new OID(value);
             case "Gauge32":
-                return new Gauge32(Long.parseLong(value));
+                return new Gauge32(Long.parseLong(value.replaceAll("[^-?0-9]+", "")));
             case "Timeticks":
                 final int openBracket = value.indexOf("(") + 1;
                 final int closeBracket = value.indexOf(")");
@@ -172,12 +180,12 @@ public class SnmpmanAgent extends BaseAgent {
                 }
                 return new TimeTicks(Long.parseLong(value.substring(openBracket, closeBracket)));
             case "Counter32":
-                return new Counter32(Long.parseLong(value));
+                return new Counter32(Long.parseLong(value.replaceAll("[^-?0-9]+", "")));
             case "Counter64":
                 // Parse unsigned long
                 return new Counter64(UnsignedLong.valueOf(value).longValue());
             case "INTEGER":
-                return new Integer32(Integer.valueOf(value));
+                return new Integer32(Integer.valueOf(value.replaceAll("[^-?0-9]+", "")));
             case "Hex-STRING":
                 return OctetString.fromHexString(value, ' ');
             case "IpAddress":
@@ -214,7 +222,7 @@ public class SnmpmanAgent extends BaseAgent {
     protected void registerManagedObjects() {
         log.trace("registering managed objects for agent \"{}\"", configuration.getName());
         try (final FileReader fileReader = new FileReader(configuration.getWalk());
-             final BufferedReader reader = new BufferedReader(fileReader)) {
+             final BufferedReader reader = new BufferedReader(fileReader, 1024)) {
 
             final Map<OID, Variable> bindings = new HashMap<>();
 
@@ -234,9 +242,13 @@ public class SnmpmanAgent extends BaseAgent {
                         value = matcher.group(7);
                     }
 
-                    final Variable variable = SnmpmanAgent.getVariable(type, value);
-                    bindings.put(oid, variable);
-                    log.trace("added binding with oid \"{}\" and variable \"{}\"", oid, variable);
+                    try {
+                        final Variable variable = SnmpmanAgent.getVariable(type, value);
+                        bindings.put(oid, variable);
+                        log.trace("added binding with oid \"{}\" and variable \"{}\"", oid, variable);
+                    } catch (final Exception e) {
+                        log.warn("could not parse line \"{}\" of walk file {} with exception: {}", line, configuration.getWalk().getCanonicalPath(), e.getMessage());
+                    }
                 } else {
                     log.warn("could not parse line \"{}\" of walk file {}", line, configuration.getWalk().getAbsolutePath());
                 }
