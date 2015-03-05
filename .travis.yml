@@ -1,5 +1,5 @@
 language: java
-script: gradle clean test integrationTest
+script: gradle integrationTest
 jdk:
   - oraclejdk8
 os:

@@ -126,7 +126,7 @@ signing {
 // Version of artifact as defined by the task graph
 // --------------------------------------------------------------------------------------------------------------------
 gradle.taskGraph.whenReady {taskGraph ->
-    if ("${version}".matches("[0-9]+\\.[0-9]+\\-SNAPSHOT") && (taskGraph.hasTask(buildRpm) || taskGraph.hasTask(buildDeb) || taskGraph.hasTask(release))) {
+    if ("${version}".matches("[0-9]+\\.[0-9]+\\-SNAPSHOT") && (taskGraph.hasTask(buildRpm) || taskGraph.hasTask(buildDeb) || taskGraph.hasTask('release'))) {
         def gitRevision = 'git rev-list HEAD --count'.execute().text.trim()
         version = "${version}".replace('-SNAPSHOT', '') + ".${gitRevision}"
 
