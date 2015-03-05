@@ -118,8 +118,10 @@ artifacts {
     archives sourcesJar
 }
 
-signing {
-    sign configurations.archives
+if (hasProperty('signing.keyId') && hasProperty('signing.password') && hasProperty('signing.secretKeyRingFile')) {
+    signing {
+        sign configurations.archives
+    }
 }
 
 // --------------------------------------------------------------------------------------------------------------------
