@@ -327,9 +327,9 @@ public class SnmpmanAgent extends BaseAgent {
         final SortedMap<OID, Variable> result = new TreeMap<>();
 
         for (final Map.Entry<OID, Variable> binding : bindings.entrySet()) {
-            final List<VariableModifier> modifiers = new ArrayList<>(0);
+            final List<VariableModifier> modifiers;
 
-            modifiers.addAll(device.getModifiers().stream().filter(modifier -> modifier.isApplicable(binding.getKey())).collect(Collectors.toList()));
+            modifiers = device.getModifiers().stream().filter(modifier -> modifier.isApplicable(binding.getKey())).collect(Collectors.toList());
 
             if (modifiers.isEmpty()) {
                 result.put(binding.getKey(), binding.getValue());
