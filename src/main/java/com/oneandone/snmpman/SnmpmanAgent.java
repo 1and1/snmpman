@@ -222,37 +222,9 @@ public class SnmpmanAgent extends BaseAgent {
     protected void registerManagedObjects() {
         log.trace("registering managed objects for agent \"{}\"", configuration.getName());
         try (final FileReader fileReader = new FileReader(configuration.getWalk());
-             final BufferedReader reader = new BufferedReader(fileReader, 1024)) {
+             final BufferedReader reader = new BufferedReader(fileReader)) {
 
-            final Map<OID, Variable> bindings = new HashMap<>();
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                final Matcher matcher = VARIABLE_BINDING_PATTERN.matcher(line);
-                if (matcher.matches()) {
-                    final OID oid = new OID(matcher.group(1).replace("iso", ".1"));
-
-                    final String type;
-                    final String value;
-                    if (matcher.group(7) == null) {
-                        type = "STRING";
-                        value = "\"\"";
-                    } else {
-                        type = matcher.group(6);
-                        value = matcher.group(7);
-                    }
-
-                    try {
-                        final Variable variable = SnmpmanAgent.getVariable(type, value);
-                        bindings.put(oid, variable);
-                        log.trace("added binding with oid \"{}\" and variable \"{}\"", oid, variable);
-                    } catch (final Exception e) {
-                        log.warn("could not parse line \"{}\" of walk file {} with exception: {}", line, configuration.getWalk().getCanonicalPath(), e.getMessage());
-                    }
-                } else {
-                    log.warn("could not parse line \"{}\" of walk file {}", line, configuration.getWalk().getAbsolutePath());
-                }
-            }
+            Map<OID, Variable> bindings = readVariableBindings(reader);
 
             final SortedMap<OID, Variable> variableBindings = this.getVariableBindings(configuration.getDevice(), bindings);
             final OctetString ctx = new OctetString();
@@ -297,6 +269,38 @@ public class SnmpmanAgent extends BaseAgent {
         } catch (final DuplicateRegistrationException e) {
             log.error("duplicate registrations are not allowed", e);
         }
+    }
+
+    /** Reads all variable bindings using {@link #VARIABLE_BINDING_PATTERN}.
+     * @param reader the reader to read the bindings from.
+     * @return the map of oid to variable binding.
+     */
+    private Map<OID, Variable> readVariableBindings(final BufferedReader reader) throws IOException {
+        final Map<OID, Variable> bindings = new HashMap<>();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            final Matcher matcher = VARIABLE_BINDING_PATTERN.matcher(line);
+            if (matcher.matches()) {
+                final OID oid = new OID(matcher.group(1).replace("iso", ".1"));
+                
+                try {
+                    final Variable variable;
+                    if (matcher.group(7) == null) {
+                        variable = SnmpmanAgent.getVariable("STRING", "\"\"");
+                    } else {
+                        variable = SnmpmanAgent.getVariable(matcher.group(6), matcher.group(7));
+                    }
+
+                    bindings.put(oid, variable);
+                    log.trace("added binding with oid \"{}\" and variable \"{}\"", oid, variable);
+                } catch (final Exception e) {
+                    log.warn("could not parse line \"{}\" of walk file {} with exception: {}", line, configuration.getWalk().getCanonicalPath(), e.getMessage());
+                }
+            } else {
+                log.warn("could not parse line \"{}\" of walk file {}", line, configuration.getWalk().getAbsolutePath());
+            }
+        }
+        return bindings;
     }
 
     /**
