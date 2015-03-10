@@ -43,7 +43,7 @@ public class SnmpmanAgent extends BaseAgent {
     private final AgentConfiguration configuration;
     
     /** The list of managed object groups. */
-    private final List<ManagedObject> groups = new ArrayList<>(0);
+    private final List<ManagedObject> groups = new ArrayList<>();
 
     /**
      * Initializes a new instance of an SNMP agent.
