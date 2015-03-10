@@ -286,18 +286,14 @@ public class SnmpmanAgent extends BaseAgent {
             if (matcher.matches()) {
                 final OID oid = new OID(matcher.group(1).replace("iso", ".1"));
                 
-                final String type;
-                final String value;
-                if (matcher.group(7) == null) {
-                    type = "STRING";
-                    value = "\"\"";
-                } else {
-                    type = matcher.group(6);
-                    value = matcher.group(7);
-                }
-                
                 try {
-                    final Variable variable = SnmpmanAgent.getVariable(type, value);
+                    final Variable variable;
+                    if (matcher.group(7) == null) {
+                        variable = SnmpmanAgent.getVariable("STRING", "\"\"");
+                    } else {
+                        variable = SnmpmanAgent.getVariable(matcher.group(6), matcher.group(7));
+                    }
+                
                     bindings.put(oid, variable);
                     log.trace("added binding with oid \"{}\" and variable \"{}\"", oid, variable);
                 } catch (final Exception e) {
