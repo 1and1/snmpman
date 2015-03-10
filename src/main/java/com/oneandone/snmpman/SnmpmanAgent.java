@@ -222,7 +222,7 @@ public class SnmpmanAgent extends BaseAgent {
     protected void registerManagedObjects() {
         log.trace("registering managed objects for agent \"{}\"", configuration.getName());
         try (final FileReader fileReader = new FileReader(configuration.getWalk());
-             final BufferedReader reader = new BufferedReader(fileReader, 1024)) {
+             final BufferedReader reader = new BufferedReader(fileReader)) {
 
             Map<OID, Variable> bindings = readVariableBindings(reader);
 
