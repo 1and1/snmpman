@@ -42,10 +42,10 @@ public class AbstractIntegerModifierTest {
         final Gauge32Modifier modifier = new Gauge32Modifier();
         modifier.init(modifierProperties);
 
-        assertEquals(modifier.getMinimum(), new Long(0));
-        assertEquals(modifier.getMaximum(), new Long(10));
-        assertEquals(modifier.getMinimumStep(), new Long(1));
-        assertEquals(modifier.getMaximumStep(), new Long(10));
+        assertEquals(modifier.getMinimum(), 0);
+        assertEquals(modifier.getMaximum(), 10);
+        assertEquals(modifier.getMinimumStep(), 1);
+        assertEquals(modifier.getMaximumStep(), 10);
     }
     
 }
