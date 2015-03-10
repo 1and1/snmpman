@@ -24,7 +24,7 @@ public class WildcardOID {
     /** The first part of the wildcard {@code OID} (before the "{@code *}" character). */
     private final OID startsWith;
 
-    /** The second part of the wildcard {@code OID} (after the "{@code *}" character). */
+    /** The second part of the wildcard {@code OID} (after the "{@code *}" character). Can be {@code null}. */
     private final OID endsWith;
 
     /**

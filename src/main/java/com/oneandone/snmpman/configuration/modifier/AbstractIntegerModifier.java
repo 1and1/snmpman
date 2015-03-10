@@ -13,16 +13,16 @@ import org.snmp4j.smi.UnsignedInteger32;
 abstract class AbstractIntegerModifier<T extends UnsignedInteger32> implements VariableModifier<T> {
 
     /** The minimum allowed number for the resulting modified variable. */
-    @Getter private Long minimum;
+    @Getter private long minimum;
 
     /** The maximum allowed number for the resulting modified variable. */
-    @Getter private Long maximum;
+    @Getter private long maximum;
 
     /** The minimal step by which a variable will be incremented. */
-    @Getter private Long minimumStep;
+    @Getter private long minimumStep;
 
     /** The maximal step by which a variable will be incremented. */
-    @Getter private Long maximumStep;
+    @Getter private long maximumStep;
 
     @Override
     public void init(final ModifierProperties properties) {

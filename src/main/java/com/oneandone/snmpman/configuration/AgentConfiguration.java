@@ -37,7 +37,7 @@ public class AgentConfiguration {
         public static final Device DEFAULT_DEVICE = new Device("default", new Modifier[0]);
 
         /** The map of all available devices. */
-        private final Map<File, Device> devices = new HashMap<>(1);
+        private final Map<File, Device> devices = new HashMap<>();
 
         /**
          * Returns the device representation for the specified {@code path}.
