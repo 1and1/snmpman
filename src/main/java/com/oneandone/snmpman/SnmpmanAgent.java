@@ -22,6 +22,8 @@ import org.snmp4j.util.ThreadPool;
 
 import java.io.*;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -221,38 +223,9 @@ public class SnmpmanAgent extends BaseAgent {
     @Override
     protected void registerManagedObjects() {
         log.trace("registering managed objects for agent \"{}\"", configuration.getName());
-        try (final FileReader fileReader = new FileReader(configuration.getWalk());
-             final BufferedReader reader = new BufferedReader(fileReader, 1024)) {
 
-            final Map<OID, Variable> bindings = new HashMap<>();
-
-            String line;
-            while ((line = reader.readLine()) != null) {
-                final Matcher matcher = VARIABLE_BINDING_PATTERN.matcher(line);
-                if (matcher.matches()) {
-                    final OID oid = new OID(matcher.group(1).replace("iso", ".1"));
-
-                    final String type;
-                    final String value;
-                    if (matcher.group(7) == null) {
-                        type = "STRING";
-                        value = "\"\"";
-                    } else {
-                        type = matcher.group(6);
-                        value = matcher.group(7);
-                    }
-
-                    try {
-                        final Variable variable = SnmpmanAgent.getVariable(type, value);
-                        bindings.put(oid, variable);
-                        log.trace("added binding with oid \"{}\" and variable \"{}\"", oid, variable);
-                    } catch (final Exception e) {
-                        log.warn("could not parse line \"{}\" of walk file {} with exception: {}", line, configuration.getWalk().getCanonicalPath(), e.getMessage());
-                    }
-                } else {
-                    log.warn("could not parse line \"{}\" of walk file {}", line, configuration.getWalk().getAbsolutePath());
-                }
-            }
+        try {
+            Map<OID, Variable> bindings = readWalkFile(configuration.getWalk());
 
             final SortedMap<OID, Variable> variableBindings = this.getVariableBindings(configuration.getDevice(), bindings);
             final OctetString ctx = new OctetString();
@@ -275,7 +248,7 @@ public class SnmpmanAgent extends BaseAgent {
                 ManagedObject mo = server.lookup(new DefaultMOQuery(scope, false));
                 if (mo != null) {
                     for (final VariableBinding variableBinding : subtree) {
-                        group = new StaticMOGroup(variableBinding.getOid(), new VariableBinding[]{ variableBinding });
+                        group = new StaticMOGroup(variableBinding.getOid(), new VariableBinding[]{variableBinding});
                         scope = new DefaultMOContextScope(ctx, variableBinding.getOid(), true, variableBinding.getOid().nextPeer(), false);
                         mo = server.lookup(new DefaultMOQuery(scope, false));
                         if (mo != null) {
@@ -297,6 +270,40 @@ public class SnmpmanAgent extends BaseAgent {
         } catch (final DuplicateRegistrationException e) {
             log.error("duplicate registrations are not allowed", e);
         }
+    }
+
+    /** Reads a walk file line by line parsing the contents.
+     * @param walkFile the file name containing lines in the {@link #VARIABLE_BINDING_PATTERN} format.
+     * @return the parsed variable bindings from the file.
+     */
+    private Map<OID, Variable> readWalkFile(final File walkFile) throws IOException {
+        final Map<OID, Variable> bindings = new HashMap<>();
+        
+        List<String> lines = Files.readAllLines(walkFile.toPath(), Charset.forName("UTF-8"));
+
+        for (String line : lines) {
+            final Matcher matcher = VARIABLE_BINDING_PATTERN.matcher(line);
+            if (matcher.matches()) {
+                final OID oid = new OID(matcher.group(1).replace("iso", ".1"));
+                
+                try {
+                    final Variable variable;
+                    if (matcher.group(7) == null) {
+                        variable = SnmpmanAgent.getVariable("STRING", "\"\"");
+                    } else {
+                        variable = SnmpmanAgent.getVariable(matcher.group(6), matcher.group(7));
+                    }
+                
+                    bindings.put(oid, variable);
+                    log.trace("added binding with oid \"{}\" and variable \"{}\"", oid, variable);
+                } catch (final Exception e) {
+                    log.warn("could not parse line \"{}\" of walk file {} with exception: {}", line, configuration.getWalk().getCanonicalPath(), e.getMessage());
+                }
+            } else {
+                log.warn("could not parse line \"{}\" of walk file {}", line, configuration.getWalk().getAbsolutePath());
+            }
+        }
+        return bindings;
     }
 
     /**

@@ -12,7 +12,7 @@ public class ModifierProperties extends Properties {
      * Returns the integer value for the specified property {@code key}.
      *  
      * @param key the property key
-     * @return the integer value for the specified key
+     * @return the integer value for the specified key or {@code null} if not existing.
      * @throws java.lang.ClassCastException thrown if the value for the specified key could not be casted
      */
     public Integer getInteger(final String key) {
@@ -24,7 +24,7 @@ public class ModifierProperties extends Properties {
      * Returns the long value for the specified property {@code key}.
      *
      * @param key the property key
-     * @return the long value for the specified key
+     * @return the long value for the specified key or {@code null} if not existing.
      * @throws java.lang.ClassCastException thrown if the value for the specified key could not be casted
      */
     public Long getLong(final String key) {
@@ -36,7 +36,7 @@ public class ModifierProperties extends Properties {
      * Returns the unsigned long value for the specified property {@code key}.
      *
      * @param key the property key
-     * @return the unsigned long value for the specified key
+     * @return the unsigned long value for the specified key or {@code null} if not existing.
      * @throws java.lang.ClassCastException thrown if the value for the specified key could not be casted
      */
     public UnsignedLong getUnsignedLong(final String key) {
@@ -48,7 +48,7 @@ public class ModifierProperties extends Properties {
      * Returns the number for the specified property {@code key}.
      *  
      * @param key the property key
-     * @return the number for the specified key
+     * @return the optional number for the specified key.
      * @throws java.lang.ClassCastException thrown if the value for the specified key could not be casted
      */
     private Optional<Number> getNumber(final String key) {
