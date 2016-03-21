@@ -30,14 +30,20 @@ public class SnmpmanTest {
     public void testSnmpGetBulk() throws Exception {
         assertEquals(snmpman.getAgents().size(), 11);
 
-        List<TableEvent> responses = getResponse(new OID("1.3.6.1.2.1"));
+        List<TableEvent> responses = getResponse(new OID("1.3.6.1.2.1"), 10000);
         assertEquals(responses.size(), 18);
 
-        responses = getResponse(new OID("1.3.6.1.2.1.31"));
+        responses = getResponse(new OID("1.3.6.1.2.1.31"), 10000);
         assertEquals(responses.size(), 10);
 
-        responses = getResponse(new OID(".1.3.6.1.2.1.2"));
+        responses = getResponse(new OID(".1.3.6.1.2.1.2"), 10000);
         assertEquals(responses.size(), 7);
+
+        responses = getResponse(new OID(".1.3"), 10010);
+        assertEquals(responses.size(), 30);
+
+        responses = getResponse(new OID(".1.0"), 10010);
+        assertEquals(responses.size(), 8);
     }
     
     @AfterMethod
@@ -45,8 +51,8 @@ public class SnmpmanTest {
         snmpman.stop();
     }
 
-    public static List<TableEvent> getResponse(final OID query) throws Exception {
-        final Address targetAddress = GenericAddress.parse("127.0.0.1/10000");
+    public static List<TableEvent> getResponse(final OID query, int port) throws Exception {
+        final Address targetAddress = GenericAddress.parse(String.format("127.0.0.1/%d", port));
         final TransportMapping transport = new DefaultUdpTransportMapping();
         final Snmp snmp = new Snmp(transport);
         snmp.listen();

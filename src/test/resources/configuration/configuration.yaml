@@ -50,6 +50,6 @@
   port: 10009
 - name: "example11"
   device: "src/test/resources/configuration/empty.yaml"
-  walk: "src/test/resources/configuration/example.txt"
+  walk: "src/test/resources/configuration/differentStartingOID.txt"
   ip: "127.0.0.1"
   port: 10010
