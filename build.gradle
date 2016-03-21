@@ -128,7 +128,7 @@ if (hasProperty('signing.keyId') && hasProperty('signing.password') && hasProper
 // Version of artifact as defined by the task graph
 // --------------------------------------------------------------------------------------------------------------------
 gradle.taskGraph.whenReady {taskGraph ->
-    if ("${version}".matches("[0-9]+\\.[0-9]+\\-SNAPSHOT") && (taskGraph.hasTask(buildRpm) || taskGraph.hasTask(buildDeb) || taskGraph.hasTask('release'))) {
+    if ("${version}".matches("[0-9]+\\.[0-9]+\\-SNAPSHOT") && (taskGraph.hasTask(':buildRpm') || taskGraph.hasTask(':buildDeb') || taskGraph.hasTask(':release'))) {
         def gitRevision = 'git rev-list HEAD --count'.execute().text.trim()
         version = "${version}".replace('-SNAPSHOT', '') + ".${gitRevision}"
 
@@ -208,11 +208,11 @@ if (hasProperty('ossrhUsername') && hasProperty('ossrhPassword')) {
             mavenDeployer {
                 beforeDeployment { MavenDeployment deployment -> signing.signPom(deployment) }
 
-                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2") {
+                repository(url: "https://oss.sonatype.org/service/local/staging/deploy/maven2/") {
                     authentication(userName: ossrhUsername, password: ossrhPassword)
                 }
 
-                snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots") {
+                snapshotRepository(url: "https://oss.sonatype.org/content/repositories/snapshots/") {
                     authentication(userName: ossrhUsername, password: ossrhPassword)
                 }
 
