@@ -110,7 +110,7 @@ public final class Snmpman {
             final ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
             final AgentConfiguration[] configurations = mapper.readValue(configurationFile, AgentConfiguration[].class);
             
-            return Snmpman.start(Arrays.stream(configurations).map(configuration -> new SnmpmanAgent(configuration)).collect(Collectors.toList()));
+            return Snmpman.start(Arrays.stream(configurations).map(SnmpmanAgent::new).collect(Collectors.toList()));
         } catch (final IOException e) {
             throw new InitializationException("could not parse configuration at path: " + configurationFile.getAbsolutePath(), e);
         }

@@ -42,7 +42,11 @@ public class Device {
      */
     public Device(@JsonProperty("name") final String name, @JsonProperty("modifiers") final Modifier[] modifiers) {
         this.name = name;
-        this.modifiers = Collections.unmodifiableList(Arrays.asList(modifiers));
+        if (modifiers != null) {
+            this.modifiers = Collections.unmodifiableList(Arrays.asList(modifiers));
+        } else {
+            this.modifiers = Collections.emptyList();
+        }
     }
     
 }

@@ -28,7 +28,7 @@ public class SnmpmanTest {
 
     @Test
     public void testSnmpGetBulk() throws Exception {
-        assertEquals(snmpman.getAgents().size(), 10);
+        assertEquals(snmpman.getAgents().size(), 11);
 
         List<TableEvent> responses = getResponse(new OID("1.3.6.1.2.1"));
         assertEquals(responses.size(), 18);
