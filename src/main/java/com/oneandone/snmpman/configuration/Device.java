@@ -37,7 +37,7 @@ public class Device {
     /**
      * The unmodifiable list of vlans.
      *
-     * @return lsit of vlans represented as {@link Long}.
+     * @return list of vlans represented as {@link Long}.
      */
     @Getter private final List<Long> vlans;
 
