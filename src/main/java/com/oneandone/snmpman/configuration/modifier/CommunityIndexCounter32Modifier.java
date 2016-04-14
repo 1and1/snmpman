@@ -55,12 +55,10 @@ public class CommunityIndexCounter32Modifier implements CommunityContextModifier
     @Override
     public Map<OID, Variable> getVariableBindings(final OctetString context, final OID queryOID) {
         if (queryOID != null && context != null && context.getValue().length != 0) {
-            if (!queryOID.toString().isEmpty() && !context.toString().isEmpty()) {
-                if (communityContextMapping.containsKey(Long.parseLong(context.toString()))) {
-                    return new TreeMap<OID, Variable>() {{
-                        put(queryOID, new Counter32(communityContextMapping.get(Long.parseLong(context.toString()))));
-                    }};
-                }
+            if (!queryOID.toString().isEmpty() && !context.toString().isEmpty() && communityContextMapping.containsKey(Long.parseLong(context.toString()))) {
+                return new TreeMap<OID, Variable>() {{
+                    put(queryOID, new Counter32(communityContextMapping.get(Long.parseLong(context.toString()))));
+                }};
             }
         } else if (queryOID != null) {
             return new TreeMap<OID, Variable>() {{
