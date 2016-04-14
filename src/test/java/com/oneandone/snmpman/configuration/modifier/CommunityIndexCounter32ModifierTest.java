@@ -11,7 +11,8 @@ import org.testng.annotations.Test;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 public class CommunityIndexCounter32ModifierTest {
     private ModifierProperties modifierProperties;
@@ -25,17 +26,11 @@ public class CommunityIndexCounter32ModifierTest {
     private void setUp() throws Exception {
         context1 = 20;
         contextValue1 = 150;
-        final Map<String, Long> contextOIDValue1 = new HashMap<String, Long>() {{
-            put(oid, contextValue1);
-        }};
         context2 = 9;
         contextValue2 = 120;
-        final Map<String, Long> contextOIDValue2 = new HashMap<String, Long>() {{
-            put(oid, contextValue2);
-        }};
         modifierProperties = new ModifierProperties();
-        modifierProperties.put(context1, contextOIDValue1);
-        modifierProperties.put(context2, contextOIDValue2);
+        modifierProperties.put(context1, contextValue1);
+        modifierProperties.put(context2, contextValue2);
     }
 
     @Test
@@ -43,10 +38,10 @@ public class CommunityIndexCounter32ModifierTest {
         final CommunityIndexCounter32Modifier modifier = new CommunityIndexCounter32Modifier();
         modifier.init(modifierProperties);
 
-        final Map<Long, Map<OID, Long>> communityIndexValues = modifier.getCommunityContextMapping();
+        final Map<Long, Long> communityIndexValues = modifier.getCommunityContextMapping();
         assertEquals(communityIndexValues.size(), 2);
-        assertTrue(communityIndexValues.containsKey(context1) && communityIndexValues.get(context1).containsValue(contextValue1));
-        assertTrue(communityIndexValues.containsKey(context2) && communityIndexValues.get(context2).containsValue(contextValue2));
+        assertTrue(communityIndexValues.containsKey(context1) && communityIndexValues.containsValue(contextValue1));
+        assertTrue(communityIndexValues.containsKey(context2) && communityIndexValues.containsValue(contextValue2));
 
         // unchanged
         modifierProperties.put("maximum", new HashMap<String, Long>() {{
@@ -55,10 +50,10 @@ public class CommunityIndexCounter32ModifierTest {
         final CommunityIndexCounter32Modifier modifier2 = new CommunityIndexCounter32Modifier();
         modifier2.init(modifierProperties);
 
-        final Map<Long, Map<OID, Long>> communityIndexValues2 = modifier.getCommunityContextMapping();
+        final Map<Long, Long> communityIndexValues2 = modifier.getCommunityContextMapping();
         assertEquals(communityIndexValues2.size(), 2);
-        assertTrue(communityIndexValues2.containsKey(context1) && communityIndexValues2.get(context1).containsValue(contextValue1));
-        assertTrue(communityIndexValues2.containsKey(context2) && communityIndexValues2.get(context2).containsValue(contextValue2));
+        assertTrue(communityIndexValues2.containsKey(context1) && communityIndexValues2.containsValue(contextValue1));
+        assertTrue(communityIndexValues2.containsKey(context2) && communityIndexValues2.containsValue(contextValue2));
     }
 
     @Test

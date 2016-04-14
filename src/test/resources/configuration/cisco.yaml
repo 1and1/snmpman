@@ -220,10 +220,8 @@ modifiers:
   - oid: ".1.3.6.1.2.1.17.2.4.0"
     class: "com.oneandone.snmpman.configuration.modifier.CommunityIndexCounter32Modifier"
     properties:
-      42:
-        1.3.6.1.2.1.17.2.4.0: 150
-      9:
-        1.3.6.1.2.1.17.2.4.0: 120
+      42: 150
+      9: 120
 vlans:
   - 42
   - 9

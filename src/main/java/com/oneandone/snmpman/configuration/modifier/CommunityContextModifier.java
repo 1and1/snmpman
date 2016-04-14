@@ -15,7 +15,7 @@ public interface CommunityContextModifier<T extends Variable> extends VariableMo
      *
      * @return Map of context value mapping.
      */
-    Map<Long, Map<OID, Long>> getCommunityContextMapping();
+    Map<Long, Long> getCommunityContextMapping();
 
     /**
      * Creates a mapping of SNMP OID and a value based on the SNMP community context and the SNMP OID.

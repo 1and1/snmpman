@@ -19,24 +19,15 @@ public class CommunityIndexCounter32Modifier implements CommunityContextModifier
     /**
      * Mapping of SNMP community context to SNMP OID and result.
      */
-    @Getter private Map<Long, Map<OID, Long>> communityContextMapping = new HashMap<>();
+    @Getter private Map<Long, Long> communityContextMapping = new HashMap<>();
 
     @Override
     @SuppressWarnings("unchecked")
     public void init(final ModifierProperties properties) {
         communityContextMapping = new HashMap<>();
-        properties.entrySet().stream().filter(property -> getUnsignedLong(property.getKey()) != -1L).forEach(property -> {
-            final Long context = getUnsignedLong(property.getKey());
-            final Object propertyValue = property.getValue();
-            final Map<Object, Object> oidValueMapping = (Map<Object, Object>) propertyValue;
-            final Map<OID, Long> result = new HashMap<>();
-            oidValueMapping.entrySet().stream().filter(ovm -> getUnsignedLong(ovm.getValue()) != -1L).forEach(ovm -> {
-                final OID oid = new OID((String) ovm.getKey());
-                final Long value = getUnsignedLong(ovm.getValue());
-                result.put(oid, value);
-            });
-            communityContextMapping.put(context, result);
-        });
+        properties.entrySet().stream().filter(property -> getUnsignedLong(property.getKey()) != -1L &&
+                getUnsignedLong(property.getValue()) != -1L).forEach(property ->
+                communityContextMapping.put(getUnsignedLong(property.getKey()), getUnsignedLong(property.getValue())));
     }
 
     private Long getUnsignedLong(final Object input) {
@@ -65,10 +56,9 @@ public class CommunityIndexCounter32Modifier implements CommunityContextModifier
     public Map<OID, Variable> getVariableBindings(final OctetString context, final OID queryOID) {
         if (queryOID != null && context != null && context.getValue().length != 0) {
             if (!queryOID.toString().isEmpty() && !context.toString().isEmpty()) {
-                if (communityContextMapping.containsKey(Long.parseLong(context.toString())) &&
-                        communityContextMapping.get(Long.parseLong(context.toString())).containsKey(queryOID)) {
+                if (communityContextMapping.containsKey(Long.parseLong(context.toString()))) {
                     return new TreeMap<OID, Variable>() {{
-                        put(queryOID, new Counter32(communityContextMapping.get(Long.parseLong(context.toString())).get(queryOID)));
+                        put(queryOID, new Counter32(communityContextMapping.get(Long.parseLong(context.toString()))));
                     }};
                 }
             }
