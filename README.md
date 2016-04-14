@@ -3,7 +3,7 @@
 SNMPMAN
 ============
 
-The `SNMPMAN` is a command-line application that simulates `SNMP`-capable devices and was developed to also be usable in unit tests.
+The `SNMPMAN` is a command-line application that simulates `SNMP`-capable devices and was developed to be usable during unit testing.
 It may be used to test traffic monitoring applications that execute `SNMP` queries. Due to the lack of
 flexibility in already existing alternatives, it was developed by the **1&1 Internet AG** to improve flexibility. Therefore the `SNMPMAN`
 is highly extendable and will be enhanced over time.
@@ -13,7 +13,7 @@ will return the data queried and save it to a textual walk result file. This fil
 device types at once. The query configuration may contain policies on
 how to dynamically change the query responses. E.g. the response of an
 [ifInOctets](http://tools.cisco.com/Support/SNMP/do/BrowseOID.do?objectInput=ifInOctets&translate=Translate&submitValue=SUBMIT")
-may be incremented with each query to simulate traffic. Several variable modifiers are already in existance for different
+may be incremented with each query to simulate traffic. Several variable modifiers are already in existence for different
 data types.
 
 Also checkout the `SNMPMAN` GitHub IO page [here](http://1and1.github.io/snmpman/)!
