@@ -1,13 +1,14 @@
 package com.oneandone.snmpman;
 
 import org.snmp4j.smi.OctetString;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Test;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.TreeMap;
 
 import static org.testng.Assert.assertTrue;
 

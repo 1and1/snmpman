@@ -206,7 +206,7 @@ public class SnmpmanAgent extends BaseAgent {
      *
      * @throws IOException signals that this agent could not be initialized by the {@link #init()} method
      */
-    void execute() throws IOException {
+    protected void execute() throws IOException {
         this.init();
         this.loadConfig(ImportModes.REPLACE_CREATE);
         this.addShutdownHook();

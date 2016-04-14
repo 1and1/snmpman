@@ -22,7 +22,7 @@ public class CommunityIndexCounter32ModifierTest {
     private final String oid = "1.3.6.1.2.1.17.2.4.0";
 
     @BeforeTest
-    private void setup() throws Exception {
+    private void setUp() throws Exception {
         context1 = 20;
         contextValue1 = 150;
         final Map<String, Long> contextOIDValue1 = new HashMap<String, Long>() {{
