@@ -3,6 +3,8 @@ package com.oneandone.snmpman.configuration;
 import org.testng.annotations.Test;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.testng.Assert.*;
 
@@ -55,5 +57,4 @@ public class AgentConfigurationTest {
         assertEquals(configuration.getDevice(), AgentConfiguration.DeviceFactory.DEFAULT_DEVICE);
         assertEquals(configuration.getAddress().toByteArray(), new byte[]{ 127, 0, 0, 1 });
     }
-    
 }

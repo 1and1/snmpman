@@ -3,7 +3,9 @@ package com.oneandone.snmpman;
 import com.google.common.primitives.UnsignedLong;
 import com.oneandone.snmpman.configuration.AgentConfiguration;
 import com.oneandone.snmpman.configuration.Device;
+import com.oneandone.snmpman.configuration.modifier.CommunityContextModifier;
 import com.oneandone.snmpman.configuration.modifier.ModifiedVariable;
+import com.oneandone.snmpman.configuration.modifier.Modifier;
 import com.oneandone.snmpman.configuration.modifier.VariableModifier;
 import lombok.extern.slf4j.Slf4j;
 import org.snmp4j.TransportMapping;
@@ -21,6 +23,7 @@ import org.snmp4j.transport.TransportMappings;
 import org.snmp4j.util.ThreadPool;
 
 import java.io.*;
+import java.lang.reflect.Field;
 import java.net.URLEncoder;
 import java.util.*;
 import java.util.regex.Matcher;
@@ -29,20 +32,26 @@ import java.util.stream.Collectors;
 
 /**
  * This is the core class of the {@code Snmpman}. The agent simulates the SNMP-capable devices.
- * <p />
+ * <p/>
  * This class can be instantiated via the constructor {@link #SnmpmanAgent(com.oneandone.snmpman.configuration.AgentConfiguration)}, which
  * requires an instance of the {@link com.oneandone.snmpman.configuration.AgentConfiguration}.
  */
 @Slf4j
 public class SnmpmanAgent extends BaseAgent {
 
-    /** The pattern of variable bindings in a walk file. */
+    /**
+     * The pattern of variable bindings in a walk file.
+     */
     private static final Pattern VARIABLE_BINDING_PATTERN = Pattern.compile("(((iso)?\\.[0-9]+)+) = ((([a-zA-Z0-9-]+): (.*)$)|(\"\"$))");
 
-    /** The configuration of this agent. */
+    /**
+     * The configuration of this agent.
+     */
     private final AgentConfiguration configuration;
-    
-    /** The list of managed object groups. */
+
+    /**
+     * The list of managed object groups.
+     */
     private final List<ManagedObject> groups = new ArrayList<>();
 
     /**
@@ -50,7 +59,7 @@ public class SnmpmanAgent extends BaseAgent {
      *
      * @param configuration the configuration for this agent
      */
-    public SnmpmanAgent(final AgentConfiguration configuration) {
+    SnmpmanAgent(final AgentConfiguration configuration) {
         super(SnmpmanAgent.getBootCounterFile(configuration), SnmpmanAgent.getConfigurationFile(configuration), new CommandProcessor(new OctetString(MPv3.createLocalEngineID())));
         this.agent.setWorkerPool(ThreadPool.create("RequestPool", 3));
         this.configuration = configuration;
@@ -58,7 +67,7 @@ public class SnmpmanAgent extends BaseAgent {
 
     /**
      * Returns the name of {@code this} agent.
-     * <p /> 
+     * <p/>
      * See {@link com.oneandone.snmpman.configuration.AgentConfiguration#name} for more information on the return value.
      *
      * @return the name of {@code this} agent.
@@ -66,7 +75,7 @@ public class SnmpmanAgent extends BaseAgent {
     public String getName() {
         return configuration.getName();
     }
-    
+
     /**
      * Returns the boot-counter file for the specified agent.
      * <p>
@@ -112,7 +121,7 @@ public class SnmpmanAgent extends BaseAgent {
      */
     private static List<OID> getRoots(final SortedMap<OID, Variable> bindings) {
         final List<OID> potentialRoots = new ArrayList<>(bindings.size());
-        
+
         OID last = null;
         for (final OID oid : bindings.keySet()) {
             if (last != null) {
@@ -129,20 +138,17 @@ public class SnmpmanAgent extends BaseAgent {
             last = oid;
         }
         Collections.sort(potentialRoots);
-        
-        
+
         final List<OID> roots = new ArrayList<>(potentialRoots.size());
-        for (final OID potentialRoot : potentialRoots) {
-            if (potentialRoot.size() > 0) {
-                OID trimmedPotentialRoot = new OID(potentialRoot.getValue(), 0, potentialRoot.size() - 1);
-                while (trimmedPotentialRoot.size() > 0 && Collections.binarySearch(potentialRoots, trimmedPotentialRoot) < 0) {
-                    trimmedPotentialRoot.trim(1);
-                }
-                if (trimmedPotentialRoot.size() == 0 && !roots.contains(potentialRoot)) {
-                    roots.add(potentialRoot);
-                }
+        potentialRoots.stream().filter(potentialRoot -> potentialRoot.size() > 0).forEach(potentialRoot -> {
+            OID trimmedPotentialRoot = new OID(potentialRoot.getValue(), 0, potentialRoot.size() - 1);
+            while (trimmedPotentialRoot.size() > 0 && Collections.binarySearch(potentialRoots, trimmedPotentialRoot) < 0) {
+                trimmedPotentialRoot.trim(1);
             }
-        }
+            if (trimmedPotentialRoot.size() == 0 && !roots.contains(potentialRoot)) {
+                roots.add(potentialRoot);
+            }
+        });
 
         log.trace("identified roots {}", roots);
         return roots;
@@ -165,7 +171,7 @@ public class SnmpmanAgent extends BaseAgent {
                         return new OctetString();
                     }
                     return new OctetString(value.substring(1, value.length() - 1));
-                } else{
+                } else {
                     return new OctetString(value);
                 }
             case "OID":
@@ -200,17 +206,24 @@ public class SnmpmanAgent extends BaseAgent {
      *
      * @throws IOException signals that this agent could not be initialized by the {@link #init()} method
      */
-    public void execute() throws IOException {
+    void execute() throws IOException {
         this.init();
         this.loadConfig(ImportModes.REPLACE_CREATE);
         this.addShutdownHook();
         this.getServer().addContext(new OctetString("public"));
+        this.getServer().addContext(new OctetString(""));
+        // configure community index contexts
+        for (final Long vlan : configuration.getDevice().getVlans()) {
+            this.getServer().addContext(new OctetString(String.valueOf(vlan)));
+        }
+
         this.finishInit();
         this.run();
         this.sendColdStartNotification();
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     protected void initTransportMappings() throws IOException {
         log.trace("starting to initialize transport mappings for agent \"{}\"", configuration.getName());
         transportMappings = new TransportMapping[1];
@@ -220,58 +233,155 @@ public class SnmpmanAgent extends BaseAgent {
 
     @Override
     protected void registerManagedObjects() {
+        unregisterDefaultManagedObjects(null);
+        unregisterDefaultManagedObjects(new OctetString());
+        final List<Long> vlans = configuration.getDevice().getVlans();
+        for (final Long vlan : vlans) {
+            unregisterDefaultManagedObjects(new OctetString(String.valueOf(vlan)));
+        }
+
         log.trace("registering managed objects for agent \"{}\"", configuration.getName());
+        for (final Long vlan : vlans) {
+            try (final FileReader fileReader = new FileReader(configuration.getWalk());
+                 final BufferedReader reader = new BufferedReader(fileReader)) {
+
+                Map<OID, Variable> bindings = readVariableBindings(reader);
+
+                final SortedMap<OID, Variable> variableBindings = this.getVariableBindings(configuration.getDevice(), bindings, new OctetString(String.valueOf(vlan)));
+
+                final OctetString context = new OctetString(String.valueOf(vlan));
+
+                final List<OID> roots = SnmpmanAgent.getRoots(variableBindings);
+                for (final OID root : roots) {
+                    final ArrayList<VariableBinding> subtree = generateSubtreeBindings(variableBindings, root);
+                    final VariableBinding[] subtreeBindings = subtree.toArray(new VariableBinding[subtree.size()]);
+                    DefaultMOContextScope scope = new DefaultMOContextScope(context, root, true, root.nextPeer(), false);
+                    ManagedObject mo = server.lookup(new DefaultMOQuery(scope, false));
+                    if (mo != null) {
+                        for (final VariableBinding variableBinding : subtree) {
+                            final StaticMOGroup group = new StaticMOGroup(variableBinding.getOid(), new VariableBinding[]{variableBinding});
+                            scope = new DefaultMOContextScope(context, variableBinding.getOid(), true, variableBinding.getOid().nextPeer(), false);
+                            mo = server.lookup(new DefaultMOQuery(scope, false));
+                            if (mo != null) {
+                                log.warn("could not register single OID at {} because ManagedObject {} is already registered.", variableBinding.getOid(), mo);
+                            } else {
+                                registerGroupAndContext(group, context);
+                            }
+                        }
+                    } else {
+                        final StaticMOGroup group = new StaticMOGroup(root, subtreeBindings);
+                        registerGroupAndContext(group, context);
+                    }
+                }
+            } catch (final FileNotFoundException e) {
+                log.error("walk file {} not found", configuration.getWalk().getAbsolutePath());
+            } catch (final IOException e) {
+                log.error("could not read walk file " + configuration.getWalk().getAbsolutePath(), e);
+            }
+        }
+        createAndRegisterDefaultContext();
+    }
+
+    /**
+     * Creates the {@link StaticMOGroup} with all information necessary to register it to the server.
+     */
+    private void createAndRegisterDefaultContext() {
         try (final FileReader fileReader = new FileReader(configuration.getWalk());
              final BufferedReader reader = new BufferedReader(fileReader)) {
 
             Map<OID, Variable> bindings = readVariableBindings(reader);
-
-            final SortedMap<OID, Variable> variableBindings = this.getVariableBindings(configuration.getDevice(), bindings);
-            final OctetString ctx = new OctetString();
-
-            unregisterDefaultManagedObjects(ctx);
-
+            final SortedMap<OID, Variable> variableBindings = this.getVariableBindings(configuration.getDevice(), bindings, new OctetString());
             final List<OID> roots = SnmpmanAgent.getRoots(variableBindings);
             for (final OID root : roots) {
-                final ArrayList<VariableBinding> subtree = new ArrayList<>();
-                for (final Map.Entry<OID, Variable> binding : variableBindings.entrySet()) {
-                    if (binding.getKey().size() >= root.size()) {
-                        if (binding.getKey().leftMostCompare(root.size(), root) == 0) {
-                            subtree.add(new VariableBinding(binding.getKey(), binding.getValue()));
-                        }
-                    }
-                }
-
-                StaticMOGroup group = new StaticMOGroup(root, subtree.toArray(new VariableBinding[subtree.size()]));
-                DefaultMOContextScope scope = new DefaultMOContextScope(ctx, root, true, root.nextPeer(), false);
-                ManagedObject mo = server.lookup(new DefaultMOQuery(scope, false));
-                if (mo != null) {
-                    for (final VariableBinding variableBinding : subtree) {
-                        group = new StaticMOGroup(variableBinding.getOid(), new VariableBinding[]{ variableBinding });
-                        scope = new DefaultMOContextScope(ctx, variableBinding.getOid(), true, variableBinding.getOid().nextPeer(), false);
-                        mo = server.lookup(new DefaultMOQuery(scope, false));
-                        if (mo != null) {
-                            log.warn("could not register single OID at {} because ManagedObject {} is already registered.", variableBinding.getOid(), mo);
-                        } else {
-                            groups.add(group);
-                            server.register(group, null);
-                        }
-                    }
-                } else {
-                    groups.add(group);
-                    server.register(group, null);
-                }
+                final ArrayList<VariableBinding> subtree = generateSubtreeBindings(variableBindings, root);
+                final VariableBinding[] subtreeBindings = subtree.toArray(new VariableBinding[subtree.size()]);
+                final StaticMOGroup group = new StaticMOGroup(root, subtreeBindings);
+                registerDefaultGroups(group);
             }
         } catch (final FileNotFoundException e) {
             log.error("walk file {} not found", configuration.getWalk().getAbsolutePath());
         } catch (final IOException e) {
             log.error("could not read walk file " + configuration.getWalk().getAbsolutePath(), e);
+        }
+    }
+
+    /**
+     * Creates a list of {@link VariableBinding} out of a mapping of {@link OID} and {@link Variable}.
+     *
+     * @param variableBindings mapping of {@link OID} and {@link Variable}.
+     * @param root             root SNMP OID.
+     * @return list of {@link VariableBinding}.
+     */
+    private ArrayList<VariableBinding> generateSubtreeBindings(final SortedMap<OID, Variable> variableBindings, final OID root) {
+        return variableBindings.entrySet().stream().filter(binding -> binding.getKey().size() >= root.size()).
+                filter(binding -> binding.getKey().leftMostCompare(root.size(), root) == 0).
+                map(binding -> new VariableBinding(binding.getKey(), binding.getValue())).collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    /**
+     * Registers a {@link ManagedObject} to the server with an empty {@link OctetString} community context.
+     *
+     * @param group {@link ManagedObject} to register.
+     */
+    private void registerDefaultGroups(final StaticMOGroup group) {
+        groups.add(group);
+        registerGroupAndContext(group, new OctetString(""));
+    }
+
+    /**
+     * Registers a {@link ManagedObject} to the server with a {@link OctetString} community context.
+     *
+     * @param group   {@link ManagedObject} to register.
+     * @param context community context.
+     */
+    private void registerGroupAndContext(final StaticMOGroup group, final OctetString context) {
+        try {
+            if (context == null || context.toString().equals("")) {
+                MOContextScope contextScope = new DefaultMOContextScope(new OctetString(), group.getScope());
+                ManagedObject other = server.lookup(new DefaultMOQuery(contextScope, false));
+                if (other != null) {
+                    log.warn("group {} already existed", group);
+                    return;
+                }
+
+                contextScope = new DefaultMOContextScope(null, group.getScope());
+                other = server.lookup(new DefaultMOQuery(contextScope, false));
+                if (other != null) {
+                    registerHard(group);
+                    return;
+                }
+                this.server.register(group, new OctetString());
+            } else {
+                this.server.register(group, context);
+            }
         } catch (final DuplicateRegistrationException e) {
             log.error("duplicate registrations are not allowed", e);
         }
     }
 
-    /** Reads all variable bindings using {@link #VARIABLE_BINDING_PATTERN}.
+    /**
+     * Sets the private registry value of {@link DefaultMOServer} via reflection.
+     * FIXME
+     * If there is any possibility to avoid this, then replace!
+     *
+     * @param group {@link ManagedObject} to register.
+     */
+    private void registerHard(final StaticMOGroup group) {
+        try {
+            final Field registry = server.getClass().getDeclaredField("registry");
+            registry.setAccessible(true);
+            final SortedMap<MOScope, ManagedObject> reg = server.getRegistry();
+            DefaultMOContextScope contextScope = new DefaultMOContextScope(new OctetString(""), group.getScope());
+            reg.put(contextScope, group);
+            registry.set(server, reg);
+        } catch (NoSuchFieldException | IllegalAccessException e) {
+            log.warn("could not set server registry", e);
+        }
+    }
+
+    /**
+     * Reads all variable bindings using {@link #VARIABLE_BINDING_PATTERN}.
+     *
      * @param reader the reader to read the bindings from.
      * @return the map of oid to variable binding.
      */
@@ -282,7 +392,7 @@ public class SnmpmanAgent extends BaseAgent {
             final Matcher matcher = VARIABLE_BINDING_PATTERN.matcher(line);
             if (matcher.matches()) {
                 final OID oid = new OID(matcher.group(1).replace("iso", ".1"));
-                
+
                 try {
                     final Variable variable;
                     if (matcher.group(7) == null) {
@@ -326,10 +436,10 @@ public class SnmpmanAgent extends BaseAgent {
      * @param bindings the bindings as the base
      * @return the variable bindings for the specified device configuration
      */
-    private SortedMap<OID, Variable> getVariableBindings(final Device device, final Map<OID, Variable> bindings) {
+    @SuppressWarnings("unchecked")
+    private SortedMap<OID, Variable> getVariableBindings(final Device device, final Map<OID, Variable> bindings, final OctetString context) {
         log.trace("get variable bindings for agent \"{}\"", configuration.getName());
         final SortedMap<OID, Variable> result = new TreeMap<>();
-
         for (final Map.Entry<OID, Variable> binding : bindings.entrySet()) {
             final List<VariableModifier> modifiers;
 
@@ -340,7 +450,14 @@ public class SnmpmanAgent extends BaseAgent {
             } else {
                 log.trace("created modified variable for OID {}", binding.getKey());
                 try {
-                    result.put(binding.getKey(), new ModifiedVariable(binding.getValue(), modifiers));
+                    if (modifiers.stream().filter(m -> m instanceof Modifier).map(m -> (Modifier) m).anyMatch(m -> m.getModifier() instanceof CommunityContextModifier)) {
+                        final List<CommunityContextModifier> contextModifiers = modifiers.stream().filter(m -> m instanceof Modifier).map(m -> (Modifier) m).filter(m -> m.getModifier() instanceof CommunityContextModifier).map(m -> (CommunityContextModifier) m.getModifier()).collect(Collectors.toList());
+                        for (final CommunityContextModifier contextModifier : contextModifiers) {
+                            result.putAll(contextModifier.getVariableBindings(context, binding.getKey()));
+                        }
+                    } else {
+                        result.put(binding.getKey(), new ModifiedVariable(binding.getValue(), modifiers));
+                    }
                 } catch (final ClassCastException e) {
                     log.error("could not create variable binding for " + binding.getKey().toString() + " and file " + configuration.getWalk().getAbsolutePath(), e);
                 }
@@ -380,6 +497,13 @@ public class SnmpmanAgent extends BaseAgent {
         vacmMIB.addGroup(SecurityModel.SECURITY_MODEL_USM, new OctetString("SHA"), new OctetString("v3restricted"), StorageType.nonVolatile);
         vacmMIB.addGroup(SecurityModel.SECURITY_MODEL_USM, new OctetString("v3notify"), new OctetString("v3restricted"), StorageType.nonVolatile);
 
+        // configure community index contexts
+        for (final Long vlan : configuration.getDevice().getVlans()) {
+            vacmMIB.addGroup(SecurityModel.SECURITY_MODEL_SNMPv1, new OctetString(configuration.getCommunity() + "@" + vlan), new OctetString("v1v2group"), StorageType.nonVolatile);
+            vacmMIB.addGroup(SecurityModel.SECURITY_MODEL_SNMPv2c, new OctetString(configuration.getCommunity() + "@" + vlan), new OctetString("v1v2group"), StorageType.nonVolatile);
+            vacmMIB.addAccess(new OctetString("v1v2group"), new OctetString(String.valueOf(vlan)), SecurityModel.SECURITY_MODEL_ANY, SecurityLevel.NOAUTH_NOPRIV, MutableVACM.VACM_MATCH_EXACT, new OctetString("fullReadView"), new OctetString("fullWriteView"), new OctetString("fullNotifyView"), StorageType.nonVolatile);
+        }
+
         vacmMIB.addAccess(new OctetString("v1v2group"), new OctetString(), SecurityModel.SECURITY_MODEL_ANY, SecurityLevel.NOAUTH_NOPRIV, MutableVACM.VACM_MATCH_EXACT, new OctetString("fullReadView"), new OctetString("fullWriteView"), new OctetString("fullNotifyView"), StorageType.nonVolatile);
         vacmMIB.addAccess(new OctetString("v3group"), new OctetString(), SecurityModel.SECURITY_MODEL_USM, SecurityLevel.AUTH_PRIV, MutableVACM.VACM_MATCH_EXACT, new OctetString("fullReadView"), new OctetString("fullWriteView"), new OctetString("fullNotifyView"), StorageType.nonVolatile);
         vacmMIB.addAccess(new OctetString("v3restricted"), new OctetString(), SecurityModel.SECURITY_MODEL_USM, SecurityLevel.NOAUTH_NOPRIV, MutableVACM.VACM_MATCH_EXACT, new OctetString("restrictedReadView"), new OctetString("restrictedWriteView"), new OctetString("restrictedNotifyView"), StorageType.nonVolatile);
@@ -403,17 +527,40 @@ public class SnmpmanAgent extends BaseAgent {
     @Override
     protected void addCommunities(final SnmpCommunityMIB snmpCommunityMIB) {
         log.trace("adding communities {} for agent \"{}\"", snmpCommunityMIB.toString(), configuration.getName());
-        final Variable[] com2sec = new Variable[]{
-                new OctetString(configuration.getCommunity()),                 // community name
-                new OctetString(configuration.getCommunity()),                 // security name
-                getAgent().getContextEngineID(),                               // local engine ID
-                new OctetString(),                                             // default context name
-                new OctetString(),                                             // transport tag
-                new Integer32(StorageType.readOnly),                           // storage type
-                new Integer32(RowStatus.active)                                // row status
-        };
-        final SnmpCommunityMIB.SnmpCommunityEntryRow row = snmpCommunityMIB.getSnmpCommunityEntry().createRow(new OctetString("public2public").toSubIndex(true), com2sec);
-        snmpCommunityMIB.getSnmpCommunityEntry().addRow(row);
+        // configure community index contexts
+        for (final Long vlan : configuration.getDevice().getVlans()) {
+            configureSnmpCommunity(snmpCommunityMIB, vlan);
+        }
+        configureSnmpCommunity(snmpCommunityMIB, null);
     }
 
+    /**
+     * Configures an SNMP community for a given SNMP community context.
+     *
+     * @param snmpCommunityMIB SNMP community.
+     * @param context          SNMP community context.
+     */
+    private void configureSnmpCommunity(final SnmpCommunityMIB snmpCommunityMIB, final Long context) {
+        String communityString;
+        OctetString contextName;
+        if (context != null) {
+            communityString = configuration.getCommunity() + "@" + context;
+            contextName = new OctetString(String.valueOf(context));
+        } else {
+            communityString = configuration.getCommunity();
+            contextName = new OctetString();
+        }
+        final Variable[] com2sec = new Variable[]{
+                new OctetString(communityString),       // community name
+                new OctetString(communityString),       // security name
+                getAgent().getContextEngineID(),        // local engine ID
+                contextName,                            // default context name
+                new OctetString(),                      // transport tag
+                new Integer32(StorageType.readOnly),    // storage type
+                new Integer32(RowStatus.active)         // row status
+        };
+        final SnmpCommunityMIB.SnmpCommunityEntryRow row = snmpCommunityMIB.getSnmpCommunityEntry().createRow(
+                new OctetString(communityString + "2" + communityString).toSubIndex(true), com2sec);
+        snmpCommunityMIB.getSnmpCommunityEntry().addRow(row);
+    }
 }

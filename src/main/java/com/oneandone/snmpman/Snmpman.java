@@ -101,7 +101,7 @@ public final class Snmpman {
      * @return the {@code Snmpman} instance
      * @throws com.oneandone.snmpman.exception.InitializationException thrown if any agent, as specified in the configuration, could not be started
      */
-    public static Snmpman start(final File configurationFile) {
+    static Snmpman start(final File configurationFile) {
         Preconditions.checkNotNull(configurationFile, "the configuration file may not be null");
         Preconditions.checkArgument(configurationFile.exists() && configurationFile.isFile(), "configuration does not exist or is not a file");
 
@@ -123,7 +123,7 @@ public final class Snmpman {
      * @return the {@code Snmpman} instance
      * @throws com.oneandone.snmpman.exception.InitializationException thrown if any agent, as specified in the configuration, could not be started
      */
-    public static Snmpman start(final List<SnmpmanAgent> agents) {
+    private static Snmpman start(final List<SnmpmanAgent> agents) {
         final Snmpman snmpman = new Snmpman(Collections.unmodifiableList(agents));
         snmpman.start();
         return snmpman;
@@ -147,7 +147,7 @@ public final class Snmpman {
     }
     
     /** Stops all agents as defined in {@link #agents}. */
-    public void stop() {
+    void stop() {
         agents.forEach(SnmpmanAgent::stop);
     }
 }
