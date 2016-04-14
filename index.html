@@ -31,17 +31,17 @@
         <h1>
 <a id="snmpman" class="anchor" href="#snmpman" aria-hidden="true"><span class="octicon octicon-link"></span></a>SNMPMAN</h1>
 
-<p>The <code>SNMPMAN</code> is mainly a command-line application that simulates <code>SNMP</code>-capable devices and can also be started and stopped within Unit-Tests.
-It may used e.g. to test traffic monitoring applications that execute <code>SNMP</code> queries. Due to to the lack in
-flexibility of already existing alternatives, it was developed by the <strong>1&amp;1 Internet AG</strong> to avoid those deficits. Therefore the <code>SNMPMAN</code>
-is highly extensible and will feature and will be enhanced in time.</p>
+<p>The <code>SNMPMAN</code> is a command-line application that simulates <code>SNMP</code>-capable devices and was developed to be usable within Unit-Tests.
+It may be used to test traffic monitoring applications that execute <code>SNMP</code> queries. Due to to the lack of
+flexibility in already existing alternatives, it was developed by the <strong>1&amp;1 Internet AG</strong> to offer a flexible and extendable alternative.
+Development of <code>SNMPMAN</code> is ongoing and its features will be enhanced over time.</p>
 
-<p>Multiple <code>SNMP</code> agents may be started at once and will run in parallel on different parts. These agents
-will return the data defined in a textual walk file. This file may be created by querying a real device. In addition,
-several device types may be defined and mapped by the agents. This device type configuration may contain policies on
+<p>Multiple <code>SNMP</code> agents may be started at once and will run in parallel. These agents
+will return the data as specified in a textual walk file. This file may be created by querying a real device. It is also possible to define and query
+  multiple device types at once. This device type configuration may contain policies on
 how to dynamically change the query responses. E.g. the response of an
 <a href="http://tools.cisco.com/Support/SNMP/do/BrowseOID.do?objectInput=ifInOctets&amp;translate=Translate&amp;submitValue=SUBMIT%22">ifInOctets</a>
-may be incremented with each query to simulate traffic. Several variable modifiers are already existing for different
+may be incremented with each query to simulate traffic. Several variable modifiers are already in existence for different
 data types.</p>
 
 <p>Also checkout the <code>SNMPMAN</code> GitHub IO page <a href="http://1and1.github.io/snmpman/">here</a>!</p>
@@ -50,7 +50,7 @@ data types.</p>
 <a id="installation" class="anchor" href="#installation" aria-hidden="true"><span class="octicon octicon-link"></span></a>Installation</h1>
 
 <h3>
-<a id="prequisites" class="anchor" href="#prequisites" aria-hidden="true"><span class="octicon octicon-link"></span></a>Prequisites</h3>
+<a id="prequisites" class="anchor" href="#prequisites" aria-hidden="true"><span class="octicon octicon-link"></span></a>Prerequisites</h3>
 
 <ul>
 <li><code>Java JDK 1.8</code></li>
@@ -60,29 +60,29 @@ data types.</p>
 <h3>
 <a id="packaging" class="anchor" href="#packaging" aria-hidden="true"><span class="octicon octicon-link"></span></a>Packaging</h3>
 
-<p>In order to package the <code>SNMPMAN</code> - as either a <code>.deb</code> or <code>.rpm</code> - you have to execute following gradle tasks</p>
+<p>In order to package the <code>SNMPMAN</code> - as either a <code>.deb</code> or <code>.rpm</code> - you have to execute the following gradle tasks</p>
 
 <ul>
 <li><code>buildDeb</code></li>
 <li><code>buildRpm</code></li>
 </ul>
 
-<p>You will find the generated output in <code>./build/distributions</code> and can install the build packages.</p>
+<p>You will find the generated output in <code>./build/distributions</code> and can then install the built packages.</p>
 
 <h1>
 <a id="execution" class="anchor" href="#execution" aria-hidden="true"><span class="octicon octicon-link"></span></a>Execution</h1>
 
 <p>To execute an instance of the <code>SNMPMAN</code> you have to start the execution script and specify a value for the <code>-c</code>
-or <code>--configuration</code> option that lists the path to the configuration <code>YAML</code> file that should be loaded in the execution context.</p>
+or <code>--configuration</code> option that lists the path to the configuration <code>YAML</code> file that will loaded during execution.</p>
 
 <h1>
 <a id="configuration" class="anchor" href="#configuration" aria-hidden="true"><span class="octicon octicon-link"></span></a>Configuration</h1>
 
-<p>The <code>SNMPMAN</code> is configured in two main <code>YAML</code> files ...</p>
+<p>The <code>SNMPMAN</code> can be configured in two main <code>YAML</code> files ...</p>
 
 <ul>
-<li>The agent configuration list all agents which should be started</li>
-<li>The device type configuration defines the modifiers that should be applied to a range of OIDs</li>
+<li>The agent configuration lists all agents which will be started</li>
+<li>The device type configuration defines the modifiers that will be applied to a range of OIDs</li>
 </ul>
 
 <p>You can find some <code>YAML</code> example configuration files within the test resources of this project in the directory</p>
