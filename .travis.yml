@@ -1,6 +1,16 @@
 language: java
-script: gradle integrationTest
 jdk:
   - oraclejdk8
 os:
   - linux
+
+before_script:
+  - curl -sL https://github.com/jpm4j/jpm4j.installers/raw/master/dist/biz.aQute.jpm.run.jar >t.jar
+  - java -jar t.jar -u init
+  - rm t.jar
+  - /home/travis/jpm/bin/jpm install com.codacy:codacy-coverage-reporter:assembly
+
+script: gradle integrationTest jacocoTestReport --info
+
+after_script:
+  - /home/travis/jpm/bin/codacy-coverage-reporter -l Java -r coverage.xml

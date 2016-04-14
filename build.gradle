@@ -7,6 +7,7 @@ apply plugin: 'application'
 apply plugin: 'os-package'
 apply plugin: 'maven'
 apply plugin: 'signing'
+apply plugin: 'jacoco'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -73,6 +74,15 @@ test {
     useTestNG({
         excludeGroups 'integration-test'
     })
+    jacoco {
+        enabled = true
+    }
+}
+jacocoTestReport {
+    reports.xml {
+        enabled = true
+        destination = "${buildDir}/jacoco/coverage.xml"
+    }
 }
 
 // --------------------------------------------------------------------------------------------------------------------
@@ -150,7 +160,7 @@ ospackage {
     os = LINUX // only applied to RPM
     packageDescription = 'SNMPMAN'
     distribution = 'development'
-    
+
     prefix '/opt/snmpman' // also only applied to RPM
     into '/opt/snmpman'
 
@@ -159,14 +169,14 @@ ospackage {
         fileMode = 0644
         createDirectoryEntry = true
     }
-    
+
     from('src/main/scripts') {
         into 'bin'
         include '*.sh'
         fileMode = 0755
         createDirectoryEntry = true
     }
-    
+
     from('src/main/config') {
         fileType CONFIG | NOREPLACE
         into 'etc'
@@ -178,7 +188,7 @@ ospackage {
 buildRpm {
     user 'snmpman'
     permissionGroup 'snmpman'
-    
+
     preInstall file('src/main/scripts/install/rpm-preInstall.sh')
     postUninstall file('src/main/scripts/install/rpm-postUninstall.sh')
 }
