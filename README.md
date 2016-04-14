@@ -77,6 +77,12 @@ The third component of the configuration are the walk files for the agents as sp
 
 This is a basic overview and more information will be provided [on the project's Wiki pages](https://github.com/1and1/snmpman/wiki).
 
-Contributing
+Contribution
 ------------
-To contribute, use the GitHub way - fork, hack, and submit a pull request!
+
+This section gives some pointers about contributions to the snmpman project.
+The project is being developed by the community. Maintainer merge pull-requests, fix critical bugs, etc.
+
+If you fixed or added something useful to the project, you can send a pull-request. It will be reviewed and accepted, or commented on for rework by at least two [maintainers](https://github.com/1and1/snmpman/blob/master/MAINTAINERS). Pull-requests are declined if a maintainer closes the request. 
+
+We are using [LGTM](https://lgtm.co) to approve pull-requests. The pull-request is only accepted if two maintainers comment with ["LGTM"](https://lgtm.co) or ":+1:".
