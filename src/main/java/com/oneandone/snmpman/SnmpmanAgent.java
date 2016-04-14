@@ -59,7 +59,7 @@ public class SnmpmanAgent extends BaseAgent {
      *
      * @param configuration the configuration for this agent
      */
-    SnmpmanAgent(final AgentConfiguration configuration) {
+    public SnmpmanAgent(final AgentConfiguration configuration) {
         super(SnmpmanAgent.getBootCounterFile(configuration), SnmpmanAgent.getConfigurationFile(configuration), new CommandProcessor(new OctetString(MPv3.createLocalEngineID())));
         this.agent.setWorkerPool(ThreadPool.create("RequestPool", 3));
         this.configuration = configuration;
@@ -206,7 +206,7 @@ public class SnmpmanAgent extends BaseAgent {
      *
      * @throws IOException signals that this agent could not be initialized by the {@link #init()} method
      */
-    protected void execute() throws IOException {
+    public void execute() throws IOException {
         this.init();
         this.loadConfig(ImportModes.REPLACE_CREATE);
         this.addShutdownHook();
