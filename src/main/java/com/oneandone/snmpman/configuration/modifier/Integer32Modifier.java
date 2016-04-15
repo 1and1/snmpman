@@ -43,18 +43,19 @@ public class Integer32Modifier implements VariableModifier<Integer32> {
      * @param maximumStep  {@link #maximumStep}
      * @return the modified variable value
      */
-    protected int modify(int currentValue, final int minimum, final int maximum, final int minimumStep, final int maximumStep) {
+    protected int modify(final int currentValue, final int minimum, final int maximum, final int minimumStep, final int maximumStep) {
+        int currentValidValue = currentValue;
         if (currentValue < minimum || currentValue > maximum) {
-            currentValue = minimum;
+            currentValidValue = minimum;
         }
         int step = (int) (Math.round(Math.random() * (maximumStep - minimumStep)) + minimumStep);
 
-        int stepUntilMaximum = maximum - currentValue;
+        int stepUntilMaximum = maximum - currentValidValue;
         int newValue;
         if (Math.abs(step) > Math.abs(stepUntilMaximum)) {
             newValue = minimum + (step - stepUntilMaximum - 1);
         } else {
-            newValue = currentValue + step;
+            newValue = currentValidValue + step;
         }
 
         if (newValue < minimum) {
