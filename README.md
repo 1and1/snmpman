@@ -1,4 +1,6 @@
-*Current build status:* ![Travis CI](https://travis-ci.org/1and1/snmpman.svg?branch=master) [![Codacy Badge](https://api.codacy.com/project/badge/grade/db37a0ee28a74266a3ec4b4efb70bb8c)](https://www.codacy.com/app/1and1_NDev/snmpman)
+[![Travis CI](https://travis-ci.org/1and1/snmpman.svg?branch=master)](https://travis-ci.org/1and1/snmpman)
+[![Codacy Badge](https://api.codacy.com/project/badge/grade/db37a0ee28a74266a3ec4b4efb70bb8c)](https://www.codacy.com/app/1and1_NDev/snmpman)
+[![Codacy Badge](https://api.codacy.com/project/badge/coverage/db37a0ee28a74266a3ec4b4efb70bb8c)](https://www.codacy.com/app/1and1_NDev/snmpman)
 
 SNMPMAN
 ============
