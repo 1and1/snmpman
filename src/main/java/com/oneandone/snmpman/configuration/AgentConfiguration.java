@@ -34,7 +34,7 @@ public class AgentConfiguration {
     public static class DeviceFactory {
 
         /** The default device which will be returned if no configuration specified. */
-        public static final Device DEFAULT_DEVICE = new Device("default", new Modifier[0]);
+        public static final Device DEFAULT_DEVICE = new Device("default", new Modifier[0], null);
 
         /** The map of all available devices. */
         private final Map<File, Device> devices = new HashMap<>();

@@ -4,7 +4,7 @@ import org.testng.annotations.Test;
 
 import java.io.File;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
 
 public class AgentConfigurationTest {
 
@@ -55,5 +55,4 @@ public class AgentConfigurationTest {
         assertEquals(configuration.getDevice(), AgentConfiguration.DeviceFactory.DEFAULT_DEVICE);
         assertEquals(configuration.getAddress().toByteArray(), new byte[]{ 127, 0, 0, 1 });
     }
-    
 }

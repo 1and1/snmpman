@@ -18,6 +18,8 @@ target/
 # Gradle properties
 gradle.properties
 *.gpg
+build
+.gradle
 
 # Temporary execution files
 *.BC.cfg

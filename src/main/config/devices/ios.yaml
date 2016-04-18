@@ -248,3 +248,12 @@ modifiers:
        maximum: 4294967295
        minimumStep: 0
        maximumStep: 20000
+# topology changes
+  - oid: ".1.3.6.1.2.1.17.2.4.0"
+    class: "com.oneandone.snmpman.configuration.modifier.CommunityIndexCounter32Modifier"
+    properties:
+      42: 150
+      9: 120
+vlans:
+  - 42
+  - 9

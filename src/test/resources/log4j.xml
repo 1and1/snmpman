@@ -7,7 +7,7 @@
         </layout>
     </appender>
     <root>
-        <priority value="off"></priority>
+        <priority value="off"/>
         <appender-ref ref="stdout"/>
     </root>
 </log4j:configuration>
