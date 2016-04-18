@@ -4,18 +4,17 @@ import org.snmp4j.*;
 import org.snmp4j.mp.SnmpConstants;
 import org.snmp4j.smi.*;
 import org.snmp4j.transport.DefaultUdpTransportMapping;
-import org.snmp4j.util.DefaultPDUFactory;
-import org.snmp4j.util.PDUFactory;
-import org.snmp4j.util.TableEvent;
-import org.snmp4j.util.TableUtils;
+import org.snmp4j.util.*;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.io.File;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 public class SnmpmanTest {
 
@@ -31,7 +30,7 @@ public class SnmpmanTest {
         assertEquals(snmpman.getAgents().size(), 11);
 
         List<TableEvent> responses = getResponse(new OID("1.3.6.1.2.1"), 10000);
-        assertEquals(responses.size(), 18);
+        assertEquals(responses.size(), 19);
 
         responses = getResponse(new OID("1.3.6.1.2.1.31"), 10000);
         assertEquals(responses.size(), 10);
@@ -45,29 +44,59 @@ public class SnmpmanTest {
         responses = getResponse(new OID(".1.0"), 10010);
         assertEquals(responses.size(), 8);
     }
-    
+
+    @Test
+    public void testWithCommunityIndex() throws Exception {
+        assertEquals(snmpman.getAgents().size(), 11);
+
+        final String oid = "1.3.6.1.2.1.17.2.4";
+        List<TableEvent> responses1 = getResponse(new OID(oid), 10009, "public@42");
+        assertEquals(responses1.size(), 1);
+        assertTrue(containsColumn(responses1, oid, "150"));
+
+        List<TableEvent> responses2 = getResponse(new OID(oid), 10009, "public@9");
+        assertEquals(responses2.size(), 1);
+        assertTrue(containsColumn(responses2, oid, "120"));
+
+        List<TableEvent> responses3 = getResponse(new OID(oid), 10009, "public");
+        assertEquals(responses3.size(), 1);
+        assertTrue(containsColumn(responses3, oid, "0"));
+    }
+
+    public static boolean containsColumn(final List<TableEvent> responses, final String oid, final String result) {
+        for (final TableEvent e : responses){
+            if (Arrays.toString(e.getColumns()).contains(oid) && Arrays.toString(e.getColumns()).contains("= " + result)){
+                return true;
+            }
+        }
+        return false;
+    }
+
     @AfterMethod
     public void stopSnmpman() throws Exception {
         snmpman.stop();
     }
 
-    public static List<TableEvent> getResponse(final OID query, int port) throws Exception {
+    public static List<TableEvent> getResponse(final OID query, int port, final String community) throws Exception {
         final Address targetAddress = GenericAddress.parse(String.format("127.0.0.1/%d", port));
-        final TransportMapping transport = new DefaultUdpTransportMapping();
-        final Snmp snmp = new Snmp(transport);
+        final Snmp snmp = new Snmp(new DefaultUdpTransportMapping());
         snmp.listen();
 
         final CommunityTarget target = new CommunityTarget();
-        target.setCommunity(new OctetString("public"));
+        target.setCommunity(new OctetString(community));
         target.setAddress(targetAddress);
         target.setRetries(2);
         target.setTimeout(1500);
         target.setVersion(SnmpConstants.version2c);
-        
+
         // creating PDU
         final PDUFactory pduFactory = new DefaultPDUFactory(PDU.GETBULK);
         final TableUtils utils = new TableUtils(snmp, pduFactory);
 
         return utils.getTable(target, new OID[]{ query }, null, null);
+    }
+
+    public static List<TableEvent> getResponse(final OID query, int port) throws Exception {
+        return getResponse(query, port, "public");
     }
 }
