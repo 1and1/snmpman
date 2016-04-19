@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
+import org.snmp4j.agent.BaseAgent;
 
 import java.io.File;
 import java.io.IOException;
@@ -144,8 +145,31 @@ public final class Snmpman {
             }
         }
         log.debug("all agents initialized");
+        agents.forEach(this::checkStatus);
+        log.debug("all agents are running");
     }
-    
+
+    /**
+     * Wait until specified agent is started.
+     * <p />
+     * A call of this method is blocking.
+     *
+     * @param agent the agent to wait for
+     * @throws InitializationException if the specified agent is already stopped
+     */
+    private void checkStatus(final SnmpmanAgent agent) {
+        if (agent.getAgentState() == BaseAgent.STATE_STOPPED) {
+            throw new InitializationException("agent " + agent.getName() + " already stopped while initialization was running");
+        } else if (agent.getAgentState() != BaseAgent.STATE_RUNNING) {
+            try {
+                Thread.sleep(100L);
+                checkStatus(agent);
+            } catch (final InterruptedException e) {
+                log.warn("wait was interrupted", e);
+            }
+        }
+    }
+
     /** Stops all agents as defined in {@link #agents}. */
     public void stop() {
         agents.forEach(SnmpmanAgent::stop);

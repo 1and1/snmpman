@@ -10,10 +10,19 @@ public class InitializationException extends RuntimeException {
      * Constructs a new exception.
      *
      * @param message the detail message
+     */
+    public InitializationException(final String message) {
+        super(message);
+    }
+
+    /**
+     * Constructs a new exception.
+     *
+     * @param message the detail message
      * @param cause the exception cause
      */
     public InitializationException(final String message, final Throwable cause) {
         super(message, cause);
     }
-    
+
 }
