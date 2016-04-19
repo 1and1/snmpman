@@ -76,6 +76,7 @@ test {
     })
     jacoco {
         enabled = true
+        destinationFile = file("${buildDir}/jacoco/integrationTest.exec")
     }
 }
 jacocoTestReport {

@@ -13,4 +13,4 @@ before_script:
 script: gradle integrationTest jacocoTestReport --info
 
 after_script:
-  - /home/travis/jpm/bin/codacy-coverage-reporter -l Java -r coverage.xml
+  - /home/travis/jpm/bin/codacy-coverage-reporter -l Java -r build/jacoco/coverage.xml
