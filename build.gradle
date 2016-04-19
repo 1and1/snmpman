@@ -14,7 +14,7 @@ targetCompatibility = 1.8
 
 group = 'com.oneandone'
 archivesBaseName = 'snmpman'
-version = '1.2-SNAPSHOT'
+version = '1.3'
 
 mainClassName = 'com.oneandone.snmpman.Snmpman'
 
@@ -46,6 +46,7 @@ dependencies {
     compile group: 'org.slf4j', name: 'slf4j-log4j12', version: '1.7.10'
 
     testCompile group: 'org.testng', name: 'testng', version: '6.9.10'
+    testCompile group: 'org.mockito', name: 'mockito-all', version: '2.0.2-beta'
 }
 
 task fatJar(type: Jar) {
@@ -144,11 +145,8 @@ if (hasProperty('signing.keyId') && hasProperty('signing.password') && hasProper
 // Version of artifact as defined by the task graph
 // --------------------------------------------------------------------------------------------------------------------
 gradle.taskGraph.whenReady {taskGraph ->
-    if ("${version}".matches("[0-9]+\\.[0-9]+\\-SNAPSHOT") && (taskGraph.hasTask(':buildRpm') || taskGraph.hasTask(':buildDeb') || taskGraph.hasTask(':release'))) {
-        def gitRevision = 'git rev-list HEAD --count'.execute().text.trim()
-        version = "${version}".replace('-SNAPSHOT', '') + ".${gitRevision}"
-
-        configurations.testCompile.dependencies.each { dependency ->
+    if (taskGraph.hasTask(':uploadArchives')) {
+        configurations.compile.dependencies.each { dependency ->
             if (dependency.version.contains("SNAPSHOT")) {
                 throw new RuntimeException("project contains SNAPSHOT dependency in artifact ${dependency.group}:${dependency.name}:${dependency.version}")
             }
@@ -211,14 +209,6 @@ buildDeb {
 
 // credentials to 'The Central Repository' (http://central.sonatype.org/pages/ossrh-guide.html)
 if (hasProperty('ossrhUsername') && hasProperty('ossrhPassword')) {
-    task release(dependsOn: uploadArchives) << {
-        println "build release with version ${version}"
-    }
-
-    task snapshot(dependsOn: uploadArchives) << {
-        println "build snapshot with version ${version}"
-    }
-
     uploadArchives {
         repositories {
             mavenDeployer {
