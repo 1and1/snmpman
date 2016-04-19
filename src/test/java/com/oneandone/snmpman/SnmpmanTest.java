@@ -1,6 +1,9 @@
 package com.oneandone.snmpman;
 
+import com.oneandone.snmpman.exception.InitializationException;
+import org.mockito.Mockito;
 import org.snmp4j.*;
+import org.snmp4j.agent.BaseAgent;
 import org.snmp4j.mp.SnmpConstants;
 import org.snmp4j.smi.*;
 import org.snmp4j.transport.DefaultUdpTransportMapping;
@@ -11,6 +14,7 @@ import org.testng.annotations.Test;
 
 import java.io.File;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.testng.Assert.assertEquals;
@@ -61,6 +65,15 @@ public class SnmpmanTest {
         List<TableEvent> responses3 = getResponse(new OID(oid), 10009, "public");
         assertEquals(responses3.size(), 1);
         assertTrue(containsColumn(responses3, oid, "0"));
+    }
+
+    @Test(expectedExceptions = InitializationException.class)
+    public void startWithAlreadyStoppedAgent() throws Exception {
+        final SnmpmanAgent mock = Mockito.mock(SnmpmanAgent.class);
+        Mockito.when(mock.getAgentState()).thenReturn(BaseAgent.STATE_STOPPED);
+
+        final List<SnmpmanAgent> snmpmanAgents = Collections.singletonList(mock);
+        Snmpman.start(snmpmanAgents);
     }
 
     public static boolean containsColumn(final List<TableEvent> responses, final String oid, final String result) {
