@@ -1,2 +1,2 @@
 pattern = "(?i):\\+1:|LGTM"
-approvals = 2
+approvals = 1
