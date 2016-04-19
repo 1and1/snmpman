@@ -100,6 +100,11 @@ task integrationTest(type: Test, dependsOn: startSnmpman) {
     useTestNG({
         includeGroups 'integration-test'
     })
+    jacoco {
+        append = true
+        enabled = true
+        destinationFile = file("${buildDir}/jacoco/integrationTest.exec")
+    }
 }
 gradle.buildFinished {
     snmpmanProcess?.waitForOrKill(1000)
