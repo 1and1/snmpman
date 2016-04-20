@@ -28,7 +28,7 @@ You can include the `SNMPMAN` as a Maven dependency from [Maven Central]().
 <dependency>
     <groupId>com.oneandone</groupId>
     <artifactId>snmpman</artifactId>
-    <version>1.2.56</version>
+    <version>1.3</version>
 </dependency>
 ```
 
