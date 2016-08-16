@@ -24,6 +24,11 @@ public class Counter32ModifierTest {
 
         final Counter32 modifiedVariable = modifier.modify(counter32);
         assertNotEquals(modifiedVariable.getValue(), 0);
+
+        // another modification should return another result
+        final Counter32 modifiedVariable2 = modifier.modify(modifiedVariable);
+        assertNotEquals(modifiedVariable.getValue(), 0);
+        assertNotEquals(modifiedVariable2.getValue(), modifiedVariable.getValue());
     }
     
 }

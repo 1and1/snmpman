@@ -37,7 +37,6 @@ public class SnmpmanAgentTest {
 
     @AfterMethod
     public void stopSnmpman() throws Exception {
-        snmpman.getAgents().stream().filter(a -> a == null).forEach(a -> System.out.println("foo"));
         if (snmpman != null) {
             snmpman.stop();
         }

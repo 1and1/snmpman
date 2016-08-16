@@ -7,6 +7,7 @@ import com.oneandone.snmpman.configuration.modifier.CommunityContextModifier;
 import com.oneandone.snmpman.configuration.modifier.ModifiedVariable;
 import com.oneandone.snmpman.configuration.modifier.Modifier;
 import com.oneandone.snmpman.configuration.modifier.VariableModifier;
+import com.oneandone.snmpman.snmp.MOGroup;
 import lombok.extern.slf4j.Slf4j;
 import org.snmp4j.TransportMapping;
 import org.snmp4j.agent.*;
@@ -253,23 +254,24 @@ public class SnmpmanAgent extends BaseAgent {
 
                 final List<OID> roots = SnmpmanAgent.getRoots(variableBindings);
                 for (final OID root : roots) {
+                    MOGroup group = createGroup(root, variableBindings);
                     final ArrayList<VariableBinding> subtree = generateSubtreeBindings(variableBindings, root);
-                    final VariableBinding[] subtreeBindings = subtree.toArray(new VariableBinding[subtree.size()]);
                     DefaultMOContextScope scope = new DefaultMOContextScope(context, root, true, root.nextPeer(), false);
                     ManagedObject mo = server.lookup(new DefaultMOQuery(scope, false));
                     if (mo != null) {
                         for (final VariableBinding variableBinding : subtree) {
-                            final StaticMOGroup group = new StaticMOGroup(variableBinding.getOid(), new VariableBinding[]{variableBinding});
+                            group = new MOGroup(variableBinding.getOid(), variableBinding.getOid(), variableBinding.getVariable());
                             scope = new DefaultMOContextScope(context, variableBinding.getOid(), true, variableBinding.getOid().nextPeer(), false);
                             mo = server.lookup(new DefaultMOQuery(scope, false));
                             if (mo != null) {
                                 log.warn("could not register single OID at {} because ManagedObject {} is already registered.", variableBinding.getOid(), mo);
                             } else {
+                                groups.add(group);
                                 registerGroupAndContext(group, context);
                             }
                         }
                     } else {
-                        final StaticMOGroup group = new StaticMOGroup(root, subtreeBindings);
+                        groups.add(group);
                         registerGroupAndContext(group, context);
                     }
                 }
@@ -280,6 +282,16 @@ public class SnmpmanAgent extends BaseAgent {
             }
         }
         createAndRegisterDefaultContext();
+    }
+
+    private MOGroup createGroup(final OID root, final SortedMap<OID, Variable> variableBindings) {
+        final SortedMap<OID, Variable> subtree = new TreeMap<>();
+        variableBindings.entrySet().stream().filter(binding -> binding.getKey().size() >= root.size()).filter(
+                binding -> binding.getKey().leftMostCompare(root.size(), root) == 0).forEach(
+                        binding -> subtree.put(binding.getKey(), binding.getValue())
+        );
+
+        return new MOGroup(root, subtree);
     }
 
     /**
@@ -293,9 +305,7 @@ public class SnmpmanAgent extends BaseAgent {
             final SortedMap<OID, Variable> variableBindings = this.getVariableBindings(configuration.getDevice(), bindings, new OctetString());
             final List<OID> roots = SnmpmanAgent.getRoots(variableBindings);
             for (final OID root : roots) {
-                final ArrayList<VariableBinding> subtree = generateSubtreeBindings(variableBindings, root);
-                final VariableBinding[] subtreeBindings = subtree.toArray(new VariableBinding[subtree.size()]);
-                final StaticMOGroup group = new StaticMOGroup(root, subtreeBindings);
+                MOGroup group = createGroup(root, variableBindings);
                 registerDefaultGroups(group);
             }
         } catch (final FileNotFoundException e) {
@@ -323,7 +333,7 @@ public class SnmpmanAgent extends BaseAgent {
      *
      * @param group {@link ManagedObject} to register.
      */
-    private void registerDefaultGroups(final StaticMOGroup group) {
+    private void registerDefaultGroups(final MOGroup group) {
         groups.add(group);
         registerGroupAndContext(group, new OctetString(""));
     }
@@ -334,7 +344,7 @@ public class SnmpmanAgent extends BaseAgent {
      * @param group   {@link ManagedObject} to register.
      * @param context community context.
      */
-    private void registerGroupAndContext(final StaticMOGroup group, final OctetString context) {
+    private void registerGroupAndContext(final MOGroup group, final OctetString context) {
         try {
             if (context == null || context.toString().equals("")) {
                 MOContextScope contextScope = new DefaultMOContextScope(new OctetString(), group.getScope());
@@ -366,7 +376,7 @@ public class SnmpmanAgent extends BaseAgent {
      *
      * @param group {@link ManagedObject} to register.
      */
-    private void registerHard(final StaticMOGroup group) {
+    private void registerHard(final MOGroup group) {
         try {
             final Field registry = server.getClass().getDeclaredField("registry");
             registry.setAccessible(true);
