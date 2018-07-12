@@ -1,2 +1,0 @@
-pattern = "(?i):\\+1:|LGTM"
-approvals = 1
