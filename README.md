@@ -83,8 +83,6 @@ Contribution
 ------------
 
 This section gives some pointers about contributions to the snmpman project.
-The project is being developed by the community. Maintainer merge pull-requests, fix critical bugs, etc.
+The project is being developed by the community. Maintainers merge pull-requests, fix critical bugs, etc.
 
-If you fixed or added something useful to the project, you can send a pull-request. It will be reviewed and accepted, or commented on for rework by at least two [maintainers](https://github.com/1and1/snmpman/blob/master/MAINTAINERS). Pull-requests are declined if a maintainer closes the request. 
-
-We are using [LGTM](https://lgtm.co) to approve pull-requests. The pull-request is only accepted if two maintainers comment with ["LGTM"](https://lgtm.co) or ":+1:".
+If you fixed or added something useful to the project, you can send a pull-request. It will be reviewed and accepted, or commented on for rework by [maintainers](https://github.com/1and1/snmpman/blob/master/MAINTAINERS). Pull-requests are declined if a maintainer closes the request. 
