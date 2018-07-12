@@ -1,9 +1,10 @@
+SNMPMAN
+============
 [![Travis CI](https://travis-ci.org/1and1/snmpman.svg?branch=master)](https://travis-ci.org/1and1/snmpman)
 [![Codacy Badge](https://api.codacy.com/project/badge/grade/db37a0ee28a74266a3ec4b4efb70bb8c)](https://www.codacy.com/app/1and1_NDev/snmpman)
 [![Codacy Badge](https://api.codacy.com/project/badge/coverage/db37a0ee28a74266a3ec4b4efb70bb8c)](https://www.codacy.com/app/1and1_NDev/snmpman)
-
-SNMPMAN
-============
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/1and1/snmpman/badge.svg)](https://maven-badges.herokuapp.com/maven-central/de.1and1/snmpman) 
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 The `SNMPMAN` is a command-line application that simulates `SNMP`-capable devices and was developed to be usable during unit testing.
 It may be used to test traffic monitoring applications that execute `SNMP` queries. Due to the lack of
