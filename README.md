@@ -1,9 +1,10 @@
+SNMPMAN
+============
 [![Travis CI](https://travis-ci.org/1and1/snmpman.svg?branch=master)](https://travis-ci.org/1and1/snmpman)
 [![Codacy Badge](https://api.codacy.com/project/badge/grade/db37a0ee28a74266a3ec4b4efb70bb8c)](https://www.codacy.com/app/1and1_NDev/snmpman)
 [![Codacy Badge](https://api.codacy.com/project/badge/coverage/db37a0ee28a74266a3ec4b4efb70bb8c)](https://www.codacy.com/app/1and1_NDev/snmpman)
-
-SNMPMAN
-============
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.oneandone/snmpman/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.oneandone/snmpman) 
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 The `SNMPMAN` is a command-line application that simulates `SNMP`-capable devices and was developed to be usable during unit testing.
 It may be used to test traffic monitoring applications that execute `SNMP` queries. Due to the lack of
@@ -83,8 +84,6 @@ Contribution
 ------------
 
 This section gives some pointers about contributions to the snmpman project.
-The project is being developed by the community. Maintainer merge pull-requests, fix critical bugs, etc.
+The project is being developed by the community. Maintainers merge pull-requests, fix critical bugs, etc.
 
-If you fixed or added something useful to the project, you can send a pull-request. It will be reviewed and accepted, or commented on for rework by at least two [maintainers](https://github.com/1and1/snmpman/blob/master/MAINTAINERS). Pull-requests are declined if a maintainer closes the request. 
-
-We are using [LGTM](https://lgtm.co) to approve pull-requests. The pull-request is only accepted if two maintainers comment with ["LGTM"](https://lgtm.co) or ":+1:".
+If you fixed or added something useful to the project, you can send a pull-request. It will be reviewed and accepted, or commented on for rework by [maintainers](https://github.com/1and1/snmpman/blob/master/MAINTAINERS). Pull-requests are declined if a maintainer closes the request. 
