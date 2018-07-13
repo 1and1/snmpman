@@ -46,17 +46,28 @@ Snmpman snmpman = Snmpman.start(new File("configuration.yaml"));
 snmpman.stop();
 ```
 
-Installation
+Installation and building
 ============
 ### Prerequisites
   * `Java JDK 1.8`
   * `Gradle 2.2`
 
-### Packaging
+### Building a fat Jar
+
+In order to build the `SNMPMAN`  you can use gradle to build a far JAR:
+
+```
+gradle fatJar
+```
+
+After that you find your JAR in `./build/libs`.
+
+### Building operating system packages
+
 In order to package the `SNMPMAN` - as either a `.deb` or `.rpm` - you have to execute the following gradle tasks
 
-  * `buildDeb` - **We strongly advise not to use the debian package, due to bugs**
-  * `buildRpm`
+  * `gradle buildDeb` - **We strongly advise not to use the debian package, due to bugs**
+  * `gradle buildRpm`
 
 You will find the generated output in `./build/distributions` and can then install the built packages.
 
