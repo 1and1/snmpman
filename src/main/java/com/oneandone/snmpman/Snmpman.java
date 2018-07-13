@@ -118,7 +118,7 @@ public final class Snmpman {
     }
 
     /**
-     * Creates an {@code Snmpman} instance by the specified list of agents and starts all agents.
+     * Creates a {@code Snmpman} instance with the specified list of agents and starts all agents.
      *
      * @param agents the list of agents
      * @return the {@code Snmpman} instance
