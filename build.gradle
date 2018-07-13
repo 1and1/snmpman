@@ -1,25 +1,13 @@
-buildscript {
-    repositories {
-        jcenter()
-    }
-    dependencies {
-        classpath 'org.kt3k.gradle.plugin:coveralls-gradle-plugin:1.0.2'
-    }
-}
 plugins {
     id "nebula.ospackage" version "3.4.0"
 }
-apply plugin: 'base'
+
 apply plugin: 'java'
 apply plugin: 'application'
 apply plugin: "nebula.ospackage"
 apply plugin: 'maven'
 apply plugin: 'signing'
 apply plugin: 'jacoco'
-jacoco {
-    toolVersion = '0.7.1.201405082137'
-}
-apply plugin: 'com.github.kt3k.coveralls'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -93,24 +81,12 @@ test {
     }
 }
 jacocoTestReport {
-    reports {
-        html.enabled = true
-        xml.enabled = true
-        csv.enabled = true
+    reports.xml {
+        enabled = true
+        destination = "${buildDir}/jacoco/coverage.xml"
     }
 }
 
-task jacocoRootReport(type: org.gradle.testing.jacoco.tasks.JacocoReport) {
-    dependsOn = subprojects.test
-    sourceDirectories = files(subprojects.sourceSets.main.allSource.srcDirs)
-    classDirectories =  files(subprojects.sourceSets.main.output)
-    executionData = files(subprojects.jacocoTestReport.executionData)
-    reports {
-        html.enabled = true
-        xml.enabled = true
-        csv.enabled = false
-    }
-}
 // --------------------------------------------------------------------------------------------------------------------
 // Integration test definition
 // --------------------------------------------------------------------------------------------------------------------

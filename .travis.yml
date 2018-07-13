@@ -4,7 +4,14 @@ jdk:
 os:
   - linux
 
+#before_script:
+#  - curl -sL https://github.com/jpm4j/jpm4j.installers/raw/master/dist/biz.aQute.jpm.run.jar >t.jar
+#  - java -jar t.jar -u init
+#  - rm t.jar
+#  - /home/travis/jpm/bin/jpm install com.codacy:codacy-coverage-reporter:assembly
+
+#script: gradle test integrationTest jacocoTestReport --info
 script: gradle test integrationTest jacocoTestReport --info
 
-after_success:
-- gradle jacocoRootReport coveralls
+#after_script:
+#  - /home/travis/jpm/bin/codacy-coverage-reporter -l Java -r build/jacoco/coverage.xml
