@@ -18,6 +18,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotEquals;
 import static org.testng.Assert.assertTrue;
 
 public class SnmpmanTest {
@@ -75,6 +76,17 @@ public class SnmpmanTest {
         final List<SnmpmanAgent> snmpmanAgents = Collections.singletonList(mock);
         Snmpman.start(snmpmanAgents);
     }
+
+    @Test
+    public void testModifier() throws Exception {
+        final String oid = "1.3.6.1.2.1.2.2.1.13";
+        List<TableEvent> responses1 = SnmpmanTest.getResponse(new OID(oid), 10009, "public");
+        List<TableEvent> responses2 = SnmpmanTest.getResponse(new OID(oid), 10009, "public");
+
+        assertNotEquals(responses1.get(0).getColumns(), responses2.get(0).getColumns(),
+                "repeated call should return a different result");
+    }
+
 
     public static boolean containsColumn(final List<TableEvent> responses, final String oid, final String result) {
         for (final TableEvent e : responses){
