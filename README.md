@@ -1,8 +1,7 @@
 SNMPMAN
 ============
 [![Travis CI](https://travis-ci.org/1and1/snmpman.svg?branch=master)](https://travis-ci.org/1and1/snmpman)
-[![Codacy Badge](https://api.codacy.com/project/badge/grade/db37a0ee28a74266a3ec4b4efb70bb8c)](https://www.codacy.com/app/1and1_NDev/snmpman)
-[![Codacy Badge](https://api.codacy.com/project/badge/coverage/db37a0ee28a74266a3ec4b4efb70bb8c)](https://www.codacy.com/app/1and1_NDev/snmpman)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/2bf43bcd01fb477e8d1f4b2f7225029d)](https://www.codacy.com/app/Stephan-FuhrmannOrganization/snmpman?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=1and1/snmpman&amp;utm_campaign=Badge_Grade)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.oneandone/snmpman/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.oneandone/snmpman) 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
@@ -47,17 +46,28 @@ Snmpman snmpman = Snmpman.start(new File("configuration.yaml"));
 snmpman.stop();
 ```
 
-Installation
+Installation and building
 ============
 ### Prerequisites
   * `Java JDK 1.8`
   * `Gradle 2.2`
 
-### Packaging
+### Building a fat Jar
+
+In order to build the `SNMPMAN`  you can use gradle to build a far JAR:
+
+```
+gradle fatJar
+```
+
+After that you find your JAR in `./build/libs`.
+
+### Building operating system packages
+
 In order to package the `SNMPMAN` - as either a `.deb` or `.rpm` - you have to execute the following gradle tasks
 
-  * `buildDeb` - **We strongly advise not to use the debian package, due to bugs**
-  * `buildRpm`
+  * `gradle buildDeb` - **We strongly advise not to use the debian package, due to bugs**
+  * `gradle buildRpm`
 
 You will find the generated output in `./build/distributions` and can then install the built packages.
 

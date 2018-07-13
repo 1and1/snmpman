@@ -11,7 +11,7 @@ import java.io.File;
 public final class CommandLineOptions {
 
     /** The {@code Snmpman} configuration. */
-    @Option(name = "-c", aliases = "--configuration", usage = "the path to the configuration XML", required = true)
+    @Option(name = "-c", aliases = "--configuration", usage = "the path to the configuration YAML", required = true)
     @Getter private File configurationFile;
     
     /** Flag that defines that a help message should be displayed when {@code true}. */
