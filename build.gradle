@@ -266,6 +266,10 @@ if (hasProperty('ossrhUsername') && hasProperty('ossrhPassword')) {
                             name 'Tobias Lindenmann'
                         }
                     }
+                    developer {
+                        id 'sfuhrm'
+                        name 'Stephan Fuhrmann'
+                    }
                 }
             }
         }
