@@ -4,4 +4,8 @@ jdk:
 os:
   - linux
 
-script: gradle test integrationTest jacocoTestReport --info
+install: mvn install -Dgpg.skip
+
+cache:
+    directories:
+    - $HOME/.m2
