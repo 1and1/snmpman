@@ -1,10 +1,14 @@
 package com.oneandone.snmpman.integration;
 
+import com.oneandone.snmpman.Snmpman;
 import com.oneandone.snmpman.SnmpmanTest;
 import org.snmp4j.smi.OID;
 import org.snmp4j.util.TableEvent;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.io.File;
 import java.util.List;
 
 import static org.testng.Assert.assertEquals;
@@ -12,6 +16,18 @@ import static org.testng.Assert.assertTrue;
 
 @Test(groups = "integration-test")
 public class SnmpmanIntegrationTest {
+
+    private Snmpman snmpman;
+
+    @BeforeMethod
+    public void startSnmpman() throws Exception {
+        snmpman = Snmpman.start(new File("src/test/resources/configuration/configuration.yaml"));
+    }
+
+    @AfterMethod
+    public void stopSnmpman() throws Exception {
+        snmpman.stop();
+    }
 
     @Test
     public void testSnmpGetBulk() throws Exception {
