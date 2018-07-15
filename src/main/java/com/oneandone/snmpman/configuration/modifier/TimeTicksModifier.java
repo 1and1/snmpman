@@ -4,7 +4,7 @@ import org.snmp4j.smi.TimeTicks;
 
 /**
  * This modifier instance modifies {@link TimeTicks} variables by the {@link #modify(TimeTicks)} method.
- * <p/>
+ * <br>
  * This method will return a new {@link TimeTicks} instance with the current timestamp.
  */
 public class TimeTicksModifier implements VariableModifier<TimeTicks> {

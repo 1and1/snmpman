@@ -12,7 +12,7 @@ import java.util.List;
 
 /**
  * Represents a device type.
- * <p />
+ * <br>
  * You can find example configurations within the test resources of this project.
  */
 @ToString(of = "name") @EqualsAndHashCode
@@ -27,7 +27,7 @@ public class Device {
 
     /**
      * The unmodifiable list of modifier definitions.
-     * <p />
+     * <br>
      * See {@link Modifier} and {@link com.oneandone.snmpman.configuration.modifier.VariableModifier}.
      *
      * @return list of modifier definitions

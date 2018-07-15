@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 
 /**
  * This is the core class of the {@code Snmpman}. The agent simulates the SNMP-capable devices.
- * <p/>
+ * <br>
  * This class can be instantiated via the constructor {@link #SnmpmanAgent(com.oneandone.snmpman.configuration.AgentConfiguration)}, which
  * requires an instance of the {@link com.oneandone.snmpman.configuration.AgentConfiguration}.
  */
@@ -68,7 +68,7 @@ public class SnmpmanAgent extends BaseAgent {
 
     /**
      * Returns the name of {@code this} agent.
-     * <p/>
+     * <br>
      * See {@link com.oneandone.snmpman.configuration.AgentConfiguration#name} for more information on the return value.
      *
      * @return the name of {@code this} agent.

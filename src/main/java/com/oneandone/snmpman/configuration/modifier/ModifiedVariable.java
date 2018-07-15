@@ -24,7 +24,7 @@ public class ModifiedVariable implements Variable, Cloneable {
 
     /**
      * Constructs a new modified variable.
-     * <p/>
+     * <br>
      * A modified variable will dynamically change it's value on each value call.
      *
      * @param variable  the initial variable to modify
@@ -133,7 +133,7 @@ public class ModifiedVariable implements Variable, Cloneable {
         }
         return variable.equals(o);
     }
-    
+
     @Override
     public int hashCode() {
         return variable.hashCode();
