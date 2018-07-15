@@ -20,6 +20,20 @@
             <url>http://www.apache.org/licenses/LICENSE-2.0</url>
         </license>
     </licenses>
+    <developers>
+        <developer>
+            <id>bitionaire</id>
+            <name>Johann Boehler</name>
+        </developer>
+        <developer>
+            <id>netdevfighter</id>
+            <name>Tobias Lindenmann</name>
+        </developer>
+        <developer>
+            <id>sfuhrm</id>
+            <name>Stephan Fuhrmann</name>
+        </developer>
+    </developers>
     <distributionManagement>
         <snapshotRepository>
             <id>ossrh</id>
