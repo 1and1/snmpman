@@ -13,7 +13,7 @@
     <dependencies>
         <dependency>
             <groupId>${project.groupId}</groupId>
-            <artifactId>main</artifactId>
+            <artifactId>snmpman</artifactId>
             <version>${project.version}</version>
             <scope>compile</scope>
         </dependency>
