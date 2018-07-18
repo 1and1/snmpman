@@ -1,4 +1,5 @@
-SNMPMAN
+![SNMPMAN](http://1and1.github.io/snmpman/images/snmpman.png
+ "SNMPMAN")
 ============
 [![Travis CI](https://travis-ci.org/1and1/snmpman.svg?branch=master)](https://travis-ci.org/1and1/snmpman)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/2bf43bcd01fb477e8d1f4b2f7225029d)](https://www.codacy.com/app/Stephan-FuhrmannOrganization/snmpman?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=1and1/snmpman&amp;utm_campaign=Badge_Grade)
