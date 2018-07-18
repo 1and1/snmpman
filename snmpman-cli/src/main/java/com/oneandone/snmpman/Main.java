@@ -1,22 +1,9 @@
 package com.oneandone.snmpman;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.google.common.base.Preconditions;
-import com.oneandone.snmpman.configuration.AgentConfiguration;
 import com.oneandone.snmpman.exception.InitializationException;
-import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.kohsuke.args4j.CmdLineException;
 import org.kohsuke.args4j.CmdLineParser;
-import org.snmp4j.agent.BaseAgent;
-
-import java.io.File;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * This is the main-class for this application.
