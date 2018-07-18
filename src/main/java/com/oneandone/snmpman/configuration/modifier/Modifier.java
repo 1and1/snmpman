@@ -10,7 +10,7 @@ import org.snmp4j.smi.Variable;
 
 /**
  * Representation of a generic modifier.
- * <p />
+ * <br>
  * See also {@link com.oneandone.snmpman.configuration.modifier.VariableModifier}.
  *
  * @param <T> the variable type

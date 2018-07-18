@@ -30,6 +30,11 @@ public class SnmpmanTest {
         snmpman = Snmpman.start(new File("src/test/resources/configuration/configuration.yaml"));
     }
 
+    @AfterMethod
+    public void stopSnmpman() throws Exception {
+        snmpman.stop();
+    }
+
     @Test
     public void testSnmpGetBulk() throws Exception {
         assertEquals(snmpman.getAgents().size(), 11);
@@ -95,11 +100,6 @@ public class SnmpmanTest {
             }
         }
         return false;
-    }
-
-    @AfterMethod
-    public void stopSnmpman() throws Exception {
-        snmpman.stop();
     }
 
     public static List<TableEvent> getResponse(final OID query, int port, final String community) throws Exception {

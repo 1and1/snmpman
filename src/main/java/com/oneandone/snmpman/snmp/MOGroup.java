@@ -34,7 +34,7 @@ public class MOGroup implements ManagedObject {
 
     /**
      * Constructs a new instance of this class.
-     * <p/>
+     * <br>
      * The specified {@code OID} and variable will be set as the only data stored
      * in the map of {@link #variableBindings}.
      *

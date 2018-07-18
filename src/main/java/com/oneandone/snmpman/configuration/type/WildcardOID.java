@@ -9,10 +9,10 @@ import java.util.regex.Pattern;
 
 /**
  * A wildcard {@code OID} is an {@code OID} that can contain the wildcard character "*".
- * <p/>
+ * <br>
  * The wildcard will be considered for matching request in the function {@link #matches(org.snmp4j.smi.OID)}.
  * Every sequence of {@code int} array chains can be considered for the wildcard character.
- * <p/>
+ * <br>
  * Only one wildcard is allowed for the wildcard {@code OID}.
  */
 @EqualsAndHashCode
@@ -20,7 +20,7 @@ public class WildcardOID {
 
     /** The wildcard OID pattern. */
     private static final Pattern WILDCARD_OID_PATTERN = Pattern.compile("((\\.)?[0-9]+(\\.[0-9]+)*)(\\.\\*)?((\\.[0-9]+)*)");
-    
+
     /** The first part of the wildcard {@code OID} (before the "{@code *}" character). */
     private final OID startsWith;
 
@@ -52,7 +52,7 @@ public class WildcardOID {
 
     /**
      * Returns {@code true} if this wildcard {@code OID} matches with the specified {@code OID}.
-     * <p/>
+     * <br>
      * Here some examples for matching {@code OID}s:
      * <ul>
      * <li>{@code .1.3.3.*.7} and {@code .1.3.3.7}</li>

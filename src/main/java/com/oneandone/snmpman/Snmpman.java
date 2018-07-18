@@ -20,17 +20,17 @@ import java.util.stream.Collectors;
 
 /**
  * This is the main-class for this application.
- * <p/>
+ * <br>
  * A mandatory argument for execution of the {@link #main(String...)} method is the path to the configuration file.
  * See {@link com.oneandone.snmpman.CommandLineOptions} for information on available command line options.
- * <p />
+ * <br>
  * Each configuration list item represents an instance of the {@link com.oneandone.snmpman.configuration.AgentConfiguration}.
  * The constructor {@link com.oneandone.snmpman.configuration.AgentConfiguration#AgentConfiguration(String, java.io.File, java.io.File, String, int, String)}
  * lists all available properties, which may or may not be required.
- * <p />
+ * <br>
  * An entry may look like the following:
  * <pre>
- * {@code         
+ * {@code
  *     - name: "example1"
  *       device: "src/test/resources/configuration/cisco.yaml"
  *       walk: "src/test/resources/configuration/example.txt"
@@ -39,7 +39,7 @@ import java.util.stream.Collectors;
  * }
  * </pre>
  * You can find more example within the test resources of this project.
- * <p /> 
+ * <br>
  * The configuration {@code YAML} file defines a list of all agents that should be simulated by the {@code Snmpman}.
  */
 @Slf4j
@@ -47,8 +47,8 @@ public final class Snmpman {
 
     /**
      * Returns the list of SNMP agents for {@code this} instance.
-     * 
-     * @return the list of SNMP agents 
+     *
+     * @return the list of SNMP agents
      */
     @Getter private final List<SnmpmanAgent> agents;
 
@@ -60,12 +60,12 @@ public final class Snmpman {
     private Snmpman(final List<SnmpmanAgent> agents) {
         this.agents = agents;
     }
-    
+
     /**
      * The application entry-point.
-     * <p/>
+     * <br>
      * All available command-line arguments are documented in the {@link com.oneandone.snmpman.CommandLineOptions} class.
-     * <p/>
+     * <br>
      * If illegal command-line options were specified for execution, a usage help message will be printed out
      * on the {@link System#err} stream and the application will terminate. Otherwise the configuration will
      * be read and used for execution.
@@ -110,7 +110,7 @@ public final class Snmpman {
         try {
             final ObjectMapper mapper = new ObjectMapper(new YAMLFactory());
             final AgentConfiguration[] configurations = mapper.readValue(configurationFile, AgentConfiguration[].class);
-            
+
             return Snmpman.start(Arrays.stream(configurations).map(SnmpmanAgent::new).collect(Collectors.toList()));
         } catch (final IOException e) {
             throw new InitializationException("could not parse configuration at path: " + configurationFile.getAbsolutePath(), e);
@@ -132,7 +132,7 @@ public final class Snmpman {
 
     /**
      * Starts all agents as defined in {@link #agents}.
-     * 
+     *
      * @throws com.oneandone.snmpman.exception.InitializationException thrown if any agent could not be started
      */
     private void start() {
@@ -151,7 +151,7 @@ public final class Snmpman {
 
     /**
      * Wait until specified agent is started.
-     * <p />
+     * <br>
      * A call of this method is blocking.
      *
      * @param agent the agent to wait for
