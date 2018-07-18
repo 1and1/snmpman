@@ -1,0 +1,5 @@
+- name: "example1"
+  device: "/opt/snmpman/etc/devices/ios.yaml"
+  walk: "/opt/snmpman/etc/walk/example1.walk"
+  ip: "127.0.0.1"
+  port: 10000

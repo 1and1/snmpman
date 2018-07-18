@@ -60,7 +60,7 @@ In order to build the `SNMPMAN`  you can use Apache Maven to build a far JAR:
 mvn clean package
 ```
 
-After that you find your JAR in `target/snmpman-$VERSION-SNAPSHOT-jar-with-dependencies.jar `.
+After that you find your JAR in `snmpman-cli/target/snmpman-cli-$VERSION-SNAPSHOT-jar-with-dependencies.jar`.
 
 Execution
 ============

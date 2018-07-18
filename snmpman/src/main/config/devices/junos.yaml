@@ -1,0 +1,210 @@
+name: "Junos"
+modifiers:
+# cpu.load
+  - oid: ".1.3.6.1.4.1.2636.3.1.13.1.8"
+    class: "com.oneandone.snmpman.configuration.modifier.Gauge32Modifier"
+    properties:
+       minimum: 0
+       maximum: 100
+       minimumStep: 0
+       maximumStep: 100
+# env.temperature.value
+  - oid: ".1.3.6.1.4.1.2636.3.1.13.1.7"
+    class: "com.oneandone.snmpman.configuration.modifier.Gauge32Modifier"
+    properties:
+       minimum: 25
+       maximum: 60
+       minimumStep: -10
+       maximumStep: 10
+# ifInOctets
+  - oid: ".1.3.6.1.2.1.2.2.1.10"
+    class: "com.oneandone.snmpman.configuration.modifier.Counter32Modifier"
+    properties:
+       minimum: 0
+       maximum: 4294967295
+       minimumStep: 0
+       maximumStep: 3840000
+# ifInOctets
+  - oid: ".1.3.6.1.2.1.2.2.1.11"
+    class: "com.oneandone.snmpman.configuration.modifier.Counter32Modifier"
+    properties:
+       minimum: 0
+       maximum: 4294967295
+       minimumStep: 0
+       maximumStep: 20000
+# ifInNUcastPkts
+  - oid: ".1.3.6.1.2.1.2.2.1.12"
+    class: "com.oneandone.snmpman.configuration.modifier.Counter32Modifier"
+    properties:
+       minimum: 0
+       maximum: 4294967295
+       minimumStep: 0
+       maximumStep: 20000
+# ifInDiscards
+  - oid: ".1.3.6.1.2.1.2.2.1.13"
+    class: "com.oneandone.snmpman.configuration.modifier.Counter32Modifier"
+    properties:
+       minimum: 0
+       maximum: 4294967295
+       minimumStep: 0
+       maximumStep: 20000
+# ifInErrors
+  - oid: ".1.3.6.1.2.1.2.2.1.14"
+    class: "com.oneandone.snmpman.configuration.modifier.Counter32Modifier"
+    properties:
+       minimum: 0
+       maximum: 4294967295
+       minimumStep: 0
+       maximumStep: 20000
+# ifInUnknownProtos
+  - oid: ".1.3.6.1.2.1.2.2.1.15"
+    class: "com.oneandone.snmpman.configuration.modifier.Counter32Modifier"
+    properties:
+       minimum: 0
+       maximum: 4294967295
+       minimumStep: 0
+       maximumStep: 20000
+# ifOutOctets
+  - oid: ".1.3.6.1.2.1.2.2.1.16"
+    class: "com.oneandone.snmpman.configuration.modifier.Counter32Modifier"
+    properties:
+       minimum: 0
+       maximum: 4294967295
+       minimumStep: 0
+       maximumStep: 3840000
+# ifOutUcastPkts
+  - oid: ".1.3.6.1.2.1.2.2.1.17"
+    class: "com.oneandone.snmpman.configuration.modifier.Counter32Modifier"
+    properties:
+       minimum: 0
+       maximum: 4294967295
+       minimumStep: 0
+       maximumStep: 20000
+# ifOutNUcastPkts
+  - oid: ".1.3.6.1.2.1.2.2.1.18"
+    class: "com.oneandone.snmpman.configuration.modifier.Counter32Modifier"
+    properties:
+       minimum: 0
+       maximum: 4294967295
+       minimumStep: 0
+       maximumStep: 20000
+# ifOutDiscards
+  - oid: ".1.3.6.1.2.1.2.2.1.19"
+    class: "com.oneandone.snmpman.configuration.modifier.Counter32Modifier"
+    properties:
+       minimum: 0
+       maximum: 4294967295
+       minimumStep: 0
+       maximumStep: 20000
+# ifOutErrors
+  - oid: ".1.3.6.1.2.1.2.2.1.20"
+    class: "com.oneandone.snmpman.configuration.modifier.Counter32Modifier"
+    properties:
+       minimum: 0
+       maximum: 4294967295
+       minimumStep: 0
+       maximumStep: 20000
+# ifHCInOctets
+  - oid: ".1.3.6.1.2.1.31.1.1.1.6"
+    class: com.oneandone.snmpman.configuration.modifier.Counter64Modifier
+    properties:
+       minimum: 0
+       maximum: 1844674407370955161
+       minimumStep: 0
+       maximumStep: 3840000
+# ifHCInUcastPkts       
+  - oid: ".1.3.6.1.2.1.31.1.1.1.7"
+    class: "com.oneandone.snmpman.configuration.modifier.Counter64Modifier"
+    properties:
+       minimum: 0
+       maximum: 1844674407370955161
+       minimumStep: 0
+       maximumStep: 20000
+# ifHCInMulticastPkts       
+  - oid: ".1.3.6.1.2.1.31.1.1.1.8"
+    class: com.oneandone.snmpman.configuration.modifier.Counter64Modifier
+    properties:
+       minimum: 0
+       maximum: 1844674407370955161
+       minimumStep: 0
+       maximumStep: 20000
+# ifHCInBroadcastPkts
+  - oid: ".1.3.6.1.2.1.31.1.1.1.9"
+    class: "com.oneandone.snmpman.configuration.modifier.Counter64Modifier"
+    properties:
+       minimum: 0
+       maximum: 1844674407370955161
+       minimumStep: 0
+       maximumStep: 20000
+# ifInDiscards      
+  - oid: ".1.3.6.1.2.1.2.2.1.13"
+    class: "com.oneandone.snmpman.configuration.modifier.Counter32Modifier"
+    properties:
+       minimum: 0
+       maximum: 4294967295
+       minimumStep: 0
+       maximumStep: 20000
+# ifInErrors
+  - oid: ".1.3.6.1.2.1.2.2.1.14"
+    class: "com.oneandone.snmpman.configuration.modifier.Counter32Modifier"
+    properties:
+       minimum: 0
+       maximum: 4294967295
+       minimumStep: 0
+       maximumStep: 20000
+# ifInUnknownProtos
+  - oid: ".1.3.6.1.2.1.2.2.1.15"
+    class: "com.oneandone.snmpman.configuration.modifier.Counter32Modifier"
+    properties:
+       minimum: 0
+       maximum: 4294967295
+       minimumStep: 0
+       maximumStep: 20000
+# ifHCOutOctets
+  - oid: ".1.3.6.1.2.1.31.1.1.1.10"
+    class: "com.oneandone.snmpman.configuration.modifier.Counter64Modifier"
+    properties:
+       minimum: 0
+       maximum: 1844674407370955161
+       minimumStep: 0
+       maximumStep: 3840000
+# ifHCOutUcastPkts
+  - oid: ".1.3.6.1.2.1.31.1.1.1.11"
+    class: "com.oneandone.snmpman.configuration.modifier.Counter64Modifier"
+    properties:
+       minimum: 0
+       maximum: 1844674407370955161
+       minimumStep: 0
+       maximumStep: 20000
+# ifHCOutMulticastPkts
+  - oid: ".1.3.6.1.2.1.31.1.1.1.12"
+    class: "com.oneandone.snmpman.configuration.modifier.Counter64Modifier"
+    properties:
+       minimum: 0
+       maximum: 1844674407370955161
+       minimumStep: 0
+       maximumStep: 20000
+# ifHCOutBroadcastPkts
+  - oid: ".1.3.6.1.2.1.31.1.1.1.13"
+    class: "com.oneandone.snmpman.configuration.modifier.Counter64Modifier"
+    properties:
+       minimum: 0
+       maximum: 1844674407370955161
+       minimumStep: 0
+       maximumStep: 20000
+# ifOutDiscards
+  - oid: ".1.3.6.1.2.1.2.2.1.19"
+    class: "com.oneandone.snmpman.configuration.modifier.Counter32Modifier"
+    properties:
+       minimum: 0
+       maximum: 4294967295
+       minimumStep: 0
+       maximumStep: 20000
+# ifOutErrors
+  - oid: ".1.3.6.1.2.1.2.2.1.20"
+    class: "com.oneandone.snmpman.configuration.modifier.Counter32Modifier"
+    properties:
+       minimum: 0
+       maximum: 4294967295
+       minimumStep: 0
+       maximumStep: 20000
