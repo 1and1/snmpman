@@ -6,7 +6,7 @@
         <artifactId>snmpman-parent</artifactId>
         <version>1.3.2-SNAPSHOT</version>
     </parent>
-    <artifactId>main</artifactId>
+    <artifactId>snmpman</artifactId>
     <name>SNMPMan</name>
     <description>SNMP agent simulator library</description>
     <packaging>jar</packaging>
