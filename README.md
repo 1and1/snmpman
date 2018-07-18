@@ -50,26 +50,17 @@ Installation and building
 ============
 ### Prerequisites
   * `Java JDK 1.8`
-  * `Gradle 2.2`
+  * `Apache Maven 3.5.2`
 
 ### Building a fat Jar
 
-In order to build the `SNMPMAN`  you can use gradle to build a far JAR:
+In order to build the `SNMPMAN`  you can use Apache Maven to build a far JAR:
 
 ```
-gradle fatJar
+mvn clean package
 ```
 
-After that you find your JAR in `./build/libs`.
-
-### Building operating system packages
-
-In order to package the `SNMPMAN` - as either a `.deb` or `.rpm` - you have to execute the following gradle tasks
-
-  * `gradle buildDeb` - **We strongly advise not to use the debian package, due to bugs**
-  * `gradle buildRpm`
-
-You will find the generated output in `./build/distributions` and can then install the built packages.
+After that you find your JAR in `target/snmpman-$VERSION-SNAPSHOT-jar-with-dependencies.jar `.
 
 Execution
 ============
