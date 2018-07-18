@@ -8,6 +8,7 @@ import org.snmp4j.smi.Variable;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,9 +45,7 @@ public class CommunityIndexCounter32ModifierTest {
         assertTrue(communityIndexValues.containsKey(context2) && communityIndexValues.containsValue(contextValue2));
 
         // unchanged
-        modifierProperties.put("maximum", new HashMap<String, Long>() {{
-            put("1.3.6", 172L);
-        }});
+        modifierProperties.put("maximum", Collections.singletonMap("1.3.6", 172L));
         final CommunityIndexCounter32Modifier modifier2 = new CommunityIndexCounter32Modifier();
         modifier2.init(modifierProperties);
 
