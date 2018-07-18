@@ -1,6 +1,5 @@
 package com.oneandone.snmpman;
 
-import com.oneandone.snmpman.exception.InitializationException;
 import org.mockito.Mockito;
 import org.snmp4j.*;
 import org.snmp4j.agent.BaseAgent;
@@ -26,12 +25,12 @@ public class SnmpmanTest {
     private Snmpman snmpman;
 
     @BeforeMethod
-    public void startSnmpman() throws Exception {
+    public void startSnmpman() {
         snmpman = Snmpman.start(new File("src/test/resources/configuration/configuration.yaml"));
     }
 
     @AfterMethod
-    public void stopSnmpman() throws Exception {
+    public void stopSnmpman() {
         snmpman.stop();
     }
 
@@ -74,7 +73,7 @@ public class SnmpmanTest {
     }
 
     @Test(expectedExceptions = InitializationException.class)
-    public void startWithAlreadyStoppedAgent() throws Exception {
+    public void startWithAlreadyStoppedAgent() {
         final SnmpmanAgent mock = Mockito.mock(SnmpmanAgent.class);
         Mockito.when(mock.getAgentState()).thenReturn(BaseAgent.STATE_STOPPED);
 

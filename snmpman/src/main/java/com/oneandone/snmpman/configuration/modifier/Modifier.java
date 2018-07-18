@@ -1,9 +1,6 @@
 package com.oneandone.snmpman.configuration.modifier;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.oneandone.snmpman.configuration.type.ModifierProperties;
-import com.oneandone.snmpman.configuration.type.WildcardOID;
-import com.oneandone.snmpman.exception.InitializationException;
 import lombok.Getter;
 import org.snmp4j.smi.OID;
 import org.snmp4j.smi.Variable;

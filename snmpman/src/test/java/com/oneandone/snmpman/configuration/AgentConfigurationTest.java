@@ -4,19 +4,17 @@ import org.testng.annotations.Test;
 
 import java.io.File;
 
-import static org.testng.Assert.assertEquals;
-
 public class AgentConfigurationTest {
 
     @Test
-    public void testInitialization() throws Exception {
+    public void testInitialization() {
         final AgentConfiguration configuration = new AgentConfiguration(
-                "Test", 
-                new File("src/test/resources/configuration/cisco.yaml"), 
-                new File("src/test/resources/configuration/example.txt"), 
-                "127.0.0.1", 8080, 
+                "Test",
+                new File("src/test/resources/configuration/cisco.yaml"),
+                new File("src/test/resources/configuration/example.txt"),
+                "127.0.0.1", 8080,
                 "secret");
-        
+
         assertEquals(configuration.getName(), "Test");
         assertEquals(configuration.getWalk(), new File("src/test/resources/configuration/example.txt"));
         assertEquals(configuration.getCommunity(), "secret");
@@ -25,7 +23,7 @@ public class AgentConfigurationTest {
     }
 
     @Test
-    public void testInitializationWithoutName() throws Exception {
+    public void testInitializationWithoutName() {
         final AgentConfiguration configuration = new AgentConfiguration(
                 null,
                 new File("src/test/resources/configuration/cisco.yaml"),
@@ -41,7 +39,7 @@ public class AgentConfigurationTest {
     }
 
     @Test
-    public void testInitializationWithoutDevice() throws Exception {
+    public void testInitializationWithoutDevice() {
         final AgentConfiguration configuration = new AgentConfiguration(
                 "Test",
                 null,

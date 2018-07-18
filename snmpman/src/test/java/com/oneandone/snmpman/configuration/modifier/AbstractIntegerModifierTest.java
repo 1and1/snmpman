@@ -1,9 +1,6 @@
 package com.oneandone.snmpman.configuration.modifier;
 
-import com.oneandone.snmpman.configuration.type.ModifierProperties;
 import org.testng.annotations.Test;
-
-import static org.testng.Assert.assertEquals;
 
 public class AbstractIntegerModifierTest {
 
@@ -32,7 +29,7 @@ public class AbstractIntegerModifierTest {
     }
 
     @Test
-    public void testProperties() throws Exception {
+    public void testProperties() {
         final ModifierProperties modifierProperties = new ModifierProperties();
         modifierProperties.put("minimum", 0);
         modifierProperties.put("maximum", 10);
@@ -47,5 +44,5 @@ public class AbstractIntegerModifierTest {
         assertEquals(modifier.getMinimumStep(), 1);
         assertEquals(modifier.getMaximumStep(), 10);
     }
-    
+
 }

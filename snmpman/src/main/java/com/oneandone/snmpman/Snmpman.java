@@ -3,8 +3,6 @@ package com.oneandone.snmpman;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
 import com.google.common.base.Preconditions;
-import com.oneandone.snmpman.configuration.AgentConfiguration;
-import com.oneandone.snmpman.exception.InitializationException;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.snmp4j.agent.BaseAgent;
