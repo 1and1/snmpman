@@ -101,7 +101,7 @@
                     <archive>
                         <manifest>
                             <addClasspath>true</addClasspath>
-                            <mainClass>com.oneandone.snmpman.Snmpman</mainClass>
+                            <mainClass>com.oneandone.snmpman.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
