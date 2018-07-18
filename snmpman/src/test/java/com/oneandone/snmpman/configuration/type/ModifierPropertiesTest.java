@@ -1,6 +1,10 @@
 package com.oneandone.snmpman.configuration.type;
 
 import com.google.common.primitives.UnsignedLong;
+import com.oneandone.snmpman.configuration.AgentConfiguration;
+import com.oneandone.snmpman.configuration.Device;
+import com.oneandone.snmpman.configuration.modifier.Counter64Modifier;
+import com.oneandone.snmpman.configuration.modifier.Modifier;
 import org.snmp4j.smi.OID;
 import org.testng.annotations.Test;
 
@@ -31,10 +35,10 @@ public class ModifierPropertiesTest {
                 counter64found = true;
             }
         }
-
+        
         if (!counter64found) {
             fail("no modifier for unsigned long found");
         }
     }
-
+    
 }

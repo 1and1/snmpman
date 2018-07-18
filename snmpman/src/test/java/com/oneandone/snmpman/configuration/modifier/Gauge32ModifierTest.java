@@ -1,5 +1,6 @@
 package com.oneandone.snmpman.configuration.modifier;
 
+import com.oneandone.snmpman.configuration.type.ModifierProperties;
 import org.snmp4j.smi.Gauge32;
 import org.testng.annotations.Test;
 
@@ -8,7 +9,7 @@ import static org.testng.Assert.*;
 public class Gauge32ModifierTest {
 
     @Test
-    public void testModify() {
+    public void testModify() throws Exception {
         final ModifierProperties modifierProperties = new ModifierProperties();
         modifierProperties.put("minimum", 0);
         modifierProperties.put("maximum", 3000);
@@ -24,5 +25,5 @@ public class Gauge32ModifierTest {
         final Gauge32 modifiedVariable = modifier.modify(gauge32);
         assertNotEquals(modifiedVariable.getValue(), 0);
     }
-
+    
 }

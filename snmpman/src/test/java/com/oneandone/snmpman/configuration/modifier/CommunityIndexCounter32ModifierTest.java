@@ -1,5 +1,6 @@
 package com.oneandone.snmpman.configuration.modifier;
 
+import com.oneandone.snmpman.configuration.type.ModifierProperties;
 import org.snmp4j.smi.Counter32;
 import org.snmp4j.smi.OID;
 import org.snmp4j.smi.OctetString;
@@ -22,7 +23,7 @@ public class CommunityIndexCounter32ModifierTest {
     private final String oid = "1.3.6.1.2.1.17.2.4.0";
 
     @BeforeTest
-    private void setUp() {
+    private void setUp() throws Exception {
         context1 = 20;
         contextValue1 = 150;
         context2 = 9;
@@ -33,7 +34,7 @@ public class CommunityIndexCounter32ModifierTest {
     }
 
     @Test
-    public void testInit() {
+    public void testInit() throws Exception {
         final CommunityIndexCounter32Modifier modifier = new CommunityIndexCounter32Modifier();
         modifier.init(modifierProperties);
 
@@ -56,7 +57,7 @@ public class CommunityIndexCounter32ModifierTest {
     }
 
     @Test
-    public void testModify() {
+    public void testModify() throws Exception {
         final CommunityIndexCounter32Modifier modifier = new CommunityIndexCounter32Modifier();
         modifier.init(modifierProperties);
 
@@ -71,7 +72,7 @@ public class CommunityIndexCounter32ModifierTest {
     }
 
     @Test
-    public void testGetVariableBindings() {
+    public void testGetVariableBindings() throws Exception {
         final CommunityIndexCounter32Modifier modifier = new CommunityIndexCounter32Modifier();
         modifier.init(modifierProperties);
 

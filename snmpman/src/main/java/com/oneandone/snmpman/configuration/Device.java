@@ -1,6 +1,7 @@
 package com.oneandone.snmpman.configuration;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.oneandone.snmpman.configuration.modifier.Modifier;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.ToString;

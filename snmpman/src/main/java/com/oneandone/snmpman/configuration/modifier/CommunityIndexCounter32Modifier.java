@@ -1,6 +1,7 @@
 package com.oneandone.snmpman.configuration.modifier;
 
 import com.google.common.base.Optional;
+import com.oneandone.snmpman.configuration.type.ModifierProperties;
 import lombok.Getter;
 import org.snmp4j.smi.Counter32;
 import org.snmp4j.smi.OID;

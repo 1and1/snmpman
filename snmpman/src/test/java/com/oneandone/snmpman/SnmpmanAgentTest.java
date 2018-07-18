@@ -17,12 +17,12 @@ public class SnmpmanAgentTest {
     private Snmpman snmpman;
 
     @BeforeMethod
-    public void startSnmpman() {
+    public void startSnmpman() throws Exception {
         snmpman = Snmpman.start(new File("src/test/resources/configuration/configuration.yaml"));
     }
 
     @Test
-    public void testSnmpAgentSetupWithCommunityContext() {
+    public void testSnmpAgentSetupWithCommunityContext() throws Exception {
         final List<OctetString> contexts = new ArrayList<>();
         final List<SnmpmanAgent> snmpmanAgents = snmpman.getAgents();
         for (final SnmpmanAgent agent : snmpmanAgents) {
@@ -36,7 +36,7 @@ public class SnmpmanAgentTest {
     }
 
     @AfterMethod
-    public void stopSnmpman() {
+    public void stopSnmpman() throws Exception {
         if (snmpman != null) {
             snmpman.stop();
         }

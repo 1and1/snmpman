@@ -1,5 +1,7 @@
 package com.oneandone.snmpman.integration;
 
+import com.oneandone.snmpman.Snmpman;
+import com.oneandone.snmpman.SnmpmanTest;
 import org.snmp4j.smi.OID;
 import org.snmp4j.util.TableEvent;
 import org.testng.annotations.AfterMethod;
@@ -18,17 +20,17 @@ public class SnmpmanIntegrationTest {
     private Snmpman snmpman;
 
     @BeforeMethod
-    public void startSnmpman() {
+    public void startSnmpman() throws Exception {
         snmpman = Snmpman.start(new File("src/test/resources/configuration/configuration.yaml"));
     }
 
     @AfterMethod
-    public void stopSnmpman() {
+    public void stopSnmpman() throws Exception {
         snmpman.stop();
     }
 
     @Test
-    public void testSnmpGetBulk() {
+    public void testSnmpGetBulk() throws Exception {
         List<TableEvent> responses = SnmpmanTest.getResponse(new OID("1.3.6.1.2.1"), 10000);
         assertEquals(responses.size(), 19);
 
@@ -40,7 +42,7 @@ public class SnmpmanIntegrationTest {
     }
 
     @Test
-    public void testWithCommunityIndex() {
+    public void testWithCommunityIndex() throws Exception {
         final String oid = "1.3.6.1.2.1.17.2.4";
         List<TableEvent> responses1 = SnmpmanTest.getResponse(new OID(oid), 10009, "public@42");
         assertEquals(responses1.size(), 1);

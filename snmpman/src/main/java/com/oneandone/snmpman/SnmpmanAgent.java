@@ -1,6 +1,13 @@
 package com.oneandone.snmpman;
 
 import com.google.common.primitives.UnsignedLong;
+import com.oneandone.snmpman.configuration.AgentConfiguration;
+import com.oneandone.snmpman.configuration.Device;
+import com.oneandone.snmpman.configuration.modifier.CommunityContextModifier;
+import com.oneandone.snmpman.configuration.modifier.ModifiedVariable;
+import com.oneandone.snmpman.configuration.modifier.Modifier;
+import com.oneandone.snmpman.configuration.modifier.VariableModifier;
+import com.oneandone.snmpman.snmp.MOGroup;
 import lombok.extern.slf4j.Slf4j;
 import org.snmp4j.TransportMapping;
 import org.snmp4j.agent.*;
@@ -218,7 +225,7 @@ public class SnmpmanAgent extends BaseAgent {
 
     @Override
     @SuppressWarnings("unchecked")
-    protected void initTransportMappings() {
+    protected void initTransportMappings() throws IOException {
         log.trace("starting to initialize transport mappings for agent \"{}\"", configuration.getName());
         transportMappings = new TransportMapping[1];
         TransportMapping tm = TransportMappings.getInstance().createTransportMapping(configuration.getAddress());
