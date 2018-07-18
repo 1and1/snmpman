@@ -8,6 +8,7 @@ import org.snmp4j.smi.OID;
 import org.snmp4j.smi.OctetString;
 import org.snmp4j.smi.Variable;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.TreeMap;
@@ -56,14 +57,10 @@ public class CommunityIndexCounter32Modifier implements CommunityContextModifier
     public Map<OID, Variable> getVariableBindings(final OctetString context, final OID queryOID) {
         if (queryOID != null && context != null && context.getValue().length != 0) {
             if (!queryOID.toString().isEmpty() && !context.toString().isEmpty() && communityContextMapping.containsKey(Long.parseLong(context.toString()))) {
-                return new TreeMap<OID, Variable>() {{
-                    put(queryOID, new Counter32(communityContextMapping.get(Long.parseLong(context.toString()))));
-                }};
+                return Collections.singletonMap(queryOID, new Counter32(communityContextMapping.get(Long.parseLong(context.toString()))));
             }
         } else if (queryOID != null) {
-            return new TreeMap<OID, Variable>() {{
-                put(queryOID, modify(null));
-            }};
+            return Collections.singletonMap(queryOID, modify(null));
 
         }
         return new TreeMap<>();
