@@ -26,6 +26,7 @@ import org.snmp4j.util.ThreadPool;
 import java.io.*;
 import java.lang.reflect.Field;
 import java.net.URLEncoder;
+import java.nio.charset.Charset;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,6 +40,11 @@ import java.util.stream.Collectors;
  */
 @Slf4j
 public class SnmpmanAgent extends BaseAgent {
+
+    /**
+     * The default charset for files being read.
+     */
+    private static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
 
     /**
      * The pattern of variable bindings in a walk file.
@@ -243,8 +249,8 @@ public class SnmpmanAgent extends BaseAgent {
 
         log.trace("registering managed objects for agent \"{}\"", configuration.getName());
         for (final Long vlan : vlans) {
-            try (final FileReader fileReader = new FileReader(configuration.getWalk());
-                 final BufferedReader reader = new BufferedReader(fileReader)) {
+            try (final FileInputStream fileInputStream = new FileInputStream(configuration.getWalk());
+                 final BufferedReader reader = new BufferedReader(new InputStreamReader(fileInputStream, DEFAULT_CHARSET))) {
 
                 Map<OID, Variable> bindings = readVariableBindings(reader);
 
@@ -298,8 +304,8 @@ public class SnmpmanAgent extends BaseAgent {
      * Creates the {@link StaticMOGroup} with all information necessary to register it to the server.
      */
     private void createAndRegisterDefaultContext() {
-        try (final FileReader fileReader = new FileReader(configuration.getWalk());
-             final BufferedReader reader = new BufferedReader(fileReader)) {
+        try (final FileInputStream fileInputStream = new FileInputStream(configuration.getWalk());
+             final BufferedReader reader = new BufferedReader(new InputStreamReader(fileInputStream, DEFAULT_CHARSET))) {
 
             Map<OID, Variable> bindings = readVariableBindings(reader);
             final SortedMap<OID, Variable> variableBindings = this.getVariableBindings(configuration.getDevice(), bindings, new OctetString());
