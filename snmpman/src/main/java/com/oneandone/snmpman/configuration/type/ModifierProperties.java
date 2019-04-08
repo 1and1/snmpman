@@ -56,6 +56,8 @@ public class ModifierProperties extends Properties {
             final Object value = this.get(key);
             if (value instanceof Number) {
                 return Optional.of((Number) value);
+            } else if (value instanceof String) {
+                return Optional.of(Long.valueOf((String) value));
             } else {
                 throw new ClassCastException("property \"" + key + "\" is not a number");
             }
