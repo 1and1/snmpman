@@ -192,7 +192,7 @@ public class SnmpmanAgent extends BaseAgent {
                 // Parse unsigned long
                 return new Counter64(UnsignedLong.valueOf(value).longValue());
             case "INTEGER":
-                return new Integer32(Integer.valueOf(value.replaceAll("[^-?0-9]+", "")));
+                return new Integer32(Integer.parseInt(value.replaceAll("[^-?0-9]+", "")));
             case "Hex-STRING":
                 return OctetString.fromHexString(value, ' ');
             case "IpAddress":
