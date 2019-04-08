@@ -6,13 +6,13 @@
     <name>SNMPMan Parent</name>
     <description>SNMP agent simulator</description>
     <url>https://github.com/1and1/snmpman</url>
-    <version>1.4.3-SNAPSHOT</version>
+    <version>1.4.3</version>
     <packaging>pom</packaging>
     <scm>
         <url>https://github.com/1and1/snmpman</url>
         <connection>scm:git:git@github.com:1and1/snmpman.git</connection>
         <developerConnection>scm:git:git@github.com:1and1/snmpman.git</developerConnection>
-      <tag>HEAD</tag>
+      <tag>v1.4.3</tag>
   </scm>
     <licenses>
         <license>
