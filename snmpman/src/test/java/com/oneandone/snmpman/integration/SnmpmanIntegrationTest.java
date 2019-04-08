@@ -20,12 +20,12 @@ public class SnmpmanIntegrationTest {
     private Snmpman snmpman;
 
     @BeforeMethod
-    public void startSnmpman() throws Exception {
+    public void startSnmpman() {
         snmpman = Snmpman.start(new File("src/test/resources/configuration/configuration.yaml"));
     }
 
     @AfterMethod
-    public void stopSnmpman() throws Exception {
+    public void stopSnmpman() {
         snmpman.stop();
     }
 

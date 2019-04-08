@@ -9,7 +9,6 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 import static org.testng.Assert.assertEquals;
@@ -24,7 +23,7 @@ public class CommunityIndexCounter32ModifierTest {
     private final String oid = "1.3.6.1.2.1.17.2.4.0";
 
     @BeforeTest
-    private void setUp() throws Exception {
+    private void setUp() {
         context1 = 20;
         contextValue1 = 150;
         context2 = 9;
@@ -35,7 +34,7 @@ public class CommunityIndexCounter32ModifierTest {
     }
 
     @Test
-    public void testInit() throws Exception {
+    public void testInit() {
         final CommunityIndexCounter32Modifier modifier = new CommunityIndexCounter32Modifier();
         modifier.init(modifierProperties);
 
@@ -56,7 +55,7 @@ public class CommunityIndexCounter32ModifierTest {
     }
 
     @Test
-    public void testModify() throws Exception {
+    public void testModify() {
         final CommunityIndexCounter32Modifier modifier = new CommunityIndexCounter32Modifier();
         modifier.init(modifierProperties);
 
@@ -71,7 +70,7 @@ public class CommunityIndexCounter32ModifierTest {
     }
 
     @Test
-    public void testGetVariableBindings() throws Exception {
+    public void testGetVariableBindings() {
         final CommunityIndexCounter32Modifier modifier = new CommunityIndexCounter32Modifier();
         modifier.init(modifierProperties);
 

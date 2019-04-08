@@ -41,7 +41,7 @@ public class ModifierProperties extends Properties {
      */
     public UnsignedLong getUnsignedLong(final String key) {
         final Optional<Number> number = getNumber(key);
-        return number.isPresent() ? UnsignedLong.valueOf(number.get().longValue()) : null;
+        return number.map(value -> UnsignedLong.valueOf(value.longValue())).orElse(null);
     }
 
     /**

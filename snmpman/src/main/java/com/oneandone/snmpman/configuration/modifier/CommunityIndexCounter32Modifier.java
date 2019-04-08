@@ -1,6 +1,5 @@
 package com.oneandone.snmpman.configuration.modifier;
 
-import com.google.common.base.Optional;
 import com.oneandone.snmpman.configuration.type.ModifierProperties;
 import lombok.Getter;
 import org.snmp4j.smi.Counter32;
@@ -8,13 +7,10 @@ import org.snmp4j.smi.OID;
 import org.snmp4j.smi.OctetString;
 import org.snmp4j.smi.Variable;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 /**
- * This modifier implementation modifies {@link org.snmp4j.smi.Counter32} variables depending on their community context.
+ * This modifier implementation modifies {@link Counter32} variables depending on their community context.
  */
 public class CommunityIndexCounter32Modifier implements CommunityContextModifier<Counter32> {
     /**
@@ -33,7 +29,7 @@ public class CommunityIndexCounter32Modifier implements CommunityContextModifier
 
     private Long getUnsignedLong(final Object input) {
         try {
-            if (!Optional.fromNullable(input).isPresent()) {
+            if (!Optional.ofNullable(input).isPresent()) {
                 // not present
                 return -1L;
             }

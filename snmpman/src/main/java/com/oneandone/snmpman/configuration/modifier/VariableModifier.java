@@ -14,12 +14,12 @@ public interface VariableModifier<T extends Variable> {
      * @param variable the variable to modify
      * @return the modified variable
      */
-    public T modify(final T variable);
+    T modify(final T variable);
 
     /**
      * Initialize {@code this} variable modifier by the specified {@code properties}.
      *
      * @param properties the initialization properties
      */
-    public default void init(final ModifierProperties properties) { }
+    default void init(final ModifierProperties properties) { }
 }

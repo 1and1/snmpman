@@ -9,7 +9,7 @@ import static org.testng.Assert.*;
 public class Integer32ModifierTest {
 
     @Test
-    public void testModify() throws Exception {
+    public void testModify() {
         final ModifierProperties modifierProperties = new ModifierProperties();
         modifierProperties.put("minimum", Integer.MIN_VALUE);
         modifierProperties.put("maximum", Integer.MAX_VALUE);
@@ -27,7 +27,7 @@ public class Integer32ModifierTest {
     }
     
     @Test
-    public void testProperties() throws Exception {
+    public void testProperties() {
         final ModifierProperties modifierProperties = new ModifierProperties();
         modifierProperties.put("minimum", Integer.MIN_VALUE);
         modifierProperties.put("maximum", Integer.MAX_VALUE);
@@ -37,10 +37,10 @@ public class Integer32ModifierTest {
         final Integer32Modifier modifier = new Integer32Modifier();
         modifier.init(modifierProperties);
         
-        assertEquals(modifier.getMinimum(), new Integer(Integer.MIN_VALUE));
-        assertEquals(modifier.getMaximum(), new Integer(Integer.MAX_VALUE));
-        assertEquals(modifier.getMinimumStep(), new Integer(1));
-        assertEquals(modifier.getMaximumStep(), new Integer(10));
+        assertEquals(modifier.getMinimum(), Integer.valueOf(Integer.MIN_VALUE));
+        assertEquals(modifier.getMaximum(), Integer.valueOf(Integer.MAX_VALUE));
+        assertEquals(modifier.getMinimumStep(), Integer.valueOf(1));
+        assertEquals(modifier.getMaximumStep(), Integer.valueOf(10));
     }
     
 }

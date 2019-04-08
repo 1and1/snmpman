@@ -9,7 +9,7 @@ import static org.testng.Assert.assertEquals;
 public class AgentConfigurationTest {
 
     @Test
-    public void testInitialization() throws Exception {
+    public void testInitialization() {
         final AgentConfiguration configuration = new AgentConfiguration(
                 "Test", 
                 new File("src/test/resources/configuration/cisco.yaml"), 
@@ -25,7 +25,7 @@ public class AgentConfigurationTest {
     }
 
     @Test
-    public void testInitializationWithoutName() throws Exception {
+    public void testInitializationWithoutName() {
         final AgentConfiguration configuration = new AgentConfiguration(
                 null,
                 new File("src/test/resources/configuration/cisco.yaml"),
@@ -41,7 +41,7 @@ public class AgentConfigurationTest {
     }
 
     @Test
-    public void testInitializationWithoutDevice() throws Exception {
+    public void testInitializationWithoutDevice() {
         final AgentConfiguration configuration = new AgentConfiguration(
                 "Test",
                 null,

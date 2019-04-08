@@ -9,7 +9,7 @@ import static org.testng.Assert.*;
 public class Counter32ModifierTest {
 
     @Test
-    public void testModify() throws Exception {
+    public void testModify() {
         final ModifierProperties modifierProperties = new ModifierProperties();
         modifierProperties.put("minimum", 0);
         modifierProperties.put("maximum", 3000);

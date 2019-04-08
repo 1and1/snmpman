@@ -18,7 +18,7 @@ public class ModifiedVariableTest {
     private ModifiedVariable modifiedVariable;
     
     @BeforeMethod
-    public void setUp() throws Exception {
+    public void setUp() {
         variable = new Integer32(0);
         otherVariable = new Integer32(1);
         
@@ -39,12 +39,12 @@ public class ModifiedVariableTest {
     }
     
     @Test
-    public void testCompareTo() throws Exception {
+    public void testCompareTo() {
         assertEquals(variable.compareTo(otherVariable), modifiedVariable.compareTo(otherVariable));
     }
 
     @Test
-    public void testClone() throws Exception {
+    public void testClone() {
         final Object clonedVariable = modifiedVariable.clone();
         assertNotSame(clonedVariable, modifiedVariable);
         assertTrue(clonedVariable instanceof Integer32);
@@ -53,64 +53,64 @@ public class ModifiedVariableTest {
     }
 
     @Test
-    public void testGetSyntax() throws Exception {
+    public void testGetSyntax() {
         assertEquals(modifiedVariable.getSyntax(), variable.getSyntax());
     }
 
     @Test
-    public void testIsException() throws Exception {
+    public void testIsException() {
         assertEquals(modifiedVariable.isException(), variable.isException());
     }
 
     @Test
-    public void testToString() throws Exception {
+    public void testToString() {
         assertEquals(modifiedVariable.toString(), variable.toString());
     }
 
     @Test
-    public void testToInt() throws Exception {
+    public void testToInt() {
         assertEquals(modifiedVariable.toInt(), variable.toInt());
     }
 
     @Test
-    public void testToLong() throws Exception {
+    public void testToLong() {
         assertEquals(modifiedVariable.toLong(), variable.toLong());
     }
 
     @Test
-    public void testGetSyntaxString() throws Exception {
+    public void testGetSyntaxString() {
         assertEquals(modifiedVariable.getSyntaxString(), variable.getSyntaxString());
     }
 
     @Test
-    public void testToSubIndex() throws Exception {
+    public void testToSubIndex() {
         assertEquals(modifiedVariable.toSubIndex(true), variable.toSubIndex(true));
         assertEquals(modifiedVariable.toSubIndex(false), variable.toSubIndex(false));
     }
 
     @Test
-    public void testIsDynamic() throws Exception {
+    public void testIsDynamic() {
         assertEquals(modifiedVariable.isDynamic(), variable.isDynamic());
     }
 
     @Test
-    public void testGetBERLength() throws Exception {
+    public void testGetBERLength() {
         assertEquals(modifiedVariable.getBERLength(), variable.getBERLength());
     }
 
     @Test
-    public void testGetBERPayloadLength() throws Exception {
+    public void testGetBERPayloadLength() {
         assertEquals(modifiedVariable.getBERPayloadLength(), variable.getBERPayloadLength());
     }
 
     @Test
-    public void testEquals() throws Exception {
+    public void testEquals() {
         assertTrue(modifiedVariable.equals(modifiedVariable));
         assertTrue(modifiedVariable.equals(variable));
     }
 
     @Test
-    public void testHashCode() throws Exception {
+    public void testHashCode() {
         assertEquals(modifiedVariable.hashCode(), variable.hashCode());
     }
 }

@@ -3,7 +3,8 @@ package com.oneandone.snmpman.configuration;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory;
-import com.google.common.base.Optional;
+import com.oneandone.snmpman.Snmpman;
+import com.oneandone.snmpman.SnmpmanAgent;
 import com.oneandone.snmpman.configuration.modifier.Modifier;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -16,8 +17,9 @@ import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
-/** Representation of the configuration for a {@link com.oneandone.snmpman.SnmpmanAgent}. */
+/** Representation of the configuration for a {@link SnmpmanAgent}. */
 @Slf4j
 @ToString(exclude = "community") @EqualsAndHashCode
 public class AgentConfiguration {
@@ -26,7 +28,7 @@ public class AgentConfiguration {
     private static final DeviceFactory DEVICE_FACTORY = new DeviceFactory();
 
     /**
-     * The device factory creates all {@link com.oneandone.snmpman.configuration.Device} representations.
+     * The device factory creates all {@link Device} representations.
      * <br>
      * It is required to instantiate the representations only one time application-wide.
      */
@@ -45,7 +47,7 @@ public class AgentConfiguration {
          * If the {@code path} is {@code null}, or the parsing of the configuration failed, the {@link #DEFAULT_DEVICE} will be returned instead.
          *
          * @param path the path of the device configuration
-         * @return the {@link com.oneandone.snmpman.configuration.Device} representation for the specified configuration in {@code path}
+         * @return the {@link Device} representation for the specified configuration in {@code path}
          */
         public Device getDevice(final File path) {
             if (path == null) {
@@ -88,9 +90,9 @@ public class AgentConfiguration {
     private final File deviceConfiguration;
 
     /**
-     * Returns the {@link com.oneandone.snmpman.configuration.Device} representation for the agent.
+     * Returns the {@link Device} representation for the agent.
      * <br>
-     * Will be set to {@link com.oneandone.snmpman.configuration.AgentConfiguration.DeviceFactory#DEFAULT_DEVICE} by default.
+     * Will be set to {@link DeviceFactory#DEFAULT_DEVICE} by default.
      *
      * @return the device representation for the agent
      */
@@ -115,11 +117,11 @@ public class AgentConfiguration {
     /**
      * Constructs a new agent configuration.
      * <br>
-     * The list of agent configurations will be parsed from within {@link com.oneandone.snmpman.Snmpman}.
+     * The list of agent configurations will be parsed from within {@link Snmpman}.
      *
      * @param name the name of the agent or {@code null} to set the address as the name
      * @param deviceConfiguration the device configuration or {@code null} will set it to
-     *                            {@link com.oneandone.snmpman.configuration.AgentConfiguration.DeviceFactory#DEFAULT_DEVICE}
+     *                            {@link DeviceFactory#DEFAULT_DEVICE}
      * @param walk the base walk file (e.g. dump of SNMP walks)
      * @param ip the IP the agent should bind to
      * @param port the port of the agent
@@ -131,18 +133,18 @@ public class AgentConfiguration {
                               @JsonProperty(value = "ip", required = true) final String ip,
                               @JsonProperty(value = "port", required = true) final int port,
                               @JsonProperty(value = "community", required = false) final String community) {
-        this.name = Optional.fromNullable(name).or(ip + ":" + port);
+        this.name = Optional.ofNullable(name).orElse(ip + ":" + port);
         this.address = GenericAddress.parse(ip + "/" + port);
 
         this.deviceConfiguration = deviceConfiguration;
         this.walk = walk;
 
-        this.community = Optional.fromNullable(community).or("public");
+        this.community = Optional.ofNullable(community).orElse("public");
     }
 
     /**
      * FIXME
-     * Lazy initialization of {@link #device} required as nested use of {@link com.fasterxml.jackson.databind.ObjectMapper}
+     * Lazy initialization of {@link #device} required as nested use of {@link ObjectMapper}
      * lead to an exception. Try to remove this call with a version update of {@code jackson}.
      *
      * @return the lazy initialized device

@@ -1,12 +1,13 @@
 package com.oneandone.snmpman.configuration.modifier;
 
-import com.google.common.base.Optional;
 import com.oneandone.snmpman.configuration.type.ModifierProperties;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import org.snmp4j.smi.Integer32;
 
-/** This modifier instance modifies {@link org.snmp4j.smi.Integer32} variables. */
+import java.util.Optional;
+
+/** This modifier instance modifies {@link Integer32} variables. */
 @Slf4j
 public class Integer32Modifier implements VariableModifier<Integer32> {
 
@@ -24,11 +25,11 @@ public class Integer32Modifier implements VariableModifier<Integer32> {
 
     @Override
     public void init(final ModifierProperties properties) {
-        this.minimum = Optional.fromNullable(properties.getInteger("minimum")).or(Integer.MIN_VALUE);
-        this.maximum = Optional.fromNullable(properties.getInteger("maximum")).or(Integer.MAX_VALUE);
+        this.minimum = Optional.ofNullable(properties.getInteger("minimum")).orElse(Integer.MIN_VALUE);
+        this.maximum = Optional.ofNullable(properties.getInteger("maximum")).orElse(Integer.MAX_VALUE);
 
-        this.minimumStep = Optional.fromNullable(properties.getInteger("minimumStep")).or(-1);
-        this.maximumStep = Optional.fromNullable(properties.getInteger("maximumStep")).or(1);
+        this.minimumStep = Optional.ofNullable(properties.getInteger("minimumStep")).orElse(-1);
+        this.maximumStep = Optional.ofNullable(properties.getInteger("maximumStep")).orElse(1);
     }
 
     /**

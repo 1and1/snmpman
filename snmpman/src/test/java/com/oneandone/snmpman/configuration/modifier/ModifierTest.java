@@ -11,14 +11,14 @@ import static org.testng.Assert.*;
 public class ModifierTest {
 
     @Test
-    public void testIsApplicable() throws Exception {        
+    public void testIsApplicable() {
         final Modifier modifier = new Modifier(".1.3.6.*", "com.oneandone.snmpman.configuration.modifier.Counter32Modifier", new ModifierProperties());
         assertTrue(modifier.isApplicable(new OID(".1.3.6.1")));
     }
 
     @Test
     @SuppressWarnings("unchecked")
-    public void testModify() throws Exception {
+    public void testModify() {
         final ModifierProperties modifierProperties = new ModifierProperties();
         modifierProperties.put("minimum", 0L);
         modifierProperties.put("maximum", 3000L);

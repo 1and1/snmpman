@@ -32,7 +32,7 @@ public class AbstractIntegerModifierTest {
     }
 
     @Test
-    public void testProperties() throws Exception {
+    public void testProperties() {
         final ModifierProperties modifierProperties = new ModifierProperties();
         modifierProperties.put("minimum", 0);
         modifierProperties.put("maximum", 10);

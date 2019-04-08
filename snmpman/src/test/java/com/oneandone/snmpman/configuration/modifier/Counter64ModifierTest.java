@@ -10,7 +10,7 @@ import static org.testng.Assert.*;
 public class Counter64ModifierTest {
 
     @Test
-    public void testProperties() throws Exception {
+    public void testProperties() {
         final ModifierProperties modifierProperties = new ModifierProperties();
         modifierProperties.put("minimum", UnsignedLong.ZERO);
         modifierProperties.put("maximum", UnsignedLong.valueOf(10L));
@@ -27,7 +27,7 @@ public class Counter64ModifierTest {
     }
 
     @Test
-    public void testModify() throws Exception {
+    public void testModify() {
         final ModifierProperties modifierProperties = new ModifierProperties();
         modifierProperties.put("minimum", UnsignedLong.ZERO);
         modifierProperties.put("maximum", UnsignedLong.valueOf(10L));

@@ -8,12 +8,12 @@ import static org.testng.Assert.*;
 public class WildcardOIDTest {
 
     @Test(expectedExceptions = { IllegalArgumentException.class })
-    public void testIllegalWildcard() throws Exception {
+    public void testIllegalWildcard() {
         new WildcardOID(".1.2.3.*.*.4");
     }
     
     @Test
-    public void testStartingMatcher() throws Exception {
+    public void testStartingMatcher() {
         final WildcardOID wildcard = new WildcardOID(".1.2.3.*");
         
         assertTrue(wildcard.matches(new OID("1.2.3.4")));
@@ -24,7 +24,7 @@ public class WildcardOIDTest {
     }
     
     @Test
-    public void testGeneralMatcher() throws Exception {
+    public void testGeneralMatcher() {
         final WildcardOID wildcard = new WildcardOID(".1.2.3.*.5");
 
         assertTrue(wildcard.matches(new OID("1.2.3.4.5")));

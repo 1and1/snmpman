@@ -69,7 +69,7 @@ public class SnmpmanAgent extends BaseAgent {
     /**
      * Returns the name of {@code this} agent.
      * <br>
-     * See {@link com.oneandone.snmpman.configuration.AgentConfiguration#name} for more information on the return value.
+     * See {@link AgentConfiguration#getName()} for more information on the return value.
      *
      * @return the name of {@code this} agent.
      */
@@ -182,7 +182,7 @@ public class SnmpmanAgent extends BaseAgent {
             case "Timeticks":
                 final int openBracket = value.indexOf("(") + 1;
                 final int closeBracket = value.indexOf(")");
-                if (openBracket < 0 || closeBracket < 0) {
+                if (openBracket == 0 || closeBracket < 0) {
                     throw new IllegalArgumentException("could not parse time tick value in " + value);
                 }
                 return new TimeTicks(Long.parseLong(value.substring(openBracket, closeBracket)));
@@ -225,7 +225,7 @@ public class SnmpmanAgent extends BaseAgent {
 
     @Override
     @SuppressWarnings("unchecked")
-    protected void initTransportMappings() throws IOException {
+    protected void initTransportMappings() {
         log.trace("starting to initialize transport mappings for agent \"{}\"", configuration.getName());
         transportMappings = new TransportMapping[1];
         TransportMapping tm = TransportMappings.getInstance().createTransportMapping(configuration.getAddress());

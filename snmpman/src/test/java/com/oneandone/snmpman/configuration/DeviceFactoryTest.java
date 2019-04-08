@@ -9,19 +9,19 @@ import static org.testng.Assert.*;
 public class DeviceFactoryTest {
 
     @Test
-    public void testGetDeviceForNullPath() throws Exception {
+    public void testGetDeviceForNullPath() {
         final AgentConfiguration.DeviceFactory deviceFactory = new AgentConfiguration.DeviceFactory();
         assertEquals(deviceFactory.getDevice(null), AgentConfiguration.DeviceFactory.DEFAULT_DEVICE);
     }
 
     @Test
-    public void testGetDeviceForNonExistentPath() throws Exception {
+    public void testGetDeviceForNonExistentPath() {
         final AgentConfiguration.DeviceFactory deviceFactory = new AgentConfiguration.DeviceFactory();
         assertEquals(deviceFactory.getDevice(new File("src/foo/bar/what.txt")), AgentConfiguration.DeviceFactory.DEFAULT_DEVICE);
     }
 
     @Test
-    public void testGetCiscoDevice() throws Exception {
+    public void testGetCiscoDevice() {
         final AgentConfiguration.DeviceFactory deviceFactory = new AgentConfiguration.DeviceFactory();
         final Device ciscoDevice = deviceFactory.getDevice(new File("src/test/resources/configuration/cisco.yaml"));
 

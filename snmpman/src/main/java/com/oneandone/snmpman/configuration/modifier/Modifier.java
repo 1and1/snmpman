@@ -8,6 +8,8 @@ import lombok.Getter;
 import org.snmp4j.smi.OID;
 import org.snmp4j.smi.Variable;
 
+import java.lang.reflect.InvocationTargetException;
+
 /**
  * Representation of a generic modifier.
  * <br>
@@ -41,9 +43,9 @@ public class Modifier<T extends Variable> implements VariableModifier<T> {
         this.oid = new WildcardOID(oid);
 
         try {
-            this.modifier = (VariableModifier) Class.forName(modifierClass).newInstance();
+            this.modifier = (VariableModifier) Class.forName(modifierClass).getConstructor().newInstance();
             this.modifier.init(properties);
-        } catch (final ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+        } catch (final ClassNotFoundException | NoSuchMethodException | InstantiationException | InvocationTargetException | IllegalAccessException e) {
             throw new InitializationException("could not construct a modifier for the oid " + oid + " and class " + modifierClass, e);
         }
     }

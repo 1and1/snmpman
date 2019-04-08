@@ -1,11 +1,12 @@
 package com.oneandone.snmpman.configuration.modifier;
 
-import com.google.common.base.Optional;
 import com.google.common.base.Preconditions;
 import com.google.common.primitives.UnsignedInteger;
 import com.oneandone.snmpman.configuration.type.ModifierProperties;
 import lombok.Getter;
 import org.snmp4j.smi.UnsignedInteger32;
+
+import java.util.Optional;
 
 /**
  * This modifier has all utility methods to construct for unsigned integer variable modifiers.
@@ -26,11 +27,11 @@ abstract class AbstractIntegerModifier<T extends UnsignedInteger32> implements V
 
     @Override
     public void init(final ModifierProperties properties) {
-        this.minimum = Optional.fromNullable(properties.getLong("minimum")).or(0L);
-        this.maximum = Optional.fromNullable(properties.getLong("maximum")).or(UnsignedInteger.MAX_VALUE.longValue());
+        this.minimum = Optional.ofNullable(properties.getLong("minimum")).orElse(0L);
+        this.maximum = Optional.ofNullable(properties.getLong("maximum")).orElse(UnsignedInteger.MAX_VALUE.longValue());
 
-        this.minimumStep = Optional.fromNullable(properties.getLong("minimumStep")).or(0L);
-        this.maximumStep = Optional.fromNullable(properties.getLong("maximumStep")).or(1L);
+        this.minimumStep = Optional.ofNullable(properties.getLong("minimumStep")).orElse(0L);
+        this.maximumStep = Optional.ofNullable(properties.getLong("maximumStep")).orElse(1L);
 
         Preconditions.checkArgument(minimum >= 0, "minimum should not be negative");
         Preconditions.checkArgument(maximum >= 0, "maximum should not be negative");

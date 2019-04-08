@@ -1,12 +1,13 @@
 package com.oneandone.snmpman.configuration.modifier;
 
-import com.google.common.base.Optional;
 import com.google.common.primitives.UnsignedLong;
 import com.oneandone.snmpman.configuration.type.ModifierProperties;
 import lombok.Getter;
 import org.snmp4j.smi.Counter64;
 
-/** This modifier instance modifies {@link org.snmp4j.smi.Counter64} variables. */
+import java.util.Optional;
+
+/** This modifier instance modifies {@link Counter64} variables. */
 public class Counter64Modifier implements VariableModifier<Counter64> {
 
     /** The minimum allowed number for the resulting modified variable. */
@@ -23,11 +24,11 @@ public class Counter64Modifier implements VariableModifier<Counter64> {
 
     @Override
     public void init(final ModifierProperties properties) {
-        this.minimum = Optional.fromNullable(properties.getUnsignedLong("minimum")).or(UnsignedLong.ZERO);
-        this.maximum = Optional.fromNullable(properties.getUnsignedLong("maximum")).or(UnsignedLong.MAX_VALUE);
+        this.minimum = Optional.ofNullable(properties.getUnsignedLong("minimum")).orElse(UnsignedLong.ZERO);
+        this.maximum = Optional.ofNullable(properties.getUnsignedLong("maximum")).orElse(UnsignedLong.MAX_VALUE);
 
-        this.minimumStep = Optional.fromNullable(properties.getUnsignedLong("minimumStep")).or(UnsignedLong.ZERO);
-        this.maximumStep = Optional.fromNullable(properties.getUnsignedLong("maximumStep")).or(UnsignedLong.ONE);
+        this.minimumStep = Optional.ofNullable(properties.getUnsignedLong("minimumStep")).orElse(UnsignedLong.ZERO);
+        this.maximumStep = Optional.ofNullable(properties.getUnsignedLong("maximumStep")).orElse(UnsignedLong.ONE);
     }
 
     @Override
