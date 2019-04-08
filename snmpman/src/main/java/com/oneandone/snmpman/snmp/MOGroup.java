@@ -70,7 +70,7 @@ public class MOGroup implements ManagedObject {
     public OID find(final MOScope range) {
         final SortedMap<OID, Variable> tail = variableBindings.tailMap(range.getLowerBound());
         final OID first = tail.firstKey();
-        if (range.getLowerBound().equals(first) && (!range.isLowerIncluded())) {
+        if (range.getLowerBound().equals(first) && !range.isLowerIncluded()) {
             if (tail.size() > 1) {
                 final Iterator<OID> it = tail.keySet().iterator();
                 it.next();
@@ -99,7 +99,7 @@ public class MOGroup implements ManagedObject {
         final MOScope scope = request.getQuery().getScope();
         final SortedMap<OID, Variable> tail = variableBindings.tailMap(scope.getLowerBound());
         OID first = tail.firstKey();
-        if (scope.getLowerBound().equals(first) && (!scope.isLowerIncluded())) {
+        if (scope.getLowerBound().equals(first) && !scope.isLowerIncluded()) {
             if (tail.size() > 1) {
                 final Iterator<OID> it = tail.keySet().iterator();
                 it.next();
