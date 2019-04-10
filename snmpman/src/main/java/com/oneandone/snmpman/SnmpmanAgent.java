@@ -261,7 +261,7 @@ public class SnmpmanAgent extends BaseAgent {
                 final List<OID> roots = SnmpmanAgent.getRoots(variableBindings);
                 for (final OID root : roots) {
                     MOGroup group = createGroup(root, variableBindings);
-                    final ArrayList<VariableBinding> subtree = generateSubtreeBindings(variableBindings, root);
+                    final Iterable<VariableBinding> subtree = generateSubtreeBindings(variableBindings, root);
                     DefaultMOContextScope scope = new DefaultMOContextScope(context, root, true, root.nextPeer(), false);
                     ManagedObject mo = server.lookup(new DefaultMOQuery(scope, false));
                     if (mo != null) {
