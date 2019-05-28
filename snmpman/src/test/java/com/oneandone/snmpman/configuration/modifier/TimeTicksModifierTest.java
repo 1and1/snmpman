@@ -3,7 +3,7 @@ package com.oneandone.snmpman.configuration.modifier;
 import org.snmp4j.smi.TimeTicks;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertNotEquals;
 
 public class TimeTicksModifierTest {
 

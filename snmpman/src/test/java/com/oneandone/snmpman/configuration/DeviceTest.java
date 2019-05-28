@@ -5,7 +5,8 @@ import com.oneandone.snmpman.configuration.modifier.Modifier;
 import com.oneandone.snmpman.configuration.type.ModifierProperties;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertTrue;
 
 public class DeviceTest {
 

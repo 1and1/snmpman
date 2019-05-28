@@ -4,7 +4,8 @@ import com.oneandone.snmpman.configuration.type.ModifierProperties;
 import org.snmp4j.smi.Gauge32;
 import org.testng.annotations.Test;
 
-import static org.testng.Assert.*;
+import static org.testng.Assert.assertEquals;
+import static org.testng.Assert.assertNotEquals;
 
 public class Gauge32ModifierTest {
 
