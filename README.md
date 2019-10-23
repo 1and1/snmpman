@@ -29,7 +29,7 @@ You can include the `SNMPMAN` as a Maven dependency from [Maven Central]().
 <dependency>
     <groupId>com.oneandone</groupId>
     <artifactId>snmpman</artifactId>
-    <version>1.4.3</version>
+    <version>1.4.4</version>
 </dependency>
 ```
 
