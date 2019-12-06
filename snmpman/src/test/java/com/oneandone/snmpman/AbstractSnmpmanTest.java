@@ -20,6 +20,8 @@ import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
+import static org.testng.Assert.assertTrue;
+
 public class AbstractSnmpmanTest {
 
     protected Snmpman snmpman;
@@ -70,6 +72,12 @@ public class AbstractSnmpmanTest {
 
     public static List<TableEvent> getResponse(final OID query, int port) throws Exception {
         return getResponse(query, port, "public");
+    }
+
+    void assertThatOidHasValue(OID oid, String expectedValue) throws Exception {
+        List<TableEvent> responses1 = getResponse(oid, 10009);
+        assertTrue(containsColumn(responses1, oid.toString(), expectedValue),
+                "Table under OID=" + oid + " doesn't contain value=" + expectedValue);
     }
 
 }
