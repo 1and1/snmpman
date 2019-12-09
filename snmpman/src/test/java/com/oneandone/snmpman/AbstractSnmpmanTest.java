@@ -41,7 +41,8 @@ public abstract class AbstractSnmpmanTest {
 
     public static boolean containsColumn(final List<TableEvent> responses, final String oid, final String result) {
         for (final TableEvent e : responses) {
-            if (Arrays.toString(e.getColumns()).contains(oid) && Arrays.toString(e.getColumns()).contains("= " + result)) {
+            String columnsToString = Arrays.toString(e.getColumns());
+            if (columnsToString.contains(oid) && columnsToString.contains("= " + result)) {
                 return true;
             }
         }
