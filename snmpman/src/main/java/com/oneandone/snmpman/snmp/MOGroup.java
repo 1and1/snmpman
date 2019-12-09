@@ -1,11 +1,9 @@
 package com.oneandone.snmpman.snmp;
 
 import lombok.extern.slf4j.Slf4j;
-import org.snmp4j.PDU;
 import org.snmp4j.agent.DefaultMOScope;
 import org.snmp4j.agent.MOScope;
 import org.snmp4j.agent.ManagedObject;
-import org.snmp4j.agent.request.Request;
 import org.snmp4j.agent.request.RequestStatus;
 import org.snmp4j.agent.request.SubRequest;
 import org.snmp4j.mp.SnmpConstants;
@@ -39,11 +37,6 @@ public class MOGroup implements ManagedObject {
     private final MOScope scope;
 
     /**
-     * The temporary OID for undo operation.
-     */
-    private Map<OID, Optional<Variable>> variableBindingValuesForRollback;
-
-    /**
      * Constructs a new instance of this class.
      * <br>
      * The specified {@code OID} and variable will be set as the only data stored
@@ -58,7 +51,6 @@ public class MOGroup implements ManagedObject {
         this.scope = new DefaultMOScope(root, true, root.nextPeer(), false);
         this.variableBindings = new TreeMap<>();
         this.variableBindings.put(oid, variable);
-        this.variableBindingValuesForRollback = new HashMap<>();
     }
 
     /**
@@ -71,7 +63,6 @@ public class MOGroup implements ManagedObject {
         this.root = root;
         this.scope = new DefaultMOScope(root, true, root.nextPeer(), false);
         this.variableBindings = variableBindings;
-        this.variableBindingValuesForRollback = new HashMap<>();
     }
 
     @Override
@@ -159,18 +150,7 @@ public class MOGroup implements ManagedObject {
         if (request.getIndex() > 0) {
             //Skip rowStatusColumn SubRequest with index 0
             OID oid = request.getVariableBinding().getOid();
-            if (scope.covers(oid)) {
-                Variable newValue = request.getVariableBinding().getVariable();
-                Optional<Variable> optionalOldValue = Optional.ofNullable(variableBindings.get(oid));
-                variableBindingValuesForRollback.put(oid, optionalOldValue);
-                optionalOldValue.ifPresent(oldValue -> {
-                    if (newValue.getSyntax() != oldValue.getSyntax()) {
-                        status.setErrorStatus(SnmpConstants.SNMP_ERROR_INCONSISTENT_VALUE);
-                    }
-                });
-            } else {
-                status.setErrorStatus(SnmpConstants.SNMP_ERROR_NO_CREATION);
-            }
+            request.setUndoValue(variableBindings.get(oid));
         }
         status.setPhaseComplete(true);
     }
@@ -185,10 +165,13 @@ public class MOGroup implements ManagedObject {
     @Override
     public void commit(final SubRequest request) {
         if (request.getIndex() > 0) {
-            if (request.getStatus().getErrorStatus() == SnmpConstants.SNMP_ERROR_SUCCESS) {
-                variableBindings.put(request.getVariableBinding().getOid(), request.getVariableBinding().getVariable());
+            //check specific context
+            Variable newValue = request.getVariableBinding().getVariable();
+            OID oid = request.getVariableBinding().getOid();
+            if (variableBindings.getOrDefault(oid, newValue).getSyntax() == newValue.getSyntax()) {
+                variableBindings.put(oid, newValue);
             } else {
-                request.getStatus().setErrorStatus(PDU.commitFailed);
+                request.getStatus().setErrorStatus(SnmpConstants.SNMP_ERROR_INCONSISTENT_VALUE);
             }
         }
         request.getStatus().setPhaseComplete(true);
@@ -202,10 +185,16 @@ public class MOGroup implements ManagedObject {
      */
     @Override
     public void undo(final SubRequest request) {
-        variableBindingValuesForRollback.forEach((oid, variable) ->
-                variable.ifPresentOrElse(var -> variableBindings.put(oid, var), () -> variableBindings.remove(oid)));
-        request.getRequest().setPhase(Request.PHASE_2PC_CLEANUP);
-        variableBindingValuesForRollback.clear();
+        if (request.getIndex() > 0) {
+            RequestStatus status = request.getStatus();
+            if ((request.getUndoValue() != null) &&
+                    (request.getUndoValue() instanceof Variable)) {
+                variableBindings.put(request.getVariableBinding().getOid(), (Variable) request.getUndoValue());
+                status.setPhaseComplete(true);
+            } else {
+                status.setErrorStatus(SnmpConstants.SNMP_ERROR_UNDO_FAILED);
+            }
+        }
     }
 
     @Override
