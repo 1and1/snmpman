@@ -136,10 +136,10 @@ public class MOGroup implements ManagedObject {
 
     /**
      * Check two mandatory properties:
-     * <ul>
-     * <li>1. OID to set is in the scope of the MOGroup</li>
-     * <li>2. New value has the same Variable type</li>
-     * </ul>
+     * <ol>
+     * <li>OID to set is in the scope of the MOGroup</li>
+     * <li>New value has the same Variable type</li>
+     * </ol>
      * Depending on process the RequestStatus gets adjust.
      *
      * @param request The SubRequest to handle.
