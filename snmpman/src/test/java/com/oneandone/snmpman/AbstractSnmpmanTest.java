@@ -25,8 +25,8 @@ import static org.testng.Assert.assertTrue;
 public abstract class AbstractSnmpmanTest {
 
     protected Snmpman snmpman;
-    static String COMMUNITY = "public";
-    static final int PORT = 10009;
+    protected static String COMMUNITY = "public";
+    protected static final int PORT = 10009;
 
     @BeforeMethod
     public void startSnmpman() {
