@@ -15,6 +15,8 @@ import org.snmp4j.smi.Variable;
 
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -37,14 +39,9 @@ public class MOGroup implements ManagedObject {
     private final MOScope scope;
 
     /**
-     * The temporary Variable for undo operation.
-     */
-    private Variable tmpVariable;
-
-    /**
      * The temporary OID for undo operation.
      */
-    private HashMap<OID, Variable> tmpVariableBindings;
+    private Map<OID, Optional<Variable>> variableBindingValuesForRollback;
 
     /**
      * Constructs a new instance of this class.
@@ -61,7 +58,7 @@ public class MOGroup implements ManagedObject {
         this.scope = new DefaultMOScope(root, true, root.nextPeer(), false);
         this.variableBindings = new TreeMap<>();
         this.variableBindings.put(oid, variable);
-        this.tmpVariableBindings = new HashMap<>();
+        this.variableBindingValuesForRollback = new HashMap<>();
     }
 
     /**
@@ -74,7 +71,7 @@ public class MOGroup implements ManagedObject {
         this.root = root;
         this.scope = new DefaultMOScope(root, true, root.nextPeer(), false);
         this.variableBindings = variableBindings;
-        this.tmpVariableBindings = new HashMap<>();
+        this.variableBindingValuesForRollback = new HashMap<>();
     }
 
     @Override
@@ -148,9 +145,12 @@ public class MOGroup implements ManagedObject {
 
     /**
      * Check two mandatory properties:
-     * 1. OID to set is in the scope of the MOGroup
-     * 2. New value has the same Variable type
+     * <ul>
+     * <li>1. OID to set is in the scope of the MOGroup</li>
+     * <li>2. New value has the same Variable type</li>
+     * </ul>
      * Depending on process the RequestStatus gets adjust.
+     *
      * @param request The SubRequest to handle.
      */
     @Override
@@ -161,13 +161,13 @@ public class MOGroup implements ManagedObject {
             OID oid = request.getVariableBinding().getOid();
             if (scope.covers(oid)) {
                 Variable newValue = request.getVariableBinding().getVariable();
-                Variable oldValue = variableBindings.getOrDefault(oid, newValue);
-
-                if (newValue.getSyntax() != oldValue.getSyntax()) {
-                    status.setErrorStatus(SnmpConstants.SNMP_ERROR_INCONSISTENT_VALUE);
-                } else {
-                    tmpVariableBindings.put(oid, oldValue);
-                }
+                Optional<Variable> optionalOldValue = Optional.ofNullable(variableBindings.get(oid));
+                variableBindingValuesForRollback.put(oid, optionalOldValue);
+                optionalOldValue.ifPresent(oldValue -> {
+                    if (newValue.getSyntax() != oldValue.getSyntax()) {
+                        status.setErrorStatus(SnmpConstants.SNMP_ERROR_INCONSISTENT_VALUE);
+                    }
+                });
             } else {
                 status.setErrorStatus(SnmpConstants.SNMP_ERROR_NO_CREATION);
             }
@@ -176,31 +176,36 @@ public class MOGroup implements ManagedObject {
     }
 
     /**
-     * If the prepare method doesn't set RequestStatus to an non-SNMP_NO_ERROR the new values are written.
+     * If the prepare method doesn't set {@link org.snmp4j.agent.request.RequestStatus RequestStatus} to
+     * {@link  org.snmp4j.mp.SnmpConstants#SNMP_ERROR_SUCCESS SNMP_ERROR_SUCCESS} the new values are written.
      * Otherwise the commit fails and forces an undo operation.
+     *
      * @param request The SubRequest to handle.
      */
     @Override
     public void commit(final SubRequest request) {
         if (request.getIndex() > 0) {
-            if (request.getStatus().getErrorStatus() != SnmpConstants.SNMP_ERROR_SUCCESS) {
-                request.getStatus().setErrorStatus(PDU.commitFailed);
-            } else {
+            if (request.getStatus().getErrorStatus() == SnmpConstants.SNMP_ERROR_SUCCESS) {
                 variableBindings.put(request.getVariableBinding().getOid(), request.getVariableBinding().getVariable());
+            } else {
+                request.getStatus().setErrorStatus(PDU.commitFailed);
             }
         }
         request.getStatus().setPhaseComplete(true);
     }
 
     /**
-     * If any ErrorStatus, except the implicit PDU.noError, has occurred during commit then the old values are written.
+     * If any ErrorStatus, except the implicit {@link org.snmp4j.PDU#noError PDU.noError},
+     * has occurred during commit then the old values are written.
+     *
      * @param request The SubRequest to handle.
      */
     @Override
     public void undo(final SubRequest request) {
-        tmpVariableBindings.forEach(variableBindings::put);
+        variableBindingValuesForRollback.forEach((oid, variable) ->
+                variable.ifPresentOrElse(var -> variableBindings.put(oid, var), () -> variableBindings.remove(oid)));
         request.getRequest().setPhase(Request.PHASE_2PC_CLEANUP);
-        tmpVariableBindings.clear();
+        variableBindingValuesForRollback.clear();
     }
 
     @Override
