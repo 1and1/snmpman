@@ -27,29 +27,25 @@ import static org.testng.Assert.assertEquals;
  */
 public class SnmpmanSetTest extends AbstractSnmpmanTest {
 
-    private final OID OID_TABLE = new OID(".1.3.6.1.2.1.31.1.1.1.1.0");
-    private final OID OID_ROW_INDEX = new OID("10101");
-    private final OID OID_OCTETSTRING = new OID(".1.3.6.1.2.1.31.1.1.1.1");
-    private final OID OID_GAUGE32 = new OID(".1.3.6.1.2.1.31.1.1.1.15");
-    private final OID OID_UNCOVERED_FROM_SCOPE = new OID("1.3.6.1.2.3");
-    private String COMMUNITY = "public";
-    private final int PORT = 10009;
-
+    private static final OID OID_TABLE = new OID(".1.3.6.1.2.1.31.1.1.1.1.0");
+    private static final OID OID_ROW_INDEX = new OID("10101");
+    private static final OID OID_OCTETSTRING = new OID(".1.3.6.1.2.1.31.1.1.1.1");
+    private static final OID OID_GAUGE32 = new OID(".1.3.6.1.2.1.31.1.1.1.15");
+    private static final OID OID_UNCOVERED_FROM_SCOPE = new OID("1.3.6.1.2.3");
 
     @Test
     public void testSnmpSetValidVariable() throws Exception {
         String newValue = "New interface";
         VariableBinding[] bindings = {new VariableBinding(OID_OCTETSTRING, new OctetString(newValue))};
-        ResponseEvent responseEvent = getResponseEvent(OID_OCTETSTRING, OID_ROW_INDEX, bindings);
+        ResponseEvent responseEvent = requestSetOidValues(OID_OCTETSTRING, OID_ROW_INDEX, bindings);
         assertEquals(SnmpConstants.SNMP_ERROR_SUCCESS, responseEvent.getResponse().getErrorStatus());
         assertThatOidHasValue(OID_OCTETSTRING, newValue);
     }
 
-
     @Test
     public void testSnmpSetValidVariableOnUncoveredOID() throws Exception {
         VariableBinding[] bindings = {new VariableBinding(OID_UNCOVERED_FROM_SCOPE, new OctetString("not scoped variable"))};
-        ResponseEvent responseEvent = getResponseEvent(OID_UNCOVERED_FROM_SCOPE, new OID("0"), bindings);
+        ResponseEvent responseEvent = requestSetOidValues(OID_UNCOVERED_FROM_SCOPE, new OID("0"), bindings);
         assertEquals(SnmpConstants.SNMP_ERROR_NO_CREATION, responseEvent.getResponse().getErrorStatus());
         assertThatOidHasValue(OID_OCTETSTRING, "Gi0/1");
     }
@@ -58,7 +54,7 @@ public class SnmpmanSetTest extends AbstractSnmpmanTest {
     public void testSnmpSetInvalidVariable() throws Exception {
         long invalidValue = 9000;
         VariableBinding[] bindings = {new VariableBinding(OID_OCTETSTRING, new Gauge32(invalidValue))};
-        ResponseEvent responseEvent = getResponseEvent(OID_OCTETSTRING, OID_ROW_INDEX, bindings);
+        ResponseEvent responseEvent = requestSetOidValues(OID_OCTETSTRING, OID_ROW_INDEX, bindings);
         assertEquals(SnmpConstants.SNMP_ERROR_INCONSISTENT_VALUE, responseEvent.getResponse().getErrorStatus());
         assertThatOidHasValue(OID_OCTETSTRING, "Gi0/1");
     }
@@ -69,7 +65,7 @@ public class SnmpmanSetTest extends AbstractSnmpmanTest {
                 new VariableBinding(OID_OCTETSTRING, new OctetString("New interface label")),
                 new VariableBinding(OID_GAUGE32, new Gauge32(999))};
 
-        ResponseEvent responseEvent = getResponseEvent(OID_TABLE, OID_ROW_INDEX, bindings);
+        ResponseEvent responseEvent = requestSetOidValues(OID_TABLE, OID_ROW_INDEX, bindings);
         assertEquals(SnmpConstants.SNMP_ERROR_SUCCESS, responseEvent.getResponse().getErrorStatus());
         assertThatOidHasValue(OID_OCTETSTRING, "New interface label");
         assertThatOidHasValue(OID_GAUGE32, "999");
@@ -79,7 +75,7 @@ public class SnmpmanSetTest extends AbstractSnmpmanTest {
     public void testSnmpSetMultipleVariablesWithInvalidValueDontSetAny() throws Exception {
         VariableBinding[] bindings = {new VariableBinding(OID_OCTETSTRING, new OctetString("new interface label")),
                 new VariableBinding(OID_GAUGE32, new OctetString("invalid variable"))};
-        ResponseEvent responseEvent = getResponseEvent(OID_TABLE, OID_ROW_INDEX, bindings);
+        ResponseEvent responseEvent = requestSetOidValues(OID_TABLE, OID_ROW_INDEX, bindings);
         assertEquals(responseEvent.getResponse().getErrorStatus(), SnmpConstants.SNMP_ERROR_INCONSISTENT_VALUE);
         assertThatOidHasValue(OID_OCTETSTRING, "Gi0/1");
         assertThatOidHasValue(OID_GAUGE32, "1000");
@@ -92,13 +88,13 @@ public class SnmpmanSetTest extends AbstractSnmpmanTest {
                 new VariableBinding(new OID(".1.3.6.1.2.1.31.1.1.1.15"), new Gauge32(999)),
                 new VariableBinding(OID_UNCOVERED_FROM_SCOPE, new OctetString("not covered scope"))};
 
-        ResponseEvent responseEvent = getResponseEvent(OID_TABLE, OID_ROW_INDEX, bindings);
+        ResponseEvent responseEvent = requestSetOidValues(OID_TABLE, OID_ROW_INDEX, bindings);
         assertEquals(responseEvent.getResponse().getErrorStatus(), SnmpConstants.SNMP_ERROR_NO_CREATION);
         assertThatOidHasValue(new OID(".1.3.6.1.2.1.31.1.1.1.1"), "Gi0/1");
         assertThatOidHasValue(new OID(".1.3.6.1.2.1.31.1.1.1.15"), "1000");
     }
 
-    ResponseEvent getResponseEvent(OID rowStatusColumnOID, OID rowIndex, VariableBinding[] bindings) throws IOException {
+    ResponseEvent requestSetOidValues(OID rowStatusColumnOID, OID rowIndex, VariableBinding[] bindings) throws IOException {
         final Snmp snmp = new Snmp(new DefaultUdpTransportMapping());
         snmp.listen();
 
@@ -109,5 +105,4 @@ public class SnmpmanSetTest extends AbstractSnmpmanTest {
         final TableUtils utils = new TableUtils(snmp, pduFactory);
         return utils.createRow(target, rowStatusColumnOID, rowIndex, bindings);
     }
-
 }

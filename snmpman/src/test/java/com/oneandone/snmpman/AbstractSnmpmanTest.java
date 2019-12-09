@@ -22,9 +22,11 @@ import java.util.List;
 
 import static org.testng.Assert.assertTrue;
 
-public class AbstractSnmpmanTest {
+public abstract class AbstractSnmpmanTest {
 
     protected Snmpman snmpman;
+    static String COMMUNITY = "public";
+    static final int PORT = 10009;
 
     @BeforeMethod
     public void startSnmpman() {
@@ -71,13 +73,12 @@ public class AbstractSnmpmanTest {
     }
 
     public static List<TableEvent> getResponse(final OID query, int port) throws Exception {
-        return getResponse(query, port, "public");
+        return getResponse(query, port, COMMUNITY);
     }
 
     void assertThatOidHasValue(OID oid, String expectedValue) throws Exception {
-        List<TableEvent> responses1 = getResponse(oid, 10009);
+        List<TableEvent> responses1 = getResponse(oid, PORT);
         assertTrue(containsColumn(responses1, oid.toString(), expectedValue),
                 "Table under OID=" + oid + " doesn't contain value=" + expectedValue);
     }
-
 }
