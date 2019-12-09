@@ -41,15 +41,15 @@ public class SnmpmanTest extends AbstractSnmpmanTest {
         assertEquals(snmpman.getAgents().size(), 11);
 
         final String oid = "1.3.6.1.2.1.17.2.4";
-        List<TableEvent> responses1 = getResponse(new OID(oid), 10009, "public@42");
+        List<TableEvent> responses1 = getResponse(new OID(oid), PORT, "public@42");
         assertEquals(responses1.size(), 1);
         assertTrue(containsColumn(responses1, oid, "150"));
 
-        List<TableEvent> responses2 = getResponse(new OID(oid), 10009, "public@9");
+        List<TableEvent> responses2 = getResponse(new OID(oid), PORT, "public@9");
         assertEquals(responses2.size(), 1);
         assertTrue(containsColumn(responses2, oid, "120"));
 
-        List<TableEvent> responses3 = getResponse(new OID(oid), 10009, "public");
+        List<TableEvent> responses3 = getResponse(new OID(oid), PORT, COMMUNITY);
         assertEquals(responses3.size(), 1);
         assertTrue(containsColumn(responses3, oid, "0"));
     }
@@ -66,11 +66,10 @@ public class SnmpmanTest extends AbstractSnmpmanTest {
     @Test
     public void testModifier() throws Exception {
         final String oid = "1.3.6.1.2.1.2.2.1.13";
-        List<TableEvent> responses1 = SnmpmanTest.getResponse(new OID(oid), 10009, "public");
-        List<TableEvent> responses2 = SnmpmanTest.getResponse(new OID(oid), 10009, "public");
+        List<TableEvent> responses1 = SnmpmanTest.getResponse(new OID(oid), PORT, COMMUNITY);
+        List<TableEvent> responses2 = SnmpmanTest.getResponse(new OID(oid), PORT, COMMUNITY);
 
         assertNotEquals(responses1.get(0).getColumns(), responses2.get(0).getColumns(),
                 "repeated call should return a different result");
     }
-
 }
