@@ -1,33 +1,18 @@
 package com.oneandone.snmpman.integration;
 
-import com.oneandone.snmpman.Snmpman;
+import com.oneandone.snmpman.AbstractSnmpmanTest;
 import com.oneandone.snmpman.SnmpmanTest;
 import org.snmp4j.smi.OID;
 import org.snmp4j.util.TableEvent;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
-import java.io.File;
 import java.util.List;
 
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
 @Test(groups = "integration-test")
-public class SnmpmanIntegrationTest {
-
-    private Snmpman snmpman;
-
-    @BeforeMethod
-    public void startSnmpman() {
-        snmpman = Snmpman.start(new File("src/test/resources/configuration/configuration.yaml"));
-    }
-
-    @AfterMethod
-    public void stopSnmpman() {
-        snmpman.stop();
-    }
+public class SnmpmanIntegrationTest extends AbstractSnmpmanTest {
 
     @Test
     public void testSnmpGetBulk() throws Exception {
@@ -44,15 +29,15 @@ public class SnmpmanIntegrationTest {
     @Test
     public void testWithCommunityIndex() throws Exception {
         final String oid = "1.3.6.1.2.1.17.2.4";
-        List<TableEvent> responses1 = SnmpmanTest.getResponse(new OID(oid), 10009, "public@42");
+        List<TableEvent> responses1 = SnmpmanTest.getResponse(new OID(oid), PORT, "public@42");
         assertEquals(responses1.size(), 1);
         assertTrue(SnmpmanTest.containsColumn(responses1, oid, "150"));
 
-        List<TableEvent> responses2 = SnmpmanTest.getResponse(new OID(oid), 10009, "public@9");
+        List<TableEvent> responses2 = SnmpmanTest.getResponse(new OID(oid), PORT, "public@9");
         assertEquals(responses2.size(), 1);
         assertTrue(SnmpmanTest.containsColumn(responses2, oid, "120"));
 
-        List<TableEvent> responses3 = SnmpmanTest.getResponse(new OID(oid), 10009, "public");
+        List<TableEvent> responses3 = SnmpmanTest.getResponse(new OID(oid), PORT, COMMUNITY);
         assertEquals(responses3.size(), 1);
         assertTrue(SnmpmanTest.containsColumn(responses3, oid, "0"));
     }

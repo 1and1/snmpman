@@ -1,11 +1,12 @@
 package com.oneandone.snmpman.snmp;
 
 import lombok.extern.slf4j.Slf4j;
-import org.snmp4j.PDU;
 import org.snmp4j.agent.DefaultMOScope;
 import org.snmp4j.agent.MOScope;
 import org.snmp4j.agent.ManagedObject;
+import org.snmp4j.agent.request.RequestStatus;
 import org.snmp4j.agent.request.SubRequest;
+import org.snmp4j.mp.SnmpConstants;
 import org.snmp4j.smi.Null;
 import org.snmp4j.smi.OID;
 import org.snmp4j.smi.Variable;
@@ -130,19 +131,66 @@ public class MOGroup implements ManagedObject {
         return false;
     }
 
+    /**
+     * Check two mandatory properties:
+     * <ol>
+     * <li>OID to set is in the scope of the MOGroup</li>
+     * <li>New value has the same Variable type</li>
+     * </ol>
+     * Depending on process the RequestStatus gets adjust.
+     *
+     * @param request The SubRequest to handle.
+     */
     @Override
-    public void prepare(final SubRequest request) {
-        request.setErrorStatus(PDU.notWritable);
+    public void prepare(SubRequest request) {
+        RequestStatus status = request.getStatus();
+        if (request.getIndex() > 0) {
+            //Skip rowStatusColumn SubRequest with index 0
+            OID oid = request.getVariableBinding().getOid();
+            request.setUndoValue(variableBindings.get(oid));
+        }
+        status.setPhaseComplete(true);
     }
 
+    /**
+     * If the prepare method doesn't set {@link org.snmp4j.agent.request.RequestStatus RequestStatus} to
+     * {@link  org.snmp4j.mp.SnmpConstants#SNMP_ERROR_SUCCESS SNMP_ERROR_SUCCESS} the new values are written.
+     * Otherwise the commit fails and forces an undo operation.
+     *
+     * @param request The SubRequest to handle.
+     */
     @Override
     public void commit(final SubRequest request) {
-        request.setErrorStatus(PDU.commitFailed);
+        if (request.getIndex() > 0) {
+            //check specific context
+            Variable newValue = request.getVariableBinding().getVariable();
+            OID oid = request.getVariableBinding().getOid();
+            if (variableBindings.getOrDefault(oid, newValue).getSyntax() == newValue.getSyntax()) {
+                variableBindings.put(oid, newValue);
+            } else {
+                request.getStatus().setErrorStatus(SnmpConstants.SNMP_ERROR_INCONSISTENT_VALUE);
+            }
+        }
+        request.getStatus().setPhaseComplete(true);
     }
 
+    /**
+     * If any ErrorStatus, except the implicit {@link org.snmp4j.PDU#noError PDU.noError},
+     * has occurred during commit then the old values are written.
+     *
+     * @param request The SubRequest to handle.
+     */
     @Override
     public void undo(final SubRequest request) {
-        request.setErrorStatus(PDU.undoFailed);
+        RequestStatus status = request.getStatus();
+        if (request.getIndex() > 0) {
+            if (request.getUndoValue() instanceof Variable) {
+                variableBindings.put(request.getVariableBinding().getOid(), (Variable) request.getUndoValue());
+            } else {
+                variableBindings.remove(request.getVariableBinding().getOid());
+            }
+        }
+        status.setPhaseComplete(true);
     }
 
     @Override
