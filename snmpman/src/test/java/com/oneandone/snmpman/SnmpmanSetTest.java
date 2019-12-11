@@ -7,6 +7,7 @@ import org.snmp4j.event.ResponseEvent;
 import org.snmp4j.mp.SnmpConstants;
 import org.snmp4j.smi.Gauge32;
 import org.snmp4j.smi.GenericAddress;
+import org.snmp4j.smi.Integer32;
 import org.snmp4j.smi.OID;
 import org.snmp4j.smi.OctetString;
 import org.snmp4j.smi.VariableBinding;
@@ -30,7 +31,9 @@ public class SnmpmanSetTest extends AbstractSnmpmanTest {
     private static final OID OID_TABLE = new OID(".1.3.6.1.2.1.31.1.1.1.1.0");
     private static final OID OID_ROW_INDEX = new OID("10101");
     private static final OID OID_OCTETSTRING = new OID(".1.3.6.1.2.1.31.1.1.1.1");
+    private static final String PRIMAL_OCTECT_VALUE = "Gi0/1";
     private static final OID OID_GAUGE32 = new OID(".1.3.6.1.2.1.31.1.1.1.15");
+    private static final String PRIMAL_GAUGE32_VALUE = "1000";
     private static final OID OID_UNCOVERED_FROM_SCOPE = new OID("1.3.6.1.2.3");
 
     @Test
@@ -47,7 +50,7 @@ public class SnmpmanSetTest extends AbstractSnmpmanTest {
         VariableBinding[] bindings = {new VariableBinding(OID_UNCOVERED_FROM_SCOPE, new OctetString("not scoped variable"))};
         ResponseEvent responseEvent = requestSetOidValues(OID_UNCOVERED_FROM_SCOPE, new OID("0"), bindings);
         assertEquals(SnmpConstants.SNMP_ERROR_NO_CREATION, responseEvent.getResponse().getErrorStatus());
-        assertThatOidHasValue(OID_OCTETSTRING, "Gi0/1");
+        assertNoOidHasChanged();
     }
 
     @Test
@@ -56,7 +59,7 @@ public class SnmpmanSetTest extends AbstractSnmpmanTest {
         VariableBinding[] bindings = {new VariableBinding(OID_OCTETSTRING, new Gauge32(invalidValue))};
         ResponseEvent responseEvent = requestSetOidValues(OID_OCTETSTRING, OID_ROW_INDEX, bindings);
         assertEquals(SnmpConstants.SNMP_ERROR_INCONSISTENT_VALUE, responseEvent.getResponse().getErrorStatus());
-        assertThatOidHasValue(OID_OCTETSTRING, "Gi0/1");
+        assertNoOidHasChanged();
     }
 
     @Test
@@ -77,21 +80,34 @@ public class SnmpmanSetTest extends AbstractSnmpmanTest {
                 new VariableBinding(OID_GAUGE32, new OctetString("invalid variable"))};
         ResponseEvent responseEvent = requestSetOidValues(OID_TABLE, OID_ROW_INDEX, bindings);
         assertEquals(responseEvent.getResponse().getErrorStatus(), SnmpConstants.SNMP_ERROR_INCONSISTENT_VALUE);
-        assertThatOidHasValue(OID_OCTETSTRING, "Gi0/1");
-        assertThatOidHasValue(OID_GAUGE32, "1000");
+        assertNoOidHasChanged();
+    }
+
+    @Test
+    public void testSnmpSetNotPresentVariablesWithInvalidValueDontSetAny() throws Exception {
+        VariableBinding[] bindings = {new VariableBinding(new OID(".1.3.6.1.2.1.31.1.1.1.100"), new OctetString("new interface label")),
+                new VariableBinding(OID_GAUGE32, new OctetString("invalid variable"))};
+        ResponseEvent responseEvent = requestSetOidValues(OID_TABLE, OID_ROW_INDEX, bindings);
+        assertEquals(responseEvent.getResponse().getErrorStatus(), SnmpConstants.SNMP_ERROR_INCONSISTENT_VALUE);
+        assertThatOidHasValue(new OID(".1.3.6.1.2.1.31.1.1.1.100"), "null");
+        assertNoOidHasChanged();
     }
 
     @Test
     public void testSnmpSetMultipleVariablesWithInvalidValueAndUncoveredOIDDontSetAny() throws Exception {
         VariableBinding[] bindings = {
-                new VariableBinding(new OID(".1.3.6.1.2.1.31.1.1.1.1"), new OctetString("New Interface")),
-                new VariableBinding(new OID(".1.3.6.1.2.1.31.1.1.1.15"), new Gauge32(999)),
+                new VariableBinding(OID_OCTETSTRING, new OctetString("New Interface")),
+                new VariableBinding(OID_GAUGE32, new Integer32(999)),
                 new VariableBinding(OID_UNCOVERED_FROM_SCOPE, new OctetString("not covered scope"))};
 
         ResponseEvent responseEvent = requestSetOidValues(OID_TABLE, OID_ROW_INDEX, bindings);
         assertEquals(responseEvent.getResponse().getErrorStatus(), SnmpConstants.SNMP_ERROR_NO_CREATION);
-        assertThatOidHasValue(new OID(".1.3.6.1.2.1.31.1.1.1.1"), "Gi0/1");
-        assertThatOidHasValue(new OID(".1.3.6.1.2.1.31.1.1.1.15"), "1000");
+        assertNoOidHasChanged();
+    }
+
+    private void assertNoOidHasChanged() throws Exception {
+        assertThatOidHasValue(OID_OCTETSTRING, PRIMAL_OCTECT_VALUE);
+        assertThatOidHasValue(OID_GAUGE32, PRIMAL_GAUGE32_VALUE);
     }
 
     ResponseEvent requestSetOidValues(OID rowStatusColumnOID, OID rowIndex, VariableBinding[] bindings) throws IOException {

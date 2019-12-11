@@ -11,10 +11,7 @@ import org.snmp4j.smi.Null;
 import org.snmp4j.smi.OID;
 import org.snmp4j.smi.Variable;
 
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Map;
-import java.util.Optional;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
@@ -185,16 +182,15 @@ public class MOGroup implements ManagedObject {
      */
     @Override
     public void undo(final SubRequest request) {
+        RequestStatus status = request.getStatus();
         if (request.getIndex() > 0) {
-            RequestStatus status = request.getStatus();
-            if ((request.getUndoValue() != null) &&
-                    (request.getUndoValue() instanceof Variable)) {
+            if (request.getUndoValue() instanceof Variable) {
                 variableBindings.put(request.getVariableBinding().getOid(), (Variable) request.getUndoValue());
-                status.setPhaseComplete(true);
             } else {
-                status.setErrorStatus(SnmpConstants.SNMP_ERROR_UNDO_FAILED);
+                variableBindings.remove(request.getVariableBinding().getOid());
             }
         }
+        status.setPhaseComplete(true);
     }
 
     @Override

@@ -21,6 +21,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.testng.Assert.assertTrue;
+import static org.testng.AssertJUnit.assertEquals;
 
 public abstract class AbstractSnmpmanTest {
 
@@ -79,7 +80,11 @@ public abstract class AbstractSnmpmanTest {
 
     void assertThatOidHasValue(OID oid, String expectedValue) throws Exception {
         List<TableEvent> responses1 = getResponse(oid, PORT);
-        assertTrue(containsColumn(responses1, oid.toString(), expectedValue),
-                "Table under OID=" + oid + " doesn't contain value=" + expectedValue);
+        if (expectedValue.equals("null")) {
+            assertEquals(Arrays.toString(responses1.get(0).getColumns()), expectedValue);
+        } else {
+            assertTrue(containsColumn(responses1, oid.toString(), expectedValue),
+                    "Table under OID=" + oid + " doesn't contain value=" + expectedValue);
+        }
     }
 }
