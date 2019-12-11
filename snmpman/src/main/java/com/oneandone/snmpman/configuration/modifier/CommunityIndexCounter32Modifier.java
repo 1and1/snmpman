@@ -19,7 +19,6 @@ public class CommunityIndexCounter32Modifier implements CommunityContextModifier
     @Getter private Map<Long, Long> communityContextMapping = new HashMap<>();
 
     @Override
-    @SuppressWarnings("unchecked")
     public void init(final ModifierProperties properties) {
         communityContextMapping = new HashMap<>();
         properties.entrySet().stream().filter(property -> getUnsignedLong(property.getKey()) != -1L &&

@@ -127,12 +127,12 @@ public class AgentConfiguration {
      * @param port the port of the agent
      * @param community the community of the agent or {@code null} will set it to {@code public}
      */
-    public AgentConfiguration(@JsonProperty(value = "name", required = false) final String name,
-                              @JsonProperty(value = "device", required = false) final File deviceConfiguration,
+    public AgentConfiguration(@JsonProperty(value = "name") final String name,
+                              @JsonProperty(value = "device") final File deviceConfiguration,
                               @JsonProperty(value = "walk", required = true) final File walk,
                               @JsonProperty(value = "ip", required = true) final String ip,
                               @JsonProperty(value = "port", required = true) final int port,
-                              @JsonProperty(value = "community", required = false) final String community) {
+                              @JsonProperty(value = "community") final String community) {
         this.name = Optional.ofNullable(name).orElse(ip + ":" + port);
         this.address = GenericAddress.parse(ip + "/" + port);
 
