@@ -6,6 +6,7 @@ import org.snmp4j.agent.MOScope;
 import org.snmp4j.agent.ManagedObject;
 import org.snmp4j.agent.request.RequestStatus;
 import org.snmp4j.agent.request.SubRequest;
+import org.snmp4j.agent.security.VACM;
 import org.snmp4j.mp.SnmpConstants;
 import org.snmp4j.smi.Null;
 import org.snmp4j.smi.OID;
@@ -131,6 +132,10 @@ public class MOGroup implements ManagedObject {
         return false;
     }
 
+    private boolean isSimpleSetOperation(SubRequest request) {
+        return (request.getRequest().getViewType() == VACM.VIEW_WRITE) && (request.getRequest().size() == 1);
+    }
+
     /**
      * Check two mandatory properties:
      * <ol>
@@ -144,8 +149,8 @@ public class MOGroup implements ManagedObject {
     @Override
     public void prepare(SubRequest request) {
         RequestStatus status = request.getStatus();
-        if (request.getIndex() > 0) {
-            //Skip rowStatusColumn SubRequest with index 0
+        if (isSimpleSetOperation(request) || request.getIndex() > 0) {
+            //Skip rowStatusColumn SubRequest with index 0, when createRow was invoked.
             OID oid = request.getVariableBinding().getOid();
             request.setUndoValue(variableBindings.get(oid));
         }
@@ -161,7 +166,7 @@ public class MOGroup implements ManagedObject {
      */
     @Override
     public void commit(final SubRequest request) {
-        if (request.getIndex() > 0) {
+        if (isSimpleSetOperation(request) || request.getIndex() > 0) {
             //check specific context
             Variable newValue = request.getVariableBinding().getVariable();
             OID oid = request.getVariableBinding().getOid();
@@ -183,7 +188,7 @@ public class MOGroup implements ManagedObject {
     @Override
     public void undo(final SubRequest request) {
         RequestStatus status = request.getStatus();
-        if (request.getIndex() > 0) {
+        if (isSimpleSetOperation(request) || request.getIndex() > 0) {
             if (request.getUndoValue() instanceof Variable) {
                 variableBindings.put(request.getVariableBinding().getOid(), (Variable) request.getUndoValue());
             } else {
