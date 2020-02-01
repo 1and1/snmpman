@@ -26,7 +26,7 @@ import static org.testng.AssertJUnit.assertEquals;
 public abstract class AbstractSnmpmanTest {
 
     protected Snmpman snmpman;
-    protected static String COMMUNITY = "public";
+    protected static final String COMMUNITY = "public";
     protected static final int PORT = 10009;
 
     @BeforeMethod

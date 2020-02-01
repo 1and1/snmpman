@@ -2,7 +2,7 @@
  "SNMPMAN")
 ============
 [![Travis CI](https://travis-ci.org/1and1/snmpman.svg?branch=master)](https://travis-ci.org/1and1/snmpman)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/2bf43bcd01fb477e8d1f4b2f7225029d)](https://www.codacy.com/app/Stephan-FuhrmannOrganization/snmpman?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=1and1/snmpman&amp;utm_campaign=Badge_Grade)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/2bf43bcd01fb477e8d1f4b2f7225029d)](https://www.codacy.com/manual/Stephan-FuhrmannOrganization/snmpman?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=1and1/snmpman&amp;utm_campaign=Badge_Grade)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.oneandone/snmpman/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.oneandone/snmpman) 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
@@ -29,7 +29,7 @@ You can include the `SNMPMAN` as a Maven dependency from [Maven Central]().
 <dependency>
     <groupId>com.oneandone</groupId>
     <artifactId>snmpman</artifactId>
-    <version>1.4.4</version>
+    <version>1.4.6</version>
 </dependency>
 ```
 
@@ -74,10 +74,9 @@ The `SNMPMAN` configuration can be found in two main `YAML` files ...
   * The agent configuration lists all agents which will be started
   * The device type configuration defines the modifiers that will be applied to a range of OIDs
 
-You can find some `YAML` example configuration files within the test resources of this project in the directory
-```
-../src/test/resources/configuration
-```
+You can find some `YAML` example configuration files within the test resources of this project in [this](https://github.com/1and1/snmpman/tree/master/snmpman-cli/src/test/resources/configuration
+) directory.
+
 The third component of the configuration are the walk files for the agents as specified in the agent configuration.
 
 This is a basic overview and more information will be provided [on the project's Wiki pages](https://github.com/1and1/snmpman/wiki).
