@@ -74,10 +74,9 @@ The `SNMPMAN` configuration can be found in two main `YAML` files ...
   * The agent configuration lists all agents which will be started
   * The device type configuration defines the modifiers that will be applied to a range of OIDs
 
-You can find some `YAML` example configuration files within the test resources of this project in the directory
-```
-../src/test/resources/configuration
-```
+You can find some `YAML` example configuration files within the test resources of this project in [this](https://github.com/1and1/snmpman/tree/master/snmpman-cli/src/test/resources/configuration
+) directory.
+
 The third component of the configuration are the walk files for the agents as specified in the agent configuration.
 
 This is a basic overview and more information will be provided [on the project's Wiki pages](https://github.com/1and1/snmpman/wiki).
