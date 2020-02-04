@@ -132,8 +132,9 @@ public class MOGroup implements ManagedObject {
         return false;
     }
 
-    private boolean isSimpleSetOperation(SubRequest request) {
-        return (request.getRequest().getViewType() == VACM.VIEW_WRITE) && (request.getRequest().size() == 1);
+    private boolean isNotRowStatusColumnSubRequest(SubRequest request) {
+        return (request.getRequest().getViewType() == VACM.VIEW_WRITE) && (request.getRequest().size() == 1)
+                || request.getIndex() > 0;
     }
 
     /**
@@ -149,7 +150,7 @@ public class MOGroup implements ManagedObject {
     @Override
     public void prepare(SubRequest request) {
         RequestStatus status = request.getStatus();
-        if (isSimpleSetOperation(request) || request.getIndex() > 0) {
+        if (isNotRowStatusColumnSubRequest(request)) {
             //Skip rowStatusColumn SubRequest with index 0, when createRow was invoked.
             OID oid = request.getVariableBinding().getOid();
             request.setUndoValue(variableBindings.get(oid));
@@ -166,7 +167,7 @@ public class MOGroup implements ManagedObject {
      */
     @Override
     public void commit(final SubRequest request) {
-        if (isSimpleSetOperation(request) || request.getIndex() > 0) {
+        if (isNotRowStatusColumnSubRequest(request)) {
             //check specific context
             Variable newValue = request.getVariableBinding().getVariable();
             OID oid = request.getVariableBinding().getOid();
@@ -188,7 +189,7 @@ public class MOGroup implements ManagedObject {
     @Override
     public void undo(final SubRequest request) {
         RequestStatus status = request.getStatus();
-        if (isSimpleSetOperation(request) || request.getIndex() > 0) {
+        if (isNotRowStatusColumnSubRequest(request)) {
             if (request.getUndoValue() instanceof Variable) {
                 variableBindings.put(request.getVariableBinding().getOid(), (Variable) request.getUndoValue());
             } else {
