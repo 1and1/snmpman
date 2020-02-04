@@ -40,7 +40,7 @@ public class ModifiedVariable implements Variable, Cloneable {
         return this.variable.compareTo(variable);
     }
 
-    @SuppressWarnings({"CloneDoesntDeclareCloneNotSupportedException", "CloneDoesntCallSuperClone", "unchecked"})
+    @SuppressWarnings({"CloneDoesntCallSuperClone", "unchecked"})
     @Override
     public Object clone() {
         log.trace("variable {} will be cloned", variable);

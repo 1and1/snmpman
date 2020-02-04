@@ -47,7 +47,7 @@ public class Device {
      * @param name the name of the device
      * @param modifiers the modifiers
      */
-    Device(@JsonProperty("name") final String name, @JsonProperty("modifiers") final Modifier[] modifiers, @JsonProperty(value = "vlans", required = false) final Long[] vlans) {
+    Device(@JsonProperty("name") final String name, @JsonProperty("modifiers") final Modifier[] modifiers, @JsonProperty(value = "vlans") final Long[] vlans) {
         this.name = name;
         if (modifiers != null) {
             this.modifiers = Collections.unmodifiableList(Arrays.asList(modifiers));

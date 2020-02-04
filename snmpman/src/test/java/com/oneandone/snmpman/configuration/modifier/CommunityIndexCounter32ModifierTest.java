@@ -20,7 +20,7 @@ public class CommunityIndexCounter32ModifierTest {
     private long contextValue1;
     private long context2;
     private long contextValue2;
-    private final String oid = "1.3.6.1.2.1.17.2.4.0";
+    private static final String OID = "1.3.6.1.2.1.17.2.4.0";
 
     @BeforeTest
     private void setUp() {
@@ -75,7 +75,7 @@ public class CommunityIndexCounter32ModifierTest {
         modifier.init(modifierProperties);
 
         final OctetString context1 = new OctetString("20");
-        final OID queryOID1 = new OID(oid);
+        final OID queryOID1 = new OID(OID);
         final Map<OID, Variable> variableBindings1 = modifier.getVariableBindings(context1, queryOID1);
 
         assertEquals(variableBindings1.size(), 1);
