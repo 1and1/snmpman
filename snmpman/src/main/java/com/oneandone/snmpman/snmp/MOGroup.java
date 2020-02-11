@@ -4,9 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.snmp4j.agent.DefaultMOScope;
 import org.snmp4j.agent.MOScope;
 import org.snmp4j.agent.ManagedObject;
-import org.snmp4j.agent.request.RequestStatus;
 import org.snmp4j.agent.request.SubRequest;
-import org.snmp4j.agent.security.VACM;
 import org.snmp4j.mp.SnmpConstants;
 import org.snmp4j.smi.Null;
 import org.snmp4j.smi.OID;
@@ -132,30 +130,16 @@ public class MOGroup implements ManagedObject {
         return false;
     }
 
-    private boolean isNotRowStatusColumnSubRequest(SubRequest request) {
-        return (request.getRequest().getViewType() == VACM.VIEW_WRITE) && (request.getRequest().size() == 1)
-                || request.getIndex() > 0;
-    }
-
     /**
-     * Check two mandatory properties:
-     * <ol>
-     * <li>OID to set is in the scope of the MOGroup</li>
-     * <li>New value has the same Variable type</li>
-     * </ol>
-     * Depending on process the RequestStatus gets adjust.
+     * Sets UnDo-Value for the OID to SubRequest which is replaced when commit fails.
      *
      * @param request The SubRequest to handle.
      */
     @Override
     public void prepare(SubRequest request) {
-        RequestStatus status = request.getStatus();
-        if (isNotRowStatusColumnSubRequest(request)) {
-            //Skip rowStatusColumn SubRequest with index 0, when createRow was invoked.
-            OID oid = request.getVariableBinding().getOid();
-            request.setUndoValue(variableBindings.get(oid));
-        }
-        status.setPhaseComplete(true);
+        OID oid = request.getVariableBinding().getOid();
+        request.setUndoValue(variableBindings.get(oid));
+        request.getStatus().setPhaseComplete(true);
     }
 
     /**
@@ -167,15 +151,12 @@ public class MOGroup implements ManagedObject {
      */
     @Override
     public void commit(final SubRequest request) {
-        if (isNotRowStatusColumnSubRequest(request)) {
-            //check specific context
-            Variable newValue = request.getVariableBinding().getVariable();
-            OID oid = request.getVariableBinding().getOid();
-            if (variableBindings.getOrDefault(oid, newValue).getSyntax() == newValue.getSyntax()) {
-                variableBindings.put(oid, newValue);
-            } else {
-                request.getStatus().setErrorStatus(SnmpConstants.SNMP_ERROR_INCONSISTENT_VALUE);
-            }
+        Variable newValue = request.getVariableBinding().getVariable();
+        OID oid = request.getVariableBinding().getOid();
+        if (variableBindings.getOrDefault(oid, newValue).getSyntax() == newValue.getSyntax()) {
+            variableBindings.put(oid, newValue);
+        } else {
+            request.getStatus().setErrorStatus(SnmpConstants.SNMP_ERROR_INCONSISTENT_VALUE);
         }
         request.getStatus().setPhaseComplete(true);
     }
@@ -188,15 +169,12 @@ public class MOGroup implements ManagedObject {
      */
     @Override
     public void undo(final SubRequest request) {
-        RequestStatus status = request.getStatus();
-        if (isNotRowStatusColumnSubRequest(request)) {
-            if (request.getUndoValue() instanceof Variable) {
-                variableBindings.put(request.getVariableBinding().getOid(), (Variable) request.getUndoValue());
-            } else {
-                variableBindings.remove(request.getVariableBinding().getOid());
-            }
+        if (request.getUndoValue() instanceof Variable) {
+            variableBindings.put(request.getVariableBinding().getOid(), (Variable) request.getUndoValue());
+        } else {
+            variableBindings.remove(request.getVariableBinding().getOid());
         }
-        status.setPhaseComplete(true);
+        request.getStatus().setPhaseComplete(true);
     }
 
     @Override
