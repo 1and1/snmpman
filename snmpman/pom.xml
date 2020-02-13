@@ -53,10 +53,4 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-  <repositories>
-    <repository>
-      <id>snmp4j</id>
-      <url>https://oosnmp.net/dist/release</url>
-    </repository>
-  </repositories>
 </project>
