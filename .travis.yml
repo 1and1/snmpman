@@ -7,7 +7,7 @@ matrix:
 os:
   - linux
 
-install: mvn install -Dgpg.skip
+install: mvn install
 
 cache:
     directories:
