@@ -11,7 +11,7 @@ import com.oneandone.snmpman.snmp.MOGroup;
 import lombok.extern.slf4j.Slf4j;
 import org.snmp4j.TransportMapping;
 import org.snmp4j.agent.*;
-import org.snmp4j.agent.io.ImportModes;
+import org.snmp4j.agent.io.ImportMode;
 import org.snmp4j.agent.mo.ext.StaticMOGroup;
 import org.snmp4j.agent.mo.snmp.*;
 import org.snmp4j.agent.security.MutableVACM;
@@ -215,7 +215,7 @@ public class SnmpmanAgent extends BaseAgent {
      */
     public void execute() throws IOException {
         this.init();
-        this.loadConfig(ImportModes.REPLACE_CREATE);
+        this.loadConfig(ImportMode.REPLACE_CREATE);
         this.addShutdownHook();
         this.getServer().addContext(new OctetString("public"));
         this.getServer().addContext(new OctetString(""));
@@ -386,7 +386,7 @@ public class SnmpmanAgent extends BaseAgent {
         try {
             final Field registry = server.getClass().getDeclaredField("registry");
             registry.setAccessible(true);
-            final SortedMap<MOScope, ManagedObject> reg = server.getRegistry();
+            final SortedMap<MOScope, ManagedObject<?>> reg = server.getRegistry();
             DefaultMOContextScope contextScope = new DefaultMOContextScope(new OctetString(""), group.getScope());
             reg.put(contextScope, group);
             registry.set(server, reg);
