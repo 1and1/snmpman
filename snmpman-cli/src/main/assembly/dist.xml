@@ -1,15 +1,26 @@
 <?xml version="1.0"?>
 <assembly>
   <!-- see http://maven.apache.org/plugins/maven-assembly-plugin/assembly.html -->
-  <id>dist</id>
+  <id>bin</id>
   <formats>
     <format>dir</format>
+    <format>tar.gz</format>
     <format>tar.bz2</format>
+    <format>zip</format>
   </formats>
   <includeBaseDirectory>false</includeBaseDirectory>
   <fileSets>
     <fileSet>
-      <directory>bin</directory>
+      <directory>${project.basedir}/..</directory>
+      <outputDirectory></outputDirectory>
+      <includes>
+        <include>README.md</include>
+        <include>MAINTAINERS</include>
+        <include>LICENSE.txt</include>
+      </includes>
+    </fileSet>
+    <fileSet>
+      <directory>src/main/assembly</directory>
       <outputDirectory>bin</outputDirectory>
       <fileMode>0755</fileMode>
       <includes>
@@ -19,22 +30,19 @@
     <fileSet>
       <directory>target</directory>
       <outputDirectory>lib</outputDirectory>
+      <excludes>
+        <exclude>*-javadoc.jar</exclude>
+        <exclude>*-sources.jar</exclude>
+      </excludes>
       <includes>
         <include>*.jar</include>
       </includes>
     </fileSet>
     <fileSet>
-      <directory>config</directory>
-      <outputDirectory>config</outputDirectory>
-      <includes>
-        <include>log4j*</include>
-      </includes>
-    </fileSet>
-    <fileSet>
       <directory>src/main/resources</directory>
-      <outputDirectory>config</outputDirectory>
+      <outputDirectory>etc</outputDirectory>
       <includes>
-        <include>schema/*.xsd</include>
+        <include>log4j2*</include>
       </includes>
     </fileSet>
   </fileSets>
