@@ -386,7 +386,7 @@ public class SnmpmanAgent extends BaseAgent {
         try {
             final Field registry = server.getClass().getDeclaredField("registry");
             registry.setAccessible(true);
-            final SortedMap<MOScope, ManagedObject<?>> reg = server.getRegistry();
+            final SortedMap<MOScope, ManagedObject> reg = server.getRegistry();
             DefaultMOContextScope contextScope = new DefaultMOContextScope(new OctetString(""), group.getScope());
             reg.put(contextScope, group);
             registry.set(server, reg);
