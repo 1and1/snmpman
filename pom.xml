@@ -34,6 +34,10 @@
       <name>Stephan Fuhrmann</name>
     </developer>
   </developers>
+  <organization>
+    <name>1&amp;1 Ionos SE</name>
+    <url>http://www.ionos.com/</url>
+  </organization>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
