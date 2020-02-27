@@ -8,7 +8,7 @@
 
 The `SNMPMAN` is a command-line application that simulates `SNMP`-capable devices and was developed to be usable during unit testing.
 It may be used to test traffic monitoring applications that execute `SNMP` queries. Due to the lack of
-flexibility in already existing alternatives, it was developed by the **1&1 Internet AG** to improve flexibility. Therefore the `SNMPMAN`
+flexibility in already existing alternatives, it was developed by the **1&1 Ionos SE** to improve flexibility. Therefore the `SNMPMAN`
 is highly extendable and will be enhanced over time.
 
 Multiple `SNMP` agents may be started at once and will run in parallel. The agents running in parallel

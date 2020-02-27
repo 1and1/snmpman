@@ -34,6 +34,10 @@
       <name>Stephan Fuhrmann</name>
     </developer>
   </developers>
+  <organization>
+    <name>1&amp;1 Ionos SE</name>
+    <url>http://www.ionos.com/</url>
+  </organization>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <maven.compiler.source>1.8</maven.compiler.source>
@@ -66,7 +70,7 @@
             <artifactId>maven-gpg-plugin</artifactId>
             <version>1.6</version>
             <configuration>
-              <keyname>3EAD41F1</keyname>
+              <keyname>0AC5A45E91FA93DA25380017B0D87B063EAD41F1</keyname>
             </configuration>
             <executions>
               <execution>
@@ -132,9 +136,8 @@
         <artifactId>maven-release-plugin</artifactId>
         <version>3.0.0-M1</version>
         <configuration>
-          <tagNameFormat>v@{project.version}</tagNameFormat>
           <autoVersionSubmodules>true</autoVersionSubmodules>
-          <releaseProfiles>releases</releaseProfiles>
+          <releaseProfiles>release</releaseProfiles>
         </configuration>
       </plugin>
     </plugins>
