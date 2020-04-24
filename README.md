@@ -29,7 +29,7 @@ You can include the `SNMPMAN` as a Maven dependency from [Maven Central]().
 <dependency>
     <groupId>com.oneandone</groupId>
     <artifactId>snmpman</artifactId>
-    <version>1.4.8</version>
+    <version>2.0.0</version>
 </dependency>
 ```
 
@@ -50,7 +50,7 @@ snmpman.stop();
 Installation and building
 ============
 ### Prerequisites
-  * `Java JDK 1.8`
+  * `Java JDK 9+`
   * `Apache Maven 3.5.2`
 
 ### Building a fat Jar
