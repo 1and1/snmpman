@@ -10,5 +10,9 @@ os:
 install: mvn install
 
 cache:
-    directories:
-    - $HOME/.m2
+  directories:
+  - $HOME/.m2
+
+after_success:
+- mvn clean test jacoco:report coveralls:report
+- bash <(curl -Ls https://coverage.codacy.com/get.sh)
