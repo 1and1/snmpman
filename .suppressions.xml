@@ -18,21 +18,18 @@
     <notes><![CDATA[
    file name: snmpman-cli-2.0.1-SNAPSHOT-sources.jar
    ]]></notes>
-    <sha1>672bb730165ceaa5f04ddf524e6df5a081aa790e</sha1>
     <cve>CVE-2019-16775</cve>
   </suppress>
   <suppress>
     <notes><![CDATA[
    file name: snmpman-cli-2.0.1-SNAPSHOT-sources.jar
    ]]></notes>
-    <sha1>672bb730165ceaa5f04ddf524e6df5a081aa790e</sha1>
     <cve>CVE-2019-16776</cve>
   </suppress>
   <suppress>
     <notes><![CDATA[
    file name: snmpman-cli-2.0.1-SNAPSHOT-sources.jar
    ]]></notes>
-    <sha1>672bb730165ceaa5f04ddf524e6df5a081aa790e</sha1>
     <cve>CVE-2019-16777</cve>
   </suppress>
 </suppressions>
