@@ -2,7 +2,9 @@ language: java
 matrix:
   include:
   - jdk: openjdk9
+  - jdk: openjdk10
   - jdk: openjdk11
+  - jdk: openjdk12
 
 os:
   - linux
