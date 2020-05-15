@@ -14,7 +14,7 @@ cache:
   - $HOME/.m2
 
 after_success:
-  - mvn clean test jacoco:report --projects=snmpman
+  - mvn clean test jacoco:report
   - bash <(curl -Ls https://coverage.codacy.com/get.sh) report -l Java -r snmpman/target/site/jacoco/jacoco.xml --partial
   - bash <(curl -Ls https://coverage.codacy.com/get.sh) report -l Java -r snmpman-cli/target/site/jacoco/jacoco.xml --partial
   - bash <(curl -Ls https://coverage.codacy.com/get.sh) final
