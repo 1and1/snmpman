@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<suppressions xmlns="https://jeremylong.github.io/DependencyCheck/dependency-suppression.1.3.xsd">
+  <suppress>
+    <notes><![CDATA[
+      file name: jquery-3.3.1.js
+      ]]></notes>
+    <packageUrl regex="true">^pkg:javascript/jquery@.*$</packageUrl>
+    <cve>CVE-2019-11358</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: jquery.js
+   ]]></notes>
+    <packageUrl regex="true">^pkg:javascript/jquery@.*$</packageUrl>
+    <vulnerabilityName>Regex in its jQuery.htmlPrefilter  sometimes may introduce XSS</vulnerabilityName>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: snmpman-cli-2.0.1-SNAPSHOT-sources.jar
+   ]]></notes>
+    <sha1>bf468e330e42dfefdb3a7f8a479a27ca03ef8e51</sha1>
+    <cpe>cpe:/a:cli_project:cli</cpe>
+  </suppress>
+</suppressions>
