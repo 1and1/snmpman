@@ -37,8 +37,14 @@ jobs:
     - name: Create Jacoco Report
       run: mvn clean test jacoco:report
     - name: Upload first Jacoco Report
+      env:
+        CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
       run: bash <(curl -Ls https://coverage.codacy.com/get.sh) report -l Java -r snmpman/target/site/jacoco/jacoco.xml --partial
     - name: Upload second Jacoco Report
+      env:
+        CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
       run: bash <(curl -Ls https://coverage.codacy.com/get.sh) report -l Java -r snmpman-cli/target/site/jacoco/jacoco.xml --partial
     - name: Final Jacoco Report
+      env:
+        CODACY_PROJECT_TOKEN: ${{ secrets.CODACY_PROJECT_TOKEN }}
       run: bash <(curl -Ls https://coverage.codacy.com/get.sh) final
