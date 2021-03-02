@@ -32,4 +32,25 @@
    ]]></notes>
     <cve>CVE-2019-16777</cve>
   </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: jquery.js
+   ]]></notes>
+    <packageUrl regex="true">^pkg:javascript/jquery@.*$</packageUrl>
+    <cve>CVE-2020-11022</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: jquery.js
+   ]]></notes>
+    <packageUrl regex="true">^pkg:javascript/jquery@.*$</packageUrl>
+    <cve>CVE-2020-11023</cve>
+  </suppress>
+  <suppress>
+    <notes><![CDATA[
+   file name: snmpman-cli-2.0.1-SNAPSHOT-javadoc.jar
+   ]]></notes>
+    <sha1>079780c7d33940e38f8942da75c3233d2179f293</sha1>
+    <cve>CVE-2020-15095</cve>
+  </suppress>
 </suppressions>
