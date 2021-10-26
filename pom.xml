@@ -63,8 +63,8 @@
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
-      <artifactId>mockito-all</artifactId>
-      <version>2.0.2-beta</version>
+      <artifactId>mockito-core</artifactId>
+      <version>3.12.4</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -107,7 +107,7 @@
       <plugin>
         <groupId>org.jacoco</groupId>
         <artifactId>jacoco-maven-plugin</artifactId>
-        <version>0.8.5</version>
+        <version>0.8.7</version>
         <executions>
           <execution>
             <id>default-prepare-agent</id>
@@ -162,6 +162,9 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>3.1.1</version>
+        <configuration>
+          <detectJavaApiLink>false</detectJavaApiLink>
+        </configuration>
         <executions>
           <execution>
             <id>attach-javadocs</id>
