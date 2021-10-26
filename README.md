@@ -2,8 +2,6 @@
  "SNMPMAN")
 ============
 [![Java CI with Maven](https://github.com/1and1/snmpman/actions/workflows/maven.yml/badge.svg)](https://github.com/1and1/snmpman/actions/workflows/maven.yml)
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/2bf43bcd01fb477e8d1f4b2f7225029d)](https://www.codacy.com/manual/Stephan-FuhrmannOrganization/snmpman?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=1and1/snmpman&amp;utm_campaign=Badge_Grade)
-[![Codacy Badge](https://api.codacy.com/project/badge/Coverage/2bf43bcd01fb477e8d1f4b2f7225029d)](https://www.codacy.com/manual/Stephan-FuhrmannOrganization/snmpman?utm_source=github.com&utm_medium=referral&utm_content=1and1/snmpman&utm_campaign=Badge_Coverage)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.oneandone/snmpman/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.oneandone/snmpman) 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
