@@ -12,7 +12,7 @@ jobs:
     with:
       java_version: 11
       artifact_name: coverage
-      artifact_path: target/snmpman-cli/target/snmpman-cli-*.jar
+      artifact_path: ./snmpman/target/site/jacoco/jacoco.csv
       jacoco_csv_path: ./snmpman/target/site/jacoco/jacoco.csv
       committer_email: sfuhrm@users.noreply.github.com
       committer_user: sfuhrm
