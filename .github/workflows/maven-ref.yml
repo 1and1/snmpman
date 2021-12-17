@@ -10,6 +10,6 @@ jobs:
   call-workflow-passing-data:
     uses: sfuhrm/github_workflows/.github/workflows/maven.yml@main
     with:
-      java_version: 11
+      java_version: "[\"11\", \"17\"]"
       artifact_name: build
-      artifact_path: target/snmpman-cli/target/snmpman-cli-*.jar
+      artifact_path: snmpman/target/snmpman-*.jar
