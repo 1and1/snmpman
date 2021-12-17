@@ -1,0 +1,18 @@
+name: Jacoco Coverage
+
+on:
+  push:
+    branches: [ master, test ]
+  pull_request:
+    branches: [ master, test ]
+
+jobs:
+  call-workflow-passing-data:
+    uses: sfuhrm/github_workflows/.github/workflows/jacoco-badge.yml@main
+    with:
+      java_version: 11
+      artifact_name: coverage
+      artifact_path: target/snmpman-cli/target/snmpman-cli-*.jar
+      jacoco_csv_path: ./snmpman/target/site/jacoco/jacoco.csv
+      commiter_email: sfuhrm@users.noreply.github.com
+      commiter_user: sfuhrm
