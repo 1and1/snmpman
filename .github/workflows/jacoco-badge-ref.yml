@@ -8,7 +8,7 @@ on:
 
 jobs:
   call-jacoco-badge:
-    uses: sfuhrm/github_workflows/.github/workflows/jacoco-badge.yml@main
+    uses: sfuhrm/github_workflows/github/workflows/jacoco-badge.yml@main
     with:
       java_version: 11
       artifact_name: coverage
