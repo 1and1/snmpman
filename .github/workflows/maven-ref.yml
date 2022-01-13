@@ -7,9 +7,14 @@ on:
     branches: [ master, test ]
 
 jobs:
+  maven_version:
+    uses: sfuhrm/github_workflows/.github/workflows/maven-expression.yml@main
+    with:
+      java_version: 17
+      expression: project.version
   call-workflow-passing-data:
     uses: sfuhrm/github_workflows/.github/workflows/maven.yml@main
     with:
       java_version: "[\"11\", \"17\"]"
       artifact_name: build
-      artifact_path: snmpman/target/snmpman-${{ jobs.version.outputs.version }}.jar
+      artifact_path: snmpman/target/snmpman-${{ needs.maven_version.expression_value }}.jar
