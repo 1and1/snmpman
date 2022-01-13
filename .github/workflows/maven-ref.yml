@@ -12,4 +12,4 @@ jobs:
     with:
       java_version: "[\"11\", \"17\"]"
       artifact_name: build
-      artifact_path: snmpman/target/snmpman-*.jar
+      artifact_path: snmpman/target/snmpman-${{ jobs.version.outputs.version }}.jar
