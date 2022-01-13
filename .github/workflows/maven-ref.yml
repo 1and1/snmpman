@@ -17,4 +17,4 @@ jobs:
     with:
       java_version: "[\"11\", \"17\"]"
       artifact_name: build
-      artifact_path: snmpman/target/snmpman-${{ needs.maven_version.expression_value }}.jar
+      artifact_path: snmpman/target/snmpman-${{ needs.maven_version.outputs.expression_value }}.jar
