@@ -2,6 +2,7 @@
  "SNMPMAN")
 ============
 [![Java CI with Maven](https://github.com/1and1/snmpman/actions/workflows/maven.yml/badge.svg)](https://github.com/1and1/snmpman/actions/workflows/maven.yml)
+[![javadoc](https://javadoc.io/badge2/1and1/snmpman/javadoc.svg)](https://javadoc.io/doc/1and1/snmpman)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.oneandone/snmpman/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.oneandone/snmpman) 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
