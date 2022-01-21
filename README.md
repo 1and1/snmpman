@@ -2,6 +2,7 @@
  "SNMPMAN")
 ============
 [![Java CI with Maven](https://github.com/1and1/snmpman/actions/workflows/maven.yml/badge.svg)](https://github.com/1and1/snmpman/actions/workflows/maven.yml)
+[![javadoc](https://javadoc.io/badge2/com.oneandone/snmpman/javadoc.svg)](https://javadoc.io/doc/com.oneandone/snmpman)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.oneandone/snmpman/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.oneandone/snmpman) 
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
@@ -28,7 +29,7 @@ You can include the `SNMPMAN` as a Maven dependency from [Maven Central]().
 <dependency>
     <groupId>com.oneandone</groupId>
     <artifactId>snmpman</artifactId>
-    <version>2.1.0</version>
+    <version>2.1.2</version>
 </dependency>
 ```
 
