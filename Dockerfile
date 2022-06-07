@@ -3,7 +3,7 @@ COPY . /snmpman
 RUN cd /snmpman && mvn clean package
 
 FROM openjdk:11-bullseye
-RUN apt-get update && apt-get install --yes snmp tcpdump strace iproute2 net-tools
+#RUN apt-get update && apt-get install --yes snmp tcpdump strace iproute2 net-tools
 RUN useradd snmpman
 COPY --chown=snmpman:snmpman --from=0 /snmpman/snmpman-cli/target/snmpman-cli-*bin /snmpman
 COPY --chown=snmpman:snmpman --from=0 /snmpman/snmpman-cli/src/main/config/devices/catos.yaml /snmpman/etc/devices/
