@@ -23,6 +23,15 @@ Also checkout the `SNMPMAN` GitHub IO page [here](http://1and1.github.io/snmpman
 
 Usage
 ============
+`SNMPMAN` can either be used as
+
+* Java library
+* Standalone command line program
+* Docker image
+
+Java library usage
+-----------
+
 You can include the `SNMPMAN` as a Maven dependency from [Maven Central]().
 
 ```xml
@@ -45,6 +54,46 @@ Snmpman snmpman = Snmpman.start(new File("configuration.yaml"));
 
 /* stop the SNMPMAN and all started agents */
 snmpman.stop();
+```
+
+Standalone commandline usage
+-----------
+For standalone commandline usage, you need to pass a YAML file as a configuration.
+
+The commandline options are:
+
+```
+ -c (--configuration) DATEI : the path to the configuration YAML
+ -h (--help)                : print the help message (Vorgabe: false)
+```
+
+A YAML configuration specifying one SNMP agent, binding to IP 127.0.0.1, UDP port 10000 and
+SNMP community 'public' is given here:
+
+```
+- name: "example1"
+  device: "/opt/snmpman/etc/devices/ios.yaml"
+  walk: "/opt/snmpman/etc/walk/example1.walk"
+  ip: "127.0.0.1"
+  port: 10000
+  community: public
+```
+
+The walk can be a SNMP walk extracted with the 'snmpwalk' command line program with the options `-On`.
+
+Docker usage
+-----------
+There's an experimental docker image available that can be used to simulate SNMP agents.
+
+Available configuration options:
+
+* `SNMPMAN_CONFIG`: The location of the default configuration can be changed using the env var `SNMPMAN_CONFIG`, it defaults to a
+sample config at `/snmpman/etc/configuration.yaml`.
+
+Sample call mounting a walk inside the container and binding the container towards the standard SNMP port 161:
+
+```
+docker run -v ABSOLUTE/PATH/TO/walk.txt:/snmpman/etc/walk/example1.walk -p 161:10000/udp stephanfuhrmannionos/snmpman
 ```
 
 Installation and building
