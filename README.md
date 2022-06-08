@@ -19,8 +19,6 @@ how to dynamically change the query responses. E.g. the response of an
 may be incremented with each query to simulate traffic. Several variable modifiers are already in existence for different
 data types.
 
-Also checkout the `SNMPMAN` GitHub IO page [here](http://1and1.github.io/snmpman/)!
-
 Usage
 ============
 `SNMPMAN` can either be used as
