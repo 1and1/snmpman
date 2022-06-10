@@ -61,7 +61,7 @@ For standalone commandline usage, you need to pass a YAML file as a configuratio
 The commandline options are:
 
 ```
- -c (--configuration) DATEI : the path to the configuration YAML
+ -c (--configuration) FILE  : the path to the configuration YAML
  -h (--help)                : print the help message (Vorgabe: false)
 ```
 
