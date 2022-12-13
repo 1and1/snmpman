@@ -53,20 +53,20 @@
     <maven.compiler.source>9</maven.compiler.source>
     <maven.compiler.target>9</maven.compiler.target>
     <log4j2.version>2.19.0</log4j2.version>
-    <jackson.version>2.13.4</jackson.version>
+    <jackson.version>2.14.1</jackson.version>
   </properties>
 
   <dependencies>
     <dependency>
       <groupId>org.testng</groupId>
       <artifactId>testng</artifactId>
-      <version>7.6.1</version>
+      <version>7.7.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>org.mockito</groupId>
       <artifactId>mockito-core</artifactId>
-      <version>4.3.1</version>
+      <version>4.9.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -78,7 +78,7 @@
     <dependency>
       <groupId>org.slf4j</groupId>
       <artifactId>slf4j-api</artifactId>
-      <version>1.7.35</version>
+      <version>2.0.6</version>
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>
