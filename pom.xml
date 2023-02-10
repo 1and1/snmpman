@@ -53,7 +53,7 @@
     <maven.compiler.source>9</maven.compiler.source>
     <maven.compiler.target>9</maven.compiler.target>
     <log4j2.version>2.19.0</log4j2.version>
-    <jackson.version>2.14.1</jackson.version>
+    <jackson.version>2.14.2</jackson.version>
   </properties>
 
   <dependencies>
