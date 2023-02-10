@@ -75,7 +75,7 @@ public class SnmpmanAgent extends BaseAgent {
     /**
      * Returns the name of {@code this} agent.
      * <br>
-     * See {@link AgentConfiguration#name} for more information on the return value.
+     * See {@code AgentConfiguration.name} for more information on the return value.
      *
      * @return the name of {@code this} agent.
      */
