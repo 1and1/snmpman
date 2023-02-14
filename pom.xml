@@ -4,7 +4,7 @@
 
   <groupId>com.oneandone</groupId>
   <artifactId>snmpman-parent</artifactId>
-  <version>2.1.5-SNAPSHOT</version>
+  <version>2.1.5</version>
   <packaging>pom</packaging>
 
   <name>SNMPMan Parent</name>
@@ -45,7 +45,7 @@
     <url>https://github.com/1and1/snmpman</url>
     <connection>scm:git:git@github.com:1and1/snmpman.git</connection>
     <developerConnection>scm:git:git@github.com:1and1/snmpman.git</developerConnection>
-    <tag>HEAD</tag>
+    <tag>snmpman-parent-2.1.5</tag>
   </scm>
 
   <properties>
