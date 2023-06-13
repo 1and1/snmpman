@@ -1,4 +1,4 @@
-FROM docker.io/maven:3-jdk-17
+FROM docker.io/maven:3-eclipse-temurin-17
 COPY . /snmpman
 RUN cd /snmpman && mvn clean package
 
