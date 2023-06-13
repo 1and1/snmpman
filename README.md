@@ -3,7 +3,8 @@
 ============
 [![Java CI with Maven](https://github.com/1and1/snmpman/actions/workflows/maven.yml/badge.svg)](https://github.com/1and1/snmpman/actions/workflows/maven.yml)
 [![javadoc](https://javadoc.io/badge2/com.oneandone/snmpman/javadoc.svg)](https://javadoc.io/doc/com.oneandone/snmpman)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.oneandone/snmpman/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.oneandone/snmpman) 
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.oneandone/snmpman/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.oneandone/snmpman)
+![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/stephanfuhrmannionos/snmpman)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
 The `SNMPMAN` is a command-line application that simulates `SNMP`-capable devices and was developed to be usable during unit testing.
