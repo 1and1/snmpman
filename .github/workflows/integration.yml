@@ -25,7 +25,7 @@ jobs:
     - name: snmpget a single OID
       run: |
         ../../snmpman-cli/target/snmpman-cli-*-SNAPSHOT-bin/bin/snmpman.sh  -c configuration.yaml &
-        SNMPMAN_PID=$1
+        SNMPMAN_PID=$!
         sleep 5
         ACTUAL=$(snmpget -On -v2c -c public 127.0.0.1:10000 iso.3.6.1.2.1.2.2.1.2.10101)
         DESIRED=".1.3.6.1.2.1.2.2.1.2.10101 = STRING: \"GigabitEthernet0/1\""
@@ -40,7 +40,7 @@ jobs:
     - name: snmpset a single OID
       run: |
         ../../snmpman-cli/target/snmpman-cli-*-SNAPSHOT-bin/bin/snmpman.sh  -c configuration.yaml &
-        SNMPMAN_PID=$1
+        SNMPMAN_PID=$!
         sleep 5
         snmpset -On -v2c -c public 127.0.0.1:10000 iso.3.6.1.2.1.2.2.1.2.10101 s "GigabitEthernet0/2"
         ACTUAL=$(snmpget -On -v2c -c public 127.0.0.1:10000 iso.3.6.1.2.1.2.2.1.2.10101)
