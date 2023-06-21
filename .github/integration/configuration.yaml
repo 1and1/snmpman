@@ -1,0 +1,5 @@
+- name: "example1"
+  device: "ios.yaml"
+  walk: "example1.walk"
+  ip: "127.0.0.1"
+  port: 10000
