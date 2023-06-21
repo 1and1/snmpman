@@ -1,8 +1,8 @@
-FROM docker.io/maven:3-jdk-11
+FROM docker.io/maven:3-eclipse-temurin-17
 COPY . /snmpman
 RUN cd /snmpman && mvn clean package
 
-FROM docker.io/openjdk:11-bullseye
+FROM docker.io/openjdk:17-bullseye
 #RUN apt-get update && apt-get install --yes snmp tcpdump strace iproute2 net-tools
 RUN useradd snmpman
 COPY --chown=snmpman:snmpman --from=0 /snmpman/snmpman-cli/target/snmpman-cli-*bin /snmpman
