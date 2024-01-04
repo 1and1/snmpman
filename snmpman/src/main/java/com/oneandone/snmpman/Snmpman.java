@@ -107,7 +107,7 @@ public final class Snmpman {
         }
         log.debug("all agents initialized");
         agents.forEach(this::checkStatus);
-        log.debug("all agents are running");
+        log.info("all agents are running");
     }
 
     /**
