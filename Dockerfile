@@ -11,7 +11,7 @@
 #
 # maven build
 #
-FROM docker.io/maven:3-eclipse-temurin-17 as maven-build
+FROM docker.io/maven:3-eclipse-temurin-21 as maven-build
 COPY . /snmpman
 RUN cd /snmpman && mvn clean package
 
@@ -19,9 +19,8 @@ RUN cd /snmpman && mvn clean package
 # create JRE
 #
 FROM docker.io/debian:bookworm as jre-build
-ARG JAVA_VERSION=17
 ENV JAVA_HOME=/opt/java/openjdk
-COPY --from=docker.io/eclipse-temurin:${JAVA_VERSION} /opt/java/openjdk $JAVA_HOME
+COPY --from=docker.io/eclipse-temurin:21 /opt/java/openjdk $JAVA_HOME
 ENV PATH="${JAVA_HOME}/bin:${PATH}"
 
 RUN apt-get update && apt-get install --yes binutils
