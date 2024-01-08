@@ -1,8 +1,5 @@
 package com.oneandone.snmpman.configuration;
 
-import com.oneandone.snmpman.configuration.modifier.Counter32Modifier;
-import com.oneandone.snmpman.configuration.modifier.Modifier;
-import com.oneandone.snmpman.configuration.type.ModifierProperties;
 import org.snmp4j.smi.Counter64;
 import org.snmp4j.smi.Gauge32;
 import org.snmp4j.smi.OID;
@@ -21,7 +18,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
 
 public class WalksTest {
     private Path tmpFile;
