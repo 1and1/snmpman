@@ -42,7 +42,7 @@ public class Walks {
     /**
      * The pattern of a Hex-STRING continuation line in a walk file.
      */
-    private static final Pattern HEX_STRING_PATTERN = Pattern.compile("([0-9a-fA-F]{2})( [0-9a-fA-F]{2})+");
+    private static final Pattern HEX_STRING_PATTERN = Pattern.compile("([0-9a-fA-F]{2})( [0-9a-fA-F]{2})* *");
 
     private Walks() {
 
