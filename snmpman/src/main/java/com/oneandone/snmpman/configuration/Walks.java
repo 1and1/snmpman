@@ -1,7 +1,6 @@
 package com.oneandone.snmpman.configuration;
 
 import com.google.common.primitives.UnsignedLong;
-import com.oneandone.snmpman.SnmpmanAgent;
 import lombok.extern.slf4j.Slf4j;
 import org.snmp4j.smi.Counter32;
 import org.snmp4j.smi.Counter64;
@@ -20,7 +19,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.Charset;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.regex.Matcher;
@@ -78,7 +76,7 @@ public class Walks {
      * @param reader the reader to read the bindings from.
      * @return the map of oid to variable binding.
      */
-    static Map<OID, Variable> readVariableBindings(final File walk, final BufferedReader reader) throws IOException {
+    private static Map<OID, Variable> readVariableBindings(final File walk, final BufferedReader reader) throws IOException {
         final Map<OID, Variable> bindings = new HashMap<>();
         OID lastOid = null;
         String lastType = null;
