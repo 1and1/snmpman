@@ -81,7 +81,9 @@ public class Walks {
         OID lastOid = null;
         String lastType = null;
         String line;
+        int lineNumber = 0;
         while ((line = reader.readLine()) != null) {
+            lineNumber++;
             boolean match = false;
             Matcher matcher = VARIABLE_BINDING_PATTERN.matcher(line);
             if (matcher.matches()) {
@@ -100,9 +102,9 @@ public class Walks {
                     }
 
                     bindings.put(oid, variable);
-                    log.trace("added binding with oid \"{}\" and variable \"{}\"", oid, variable);
+                    log.trace("added binding from line {} with oid \"{}\" and variable \"{}\"", lineNumber, oid, variable);
                 } catch (final Exception e) {
-                    log.warn("could not parse line \"{}\" of walk file {} with exception: {}", line, walk.getCanonicalPath(), e.getMessage());
+                    log.warn("could not parse line {} with \"{}\" of walk file {} with exception: {}", lineNumber, line, walk.getCanonicalPath(), e.getMessage());
                 }
             }
 
@@ -121,7 +123,8 @@ public class Walks {
                     String combined = oldString + "\n" + newString;
                     bindings.put(lastOid, new OctetString(combined));
                 } else {
-                    log.warn("Could not find the previous octet string of OID {} in walk file {}", lastOid);
+                    log.warn("Could not find the previous octet string of OID {} in walk file {} at line {}",
+                            lastOid, walk.getAbsolutePath(), lineNumber);
                 }
             }
 
@@ -139,13 +142,14 @@ public class Walks {
                         System.arraycopy(newBytes, 0, combined, oldBytes.length, newBytes.length);
                         bindings.put(lastOid, new OctetString(combined));
                     } else {
-                        log.warn("Could not find the previous octet string of OID {} in walk file {}", lastOid);
+                        log.warn("Could not find the previous octet string of OID {} in walk file {} at line {}",
+                                lastOid, walk.getAbsolutePath(), lineNumber);
                     }
                 }
             }
 
             if (!match) {
-                log.warn("could not parse line \"{}\" of walk file {}", line, walk.getAbsolutePath());
+                log.warn("Could not parse line number {} with content \"{}\" of walk file {}", lineNumber, line, walk.getAbsolutePath());
             }
         }
         return bindings;
