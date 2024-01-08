@@ -109,9 +109,29 @@ public class Walks {
             }
 
             // if we have a continuation line for a Hex-STRING, append to it
-            if (lastType != null && lastOid != null && lastType.equals("Hex-STRING")) {
+            if (!match && lastType != null && lastOid != null && lastType.equals("STRING")) {
+                OctetString octetStringToExtend = (OctetString) bindings.get(lastOid);
+                if (octetStringToExtend != null) {
+                    match = true;
+                    String oldString = octetStringToExtend.toString();
+                    String newString;
+                    if (line.endsWith("\"")) {
+                        newString = line.substring(0, line.length() - 1);
+                    } else {
+                        newString = line;
+                    }
+                    String combined = oldString + "\n" + newString;
+                    bindings.put(lastOid, new OctetString(combined));
+                } else {
+                    log.warn("Could not find the previous octet string of OID {} in walk file {}", lastOid);
+                }
+            }
+
+            // if we have a continuation line for a Hex-STRING, append to it
+            if (!match && lastType != null && lastOid != null && lastType.equals("Hex-STRING")) {
                 matcher = HEX_STRING_PATTERN.matcher(line);
                 if (matcher.matches()) {
+                    match = true;
                     OctetString octetStringToExtend = (OctetString) bindings.get(lastOid);
                     if (octetStringToExtend != null) {
                         byte[] oldBytes = octetStringToExtend.getValue();
@@ -145,14 +165,17 @@ public class Walks {
         switch (type) {
             // TODO add "BITS" support
             case "STRING":
-                if (value.startsWith("\"") && value.endsWith("\"")) {
-                    if (value.length() == 2) {
-                        return new OctetString();
-                    }
-                    return new OctetString(value.substring(1, value.length() - 1));
-                } else {
-                    return new OctetString(value);
+                String use = value;
+                if (use.startsWith("\"")) {
+                    use = use.substring(1);
                 }
+                if (use.endsWith("\"")) {
+                    use = use.substring(0, use.length() - 1);
+                }
+                if (use.length() == 0) {
+                    return new OctetString();
+                }
+                return new OctetString(use);
             case "OID":
                 return new OID(value);
             case "Gauge32":
