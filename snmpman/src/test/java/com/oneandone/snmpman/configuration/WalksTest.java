@@ -84,6 +84,19 @@ public class WalksTest {
     }
 
     @Test
+    public void readWalkWithIsoOid() throws IOException {
+        Files.write(tmpFile, Collections.singletonList("iso.3.6.1.4.1.9.9.683.1.5.0 = Hex-STRING: 00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f"));
+        Map<OID, Variable> walk = Walks.readWalk(tmpFile.toFile());
+        byte[] expected = new byte[16];
+        for (int i = 0; i < 16; i++) {
+            expected[i] = (byte) i;
+        }
+        assertEquals(walk, Collections.singletonMap(
+                new OID(".1.3.6.1.4.1.9.9.683.1.5.0"),
+                new OctetString(expected)));
+    }
+
+    @Test
     public void readWalkWithTwoHexStringLine() throws IOException {
         Files.write(tmpFile, Arrays.asList(
                 ".1.3.6.1.4.1.9.9.683.1.5.0 = Hex-STRING: 00 01 02 03 04 05 06 07 08 09 0a 0b 0c 0d 0e 0f",
