@@ -3,6 +3,7 @@ package com.oneandone.snmpman;
 import com.google.common.primitives.UnsignedLong;
 import com.oneandone.snmpman.configuration.AgentConfiguration;
 import com.oneandone.snmpman.configuration.Device;
+import com.oneandone.snmpman.configuration.Walks;
 import com.oneandone.snmpman.configuration.modifier.CommunityContextModifier;
 import com.oneandone.snmpman.configuration.modifier.ModifiedVariable;
 import com.oneandone.snmpman.configuration.modifier.Modifier;
@@ -45,11 +46,6 @@ public class SnmpmanAgent extends BaseAgent {
      * The default charset for files being read.
      */
     private static final Charset DEFAULT_CHARSET = Charset.forName("UTF-8");
-
-    /**
-     * The pattern of variable bindings in a walk file.
-     */
-    private static final Pattern VARIABLE_BINDING_PATTERN = Pattern.compile("(((iso)?\\.[0-9]+)+) = ((([a-zA-Z0-9-]+): (.*)$)|(\"\"$))");
 
     /**
      * The configuration of this agent.
@@ -162,53 +158,6 @@ public class SnmpmanAgent extends BaseAgent {
     }
 
     /**
-     * Returns a {@link Variable} instance for the specified parameters.
-     *
-     * @param type  the type of the variable
-     * @param value the value of this variable
-     * @return a a {@link Variable} instance with the specified type and value
-     * @throws IllegalArgumentException if the type could not be mapped to a {@link Variable} implementation
-     */
-    private static Variable getVariable(final String type, final String value) {
-        switch (type) {
-            // TODO add "BITS" support
-            case "STRING":
-                if (value.startsWith("\"") && value.endsWith("\"")) {
-                    if (value.length() == 2) {
-                        return new OctetString();
-                    }
-                    return new OctetString(value.substring(1, value.length() - 1));
-                } else {
-                    return new OctetString(value);
-                }
-            case "OID":
-                return new OID(value);
-            case "Gauge32":
-                return new Gauge32(Long.parseLong(value.replaceAll("[^-?0-9]+", "")));
-            case "Timeticks":
-                final int openBracket = value.indexOf("(") + 1;
-                final int closeBracket = value.indexOf(")");
-                if (openBracket == 0 || closeBracket < 0) {
-                    throw new IllegalArgumentException("could not parse time tick value in " + value);
-                }
-                return new TimeTicks(Long.parseLong(value.substring(openBracket, closeBracket)));
-            case "Counter32":
-                return new Counter32(Long.parseLong(value.replaceAll("[^-?0-9]+", "")));
-            case "Counter64":
-                // Parse unsigned long
-                return new Counter64(UnsignedLong.valueOf(value).longValue());
-            case "INTEGER":
-                return new Integer32(Integer.parseInt(value.replaceAll("[^-?0-9]+", "")));
-            case "Hex-STRING":
-                return OctetString.fromHexString(value, ' ');
-            case "IpAddress":
-                return new IpAddress(value);
-            default:
-                throw new IllegalArgumentException("illegal type \"" + type + "\" in walk detected");
-        }
-    }
-
-    /**
      * Starts this agent instance.
      *
      * @throws IOException signals that this agent could not be initialized by the {@link #init()} method
@@ -249,10 +198,8 @@ public class SnmpmanAgent extends BaseAgent {
 
         log.trace("registering managed objects for agent \"{}\"", configuration.getName());
         for (final Long vlan : vlans) {
-            try (final FileInputStream fileInputStream = new FileInputStream(configuration.getWalk());
-                 final BufferedReader reader = new BufferedReader(new InputStreamReader(fileInputStream, DEFAULT_CHARSET))) {
-
-                Map<OID, Variable> bindings = readVariableBindings(reader);
+            try {
+                Map<OID, Variable> bindings = Walks.readWalk(configuration.getWalk());
 
                 final SortedMap<OID, Variable> variableBindings = this.getVariableBindings(configuration.getDevice(), bindings, new OctetString(String.valueOf(vlan)));
 
@@ -281,10 +228,9 @@ public class SnmpmanAgent extends BaseAgent {
                         registerGroupAndContext(group, context);
                     }
                 }
-            } catch (final FileNotFoundException e) {
-                log.error("walk file {} not found", configuration.getWalk().getAbsolutePath());
-            } catch (final IOException e) {
-                log.error("could not read walk file " + configuration.getWalk().getAbsolutePath(), e);
+            }
+            catch (IOException e) {
+                log.error("Could not read walk file " + configuration.getWalk().getAbsolutePath(), e);
             }
         }
         createAndRegisterDefaultContext();
@@ -304,20 +250,17 @@ public class SnmpmanAgent extends BaseAgent {
      * Creates the {@link StaticMOGroup} with all information necessary to register it to the server.
      */
     private void createAndRegisterDefaultContext() {
-        try (final FileInputStream fileInputStream = new FileInputStream(configuration.getWalk());
-             final BufferedReader reader = new BufferedReader(new InputStreamReader(fileInputStream, DEFAULT_CHARSET))) {
-
-            Map<OID, Variable> bindings = readVariableBindings(reader);
+        try {
+            Map<OID, Variable> bindings = Walks.readWalk(configuration.getWalk());
             final SortedMap<OID, Variable> variableBindings = this.getVariableBindings(configuration.getDevice(), bindings, new OctetString());
             final List<OID> roots = SnmpmanAgent.getRoots(variableBindings);
             for (final OID root : roots) {
                 MOGroup group = createGroup(root, variableBindings);
                 registerDefaultGroups(group);
             }
-        } catch (final FileNotFoundException e) {
-            log.error("walk file {} not found", configuration.getWalk().getAbsolutePath());
-        } catch (final IOException e) {
-            log.error("could not read walk file " + configuration.getWalk().getAbsolutePath(), e);
+        }
+        catch (IOException e) {
+            log.error("Could not read walk file " + configuration.getWalk().getAbsolutePath(), e);
         }
     }
 
@@ -393,40 +336,6 @@ public class SnmpmanAgent extends BaseAgent {
         } catch (NoSuchFieldException | IllegalAccessException e) {
             log.warn("could not set server registry", e);
         }
-    }
-
-    /**
-     * Reads all variable bindings using {@link #VARIABLE_BINDING_PATTERN}.
-     *
-     * @param reader the reader to read the bindings from.
-     * @return the map of oid to variable binding.
-     */
-    private Map<OID, Variable> readVariableBindings(final BufferedReader reader) throws IOException {
-        final Map<OID, Variable> bindings = new HashMap<>();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            final Matcher matcher = VARIABLE_BINDING_PATTERN.matcher(line);
-            if (matcher.matches()) {
-                final OID oid = new OID(matcher.group(1).replace("iso", ".1"));
-
-                try {
-                    final Variable variable;
-                    if (matcher.group(7) == null) {
-                        variable = SnmpmanAgent.getVariable("STRING", "\"\"");
-                    } else {
-                        variable = SnmpmanAgent.getVariable(matcher.group(6), matcher.group(7));
-                    }
-
-                    bindings.put(oid, variable);
-                    log.trace("added binding with oid \"{}\" and variable \"{}\"", oid, variable);
-                } catch (final Exception e) {
-                    log.warn("could not parse line \"{}\" of walk file {} with exception: {}", line, configuration.getWalk().getCanonicalPath(), e.getMessage());
-                }
-            } else {
-                log.warn("could not parse line \"{}\" of walk file {}", line, configuration.getWalk().getAbsolutePath());
-            }
-        }
-        return bindings;
     }
 
     /**
