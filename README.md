@@ -87,7 +87,12 @@ There's an experimental docker image available that can be used to simulate SNMP
 Available configuration options:
 
 * `SNMPMAN_CONFIG`: The location of the default configuration can be changed using the env var `SNMPMAN_CONFIG`, it defaults to a
-sample config at `/snmpman/etc/configuration.yaml`.
+sample config at `/snmpman/etc/configuration.yaml` if you're not specifying thie config file. Instead of providing a
+   full-blown config, you can also let the docker entrypoint create a config for you with the following
+   env vars.
+* `SNMPMAN_PORT`: The UDP port to bind to, from the perspective of the docker container. Only gets written if `SNMPMAN_CONFIG` is not set.
+* `SNMPMAN_COMMUNITY`: The SNMP community to use for authentication. Only gets written if `SNMPMAN_CONFIG` is not set.
+* `SNMPMAN_WALK`: The location of the SNMP walk to provide via SNMP in the docker container filesystem (can be bind-mounted as a volume into the container). Only gets written if `SNMPMAN_CONFIG` is not set.
 
 Sample call mounting a walk inside the container and binding the container towards the standard SNMP port 161:
 
