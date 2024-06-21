@@ -7,6 +7,8 @@
 ![Docker Image Size (latest by date)](https://img.shields.io/docker/image-size/stephanfuhrmannionos/snmpman)
 [![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 
+**This repo has been set to read-only because there are no maintainers in our organization to maintain the project. Feel free to fork.**
+
 The `SNMPMAN` is a command-line application that simulates `SNMP`-capable devices and was developed to be usable during unit testing.
 It may be used to test traffic monitoring applications that execute `SNMP` queries. Due to the lack of
 flexibility in already existing alternatives, it was developed by the **IONOS SE** to improve flexibility. Therefore the `SNMPMAN`
